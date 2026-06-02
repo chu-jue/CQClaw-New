@@ -6,8 +6,8 @@
   "build": {
     "frontendDist": "../app",
     "devUrl": null,
-    "beforeDevCommand": "npm run build:web",
-    "beforeBuildCommand": "npm run build:web"
+    "beforeDevCommand": "npm run build:assets",
+    "beforeBuildCommand": "npm run build:assets"
   },
   "app": {
     "withGlobalTauri": true,

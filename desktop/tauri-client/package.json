@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "tauri dev",
     "build": "tauri build",
-    "build:web": "node tools/copy-frontend.mjs"
+    "build:web": "node tools/copy-frontend.mjs",
+    "build:icons": "tauri icon src-tauri/icons/icon.png",
+    "build:assets": "npm run build:icons && npm run build:web"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.6.2"
