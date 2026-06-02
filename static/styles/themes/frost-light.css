@@ -1,0 +1,48 @@
+:root,
+html[data-theme="light"] {
+  --bg-page: #eef4fb;
+  --bg-page-glow-a: rgba(61, 115, 230, .16);
+  --bg-page-glow-b: rgba(209, 226, 255, .34);
+  --bg-panel: rgba(255, 255, 255, .76);
+  --bg-panel-strong: rgba(255, 255, 255, .90);
+  --bg-card: rgba(255, 255, 255, .72);
+  --bg-card-hover: rgba(248, 251, 255, .94);
+  --bg-field: rgba(255, 255, 255, .84);
+  --bg-soft: rgba(242, 247, 254, .82);
+  --bg-selected: rgba(37, 99, 235, .10);
+  --bg-transparent: transparent;
+
+  --border: rgba(148, 163, 184, .32);
+  --border-soft: rgba(148, 163, 184, .18);
+  --border-strong: rgba(59, 130, 246, .36);
+
+  --text-primary: #142033;
+  --text-secondary: #506078;
+  --text-muted: #8290a6;
+  --text-inverse: #ffffff;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, .10);
+
+  --danger: #dc2626;
+  --warning: #d97706;
+  --success: #059669;
+
+  --shadow-card: 0 16px 42px rgba(37, 54, 92, .10);
+  --shadow-panel: 0 24px 70px rgba(37, 54, 92, .12);
+  --shadow-toolbar: 0 10px 34px rgba(37, 54, 92, .10);
+
+  --log-error: #dc2626;
+  --log-warning: #d97706;
+  --log-info: #2563eb;
+  --log-debug: #64748b;
+  --log-verbose: #7c3aed;
+  --log-fatal: #be123c;
+
+  --log-error-bg: rgba(220, 38, 38, .08);
+  --log-warning-bg: rgba(217, 119, 6, .10);
+  --log-info-bg: rgba(37, 99, 235, .07);
+  --log-debug-bg: rgba(100, 116, 139, .08);
+  --log-success-bg: rgba(5, 150, 105, .08);
+}

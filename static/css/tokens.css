@@ -1,0 +1,149 @@
+/* =========================================================
+   Design Tokens
+   ---------------------------------------------------------
+   Shared semantic token names for all themes. Theme files
+   own the values; components/pages should consume these names
+   instead of hard-coded color literals.
+   ========================================================= */
+:root {
+  /* backgrounds */
+  --color-bg-page: var(--app-bg, #f5f7fb);
+  --color-bg-panel: var(--app-surface, #ffffff);
+  --color-bg-elevated: var(--app-surface-2, #f8fafc);
+  --color-bg-card: var(--app-card, #ffffff);
+  --color-bg-subtle: var(--app-card-2, #f8fafc);
+  --color-bg-input: var(--app-input, #ffffff);
+  --color-bg-control: var(--app-control, #ffffff);
+  --color-bg-control-hover: var(--app-control-hover, #f7faff);
+  --color-bg-hover: var(--app-hover, #f7faff);
+  --color-bg-chip: var(--app-chip, #eef4ff);
+  --color-bg-code: var(--app-code, #f8fafc);
+
+  /* text */
+  --color-text-primary: var(--app-text-strong, #111827);
+  --color-text-secondary: var(--app-text, #1f2937);
+  --color-text-muted: var(--app-muted, #667085);
+  --color-text-faint: var(--app-faint, #98a2b3);
+  --color-text-inverse: var(--app-primary-text, #ffffff);
+  --color-text-code: var(--app-code-text, #1f2937);
+
+  /* borders */
+  --color-border-subtle: var(--app-border, rgba(15,23,42,.08));
+  --color-border-strong: var(--app-border-strong, rgba(37,99,235,.28));
+  --color-border-control-hover: var(--app-border-hover, rgba(37,99,235,.22));
+
+  /* brand / state */
+  --color-accent: var(--app-accent, #2563eb);
+  --color-accent-hover: var(--app-accent-2, #3b82f6);
+  --color-accent-soft: var(--app-accent-soft, rgba(37,99,235,.10));
+  --color-accent-soft-hover: var(--app-accent-soft-hover, rgba(37,99,235,.14));
+  --color-accent-line: var(--app-accent-line, rgba(37,99,235,.20));
+  --color-accent-line-strong: var(--app-accent-line-strong, rgba(37,99,235,.34));
+
+  --color-success: var(--app-success, #16a34a);
+  --color-success-soft: var(--app-success-soft, rgba(22,163,74,.10));
+  --color-success-line: var(--app-success-line, rgba(22,163,74,.24));
+
+  --color-warning: var(--app-warn, #d97706);
+  --color-warning-soft: var(--app-warning-soft, rgba(217,119,6,.10));
+  --color-warning-line: var(--app-warning-line, rgba(217,119,6,.24));
+
+  --color-danger: var(--app-danger, #dc2626);
+  --color-danger-strong: var(--app-danger-strong, #b42318);
+  --color-danger-soft: var(--app-danger-soft, rgba(220,38,38,.10));
+  --color-danger-soft-hover: var(--app-danger-soft-hover, rgba(220,38,38,.14));
+  --color-danger-line: var(--app-danger-line, rgba(220,38,38,.22));
+  --color-danger-line-strong: var(--app-danger-line-strong, rgba(220,38,38,.32));
+
+  /* scrollbar */
+  --color-scrollbar-track: var(--app-scrollbar-track, transparent);
+  --color-scrollbar-thumb: var(--app-scrollbar-thumb, rgba(148,163,184,.55));
+  --color-scrollbar-thumb-hover: var(--app-scrollbar-thumb-hover, rgba(100,116,139,.72));
+
+  /* shape / effects */
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  /* spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-md: 13px;
+  --font-size-base: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --line-tight: 1.18;
+  --line-body: 1.45;
+  --weight-medium: 600;
+  --weight-semibold: 700;
+  --weight-bold: 780;
+
+  /* layout density */
+  --shell-header-height: 76px;
+  --shell-page-gap: 14px;
+  --control-height-sm: 30px;
+  --control-height-md: 34px;
+  --control-height-lg: 40px;
+
+  /* motion */
+  --motion-fast: 120ms ease;
+  --motion-normal: 180ms ease;
+  --motion-slow: 260ms ease;
+
+  /* layers */
+  --z-header: 40;
+  --z-toolbar: 30;
+  --z-popover: 90;
+  --z-modal: 120;
+
+  --shadow-panel: var(--app-shadow, 0 1px 2px rgba(16,24,40,.04), 0 18px 46px rgba(16,24,40,.08));
+  --shadow-card: var(--app-shadow-card, 0 1px 2px rgba(16,24,40,.04));
+  --shadow-control: var(--app-shadow-control, 0 1px 2px rgba(16,24,40,.04));
+  --shadow-control-hover: var(--app-shadow-control-hover, 0 8px 22px rgba(37,99,235,.08));
+  --shadow-primary: var(--app-shadow-primary, 0 10px 24px rgba(37,99,235,.24));
+  --shadow-selected: var(--app-shadow-selected, 0 10px 26px rgba(37,99,235,.08));
+  --shadow-inset: var(--app-shadow-inset, inset 0 1px 0 rgba(255,255,255,.45));
+  --focus-ring: var(--app-focus-ring, 0 0 0 4px rgba(37,99,235,.10));
+
+  /* Log Workbench */
+  --bg-page-gradient: var(--app-bg-gradient);
+  --bg-panel-glass: var(--app-panel-glass);
+  --bg-toolbar-glass: var(--app-toolbar-glass);
+  --bg-log-row-hover: var(--app-log-row-hover);
+  --bg-log-row-selected: var(--app-log-row-selected);
+  --bg-log-anchor: var(--app-log-anchor-bg);
+
+  --log-error: var(--app-log-error);
+  --log-warning: var(--app-log-warning);
+  --log-info: var(--app-log-info);
+  --log-debug: var(--app-log-debug);
+  --log-verbose: var(--app-log-verbose);
+  --log-fatal: var(--app-log-fatal);
+  --log-activity: var(--app-log-activity);
+  --log-binder: var(--app-log-binder);
+
+  --log-error-bg: var(--app-log-error-bg);
+  --log-warning-bg: var(--app-log-warning-bg);
+  --log-info-bg: var(--app-log-info-bg);
+  --log-debug-bg: var(--app-log-debug-bg);
+  --log-verbose-bg: var(--app-log-verbose-bg);
+  --log-fatal-bg: var(--app-log-fatal-bg);
+  --log-activity-bg: var(--app-log-activity-bg);
+  --log-binder-bg: var(--app-log-binder-bg);
+}

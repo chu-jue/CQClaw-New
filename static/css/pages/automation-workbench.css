@@ -1,0 +1,447 @@
+/* Automation workbench redesign: professional three-pane desktop layout. */
+.automation-page {
+  --auto-sidebar: clamp(260px, 18vw, 320px);
+  --auto-inspector: clamp(300px, 20vw, 360px);
+  --auto-gap: 16px;
+  background:
+    radial-gradient(circle at 22% 8%, color-mix(in srgb, var(--accent, #3b82f6) 13%, transparent), transparent 28%),
+    linear-gradient(180deg, var(--bg, #f6f8fb) 0%, color-mix(in srgb, var(--bg, #f6f8fb) 88%, #eaf1ff) 100%);
+}
+
+.automation-page .app-header {
+  height: 76px;
+  padding: 14px 20px;
+  background: color-mix(in srgb, var(--panel, #fff) 78%, transparent);
+  border-bottom: 1px solid var(--border, #e5eaf2);
+  backdrop-filter: blur(18px);
+}
+
+.automation-page .brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--accent, #3b82f6) 28%, transparent);
+}
+
+.automation-page .brand-block h1 { font-size: 20px; letter-spacing: -0.03em; }
+.automation-page .brand-meta { gap: 8px; flex-wrap: wrap; }
+
+.automation-page .main-tabs {
+  padding: 5px;
+  border: 1px solid var(--border, #e5eaf2);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel, #fff) 82%, transparent);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+}
+
+.automation-page .nav-tab {
+  height: 34px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+.automation-page .console-layout.layout {
+  display: grid;
+  grid-template-columns: var(--auto-sidebar) minmax(640px, 1fr) var(--auto-inspector);
+  grid-template-rows: minmax(220px, auto) minmax(0, 1fr);
+  gap: var(--auto-gap);
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  min-height: calc(100vh - 76px);
+  padding: 16px;
+}
+
+.automation-page .panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 86%, transparent);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--panel, #fff) 88%, transparent);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.07);
+  backdrop-filter: blur(18px);
+}
+
+.automation-page .panel-head {
+  min-height: 56px;
+  padding: 14px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 72%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--panel, #fff) 94%, transparent), color-mix(in srgb, var(--panel, #fff) 76%, transparent));
+}
+
+.automation-page .panel-head h2 {
+  font-size: 15px;
+  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.automation-page .panel-body {
+  padding: 14px;
+  min-height: 0;
+}
+
+.automation-page .device-panel {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.automation-page .action-panel {
+  grid-column: 1;
+  grid-row: 2;
+  min-height: 0;
+}
+
+.automation-page .workflow-panel {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.automation-page .log-panel {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.automation-page .workflow-panel .panel-body,
+.automation-page .log-panel .panel-body,
+.automation-page .action-panel .panel-body {
+  overflow: auto;
+}
+
+.automation-page .workflow-titlebar {
+  gap: 16px;
+  align-items: center;
+}
+
+.automation-page .workflow-header-actions {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto auto auto;
+  gap: 8px;
+  align-items: center;
+  min-width: min(100%, 720px);
+}
+
+.automation-page .workflow-header-actions input {
+  min-width: 0;
+  height: 40px;
+  border-radius: 13px;
+}
+
+.automation-page button,
+.automation-page select,
+.automation-page input {
+  border-radius: 13px;
+}
+
+.automation-page button {
+  min-height: 38px;
+  box-shadow: none;
+}
+
+.automation-page .blue,
+.automation-page .primary {
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--accent, #3b82f6) 22%, transparent);
+}
+
+.automation-page .device-toolbar.row,
+.automation-page .row {
+  gap: 8px;
+  min-width: 0;
+}
+
+.automation-page .device-panel .panel-body {
+  gap: 10px;
+}
+
+.automation-page .device-toolbar button,
+.automation-page #selectGroup,
+.automation-page #saveDeviceMeta {
+  font-size: 13px;
+  padding-inline: 10px;
+}
+
+.automation-page #devices.device-list {
+  display: grid;
+  gap: 10px;
+  max-height: 230px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.automation-page .device-card,
+.automation-page .device-item,
+.automation-page #devices > * {
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 74%, transparent);
+  background: color-mix(in srgb, var(--panel, #fff) 78%, transparent);
+}
+
+.automation-page .settings-drawer {
+  border: 1px dashed color-mix(in srgb, var(--accent, #3b82f6) 25%, var(--border, #e5eaf2));
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 5%, transparent);
+  overflow: hidden;
+}
+
+.automation-page .settings-drawer summary {
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.automation-page .action-catalog {
+  display: grid;
+  gap: 10px;
+}
+
+.automation-page .action-group {
+  padding: 10px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 74%, transparent);
+  background: color-mix(in srgb, var(--panel, #fff) 70%, transparent);
+}
+
+.automation-page .action-group-title {
+  margin: 0 0 8px;
+  color: var(--accent, #2563eb);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.automation-page .action-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.automation-page .action-buttons button {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-color: color-mix(in srgb, var(--border, #e5eaf2) 76%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel, #fff) 94%, transparent), color-mix(in srgb, var(--panel, #fff) 72%, transparent));
+  font-weight: 700;
+}
+
+.automation-page .action-buttons button .ui-icon {
+  width: 22px;
+  height: 22px;
+  padding: 5px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 11%, transparent);
+  color: var(--accent, #2563eb);
+}
+
+.automation-page .action-buttons button:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent, #3b82f6) 36%, var(--border, #e5eaf2));
+}
+
+.automation-page .flow-guide {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 76%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--bg-soft, #eef4ff) 74%, transparent);
+}
+
+.automation-page .flow-step {
+  min-width: 0;
+  border-radius: 14px;
+  padding: 9px 10px;
+  background: color-mix(in srgb, var(--panel, #fff) 72%, transparent);
+}
+
+.automation-page .flow-step b {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+}
+
+.automation-page .workflow-visual-strip {
+  min-height: 112px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.automation-page .workflow-row {
+  flex-wrap: wrap;
+  padding: 10px 0 0;
+}
+
+.automation-page .variable-bar,
+.automation-page .variable-help {
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--panel, #fff) 74%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 72%, transparent);
+}
+
+.automation-page .variable-bar {
+  padding: 10px;
+  gap: 8px;
+}
+
+.automation-page .variable-bar button {
+  min-height: 38px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 7%, var(--panel, #fff));
+  border-color: color-mix(in srgb, var(--accent, #3b82f6) 20%, var(--border, #e5eaf2));
+}
+
+.automation-page .variable-help {
+  padding: 11px 12px;
+  color: var(--text-muted, #64748b);
+}
+
+.automation-page #steps.workflow-editor {
+  min-height: 420px;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 72%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent, #3b82f6) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--accent, #3b82f6) 4%, transparent) 1px, transparent 1px),
+    color-mix(in srgb, var(--panel, #fff) 62%, transparent);
+  background-size: 28px 28px;
+  padding: 18px;
+  overflow: auto;
+}
+
+.automation-page .log-panel .panel-head {
+  align-items: center;
+}
+
+.automation-page .log-panel .panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.automation-page .profile-list {
+  min-height: 48px;
+  max-height: 140px;
+  overflow: auto;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--bg-soft, #eef4ff) 62%, transparent);
+}
+
+.automation-page .runbar {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 72%, transparent);
+  background: color-mix(in srgb, var(--panel, #fff) 70%, transparent);
+}
+
+.automation-page .runbar .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.automation-page .log-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 72%, transparent);
+  background: color-mix(in srgb, var(--bg-soft, #eef4ff) 70%, transparent);
+}
+
+.automation-page .log-filter-bar button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 8px;
+  border-radius: 14px;
+  font-size: 12px;
+  background: color-mix(in srgb, var(--panel, #fff) 78%, transparent);
+}
+
+.automation-page .log-filter-bar button.active {
+  color: var(--accent, #2563eb);
+  border-color: color-mix(in srgb, var(--accent, #3b82f6) 34%, var(--border, #e5eaf2));
+  background: color-mix(in srgb, var(--accent, #3b82f6) 10%, var(--panel, #fff));
+}
+
+.automation-page .log-panel .log {
+  flex: 1 1 auto;
+  min-height: 360px;
+  margin: 0;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--border, #e5eaf2) 70%, transparent);
+  background: #111827;
+  color: #d1e7ff;
+  font-size: 12px;
+  line-height: 1.65;
+  overflow: auto;
+}
+
+.automation-page #resultSummary {
+  max-height: 160px;
+  overflow: auto;
+}
+
+.automation-page .modal-panel {
+  border-radius: 22px;
+}
+
+@media (max-width: 1480px) {
+  .automation-page .console-layout.layout {
+    grid-template-columns: 280px minmax(560px, 1fr) 300px;
+  }
+  .automation-page .workflow-header-actions {
+    grid-template-columns: minmax(180px, 1fr) auto auto;
+  }
+  .automation-page #runAll { grid-column: 3; }
+}
+
+@media (max-width: 1240px) {
+  .automation-page .console-layout.layout {
+    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+  }
+  .automation-page .device-panel { grid-column: 1; grid-row: 1; }
+  .automation-page .action-panel { grid-column: 1; grid-row: 2 / span 2; }
+  .automation-page .workflow-panel { grid-column: 2; grid-row: 1 / span 2; }
+  .automation-page .log-panel { grid-column: 2; grid-row: 3; min-height: 360px; }
+  .automation-page .log-panel .log { min-height: 220px; }
+}
+
+@media (max-width: 900px) {
+  .automation-page .app-header {
+    height: auto;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .automation-page .console-layout.layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    padding: 12px;
+  }
+  .automation-page .device-panel,
+  .automation-page .action-panel,
+  .automation-page .workflow-panel,
+  .automation-page .log-panel {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .automation-page .workflow-header-actions {
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+  .automation-page .workflow-header-actions input { grid-column: 1 / -1; }
+  .automation-page .flow-guide { grid-template-columns: 1fr 1fr; }
+}

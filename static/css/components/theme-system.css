@@ -1,0 +1,3354 @@
+/* =========================================================
+   Theme Component System
+   ---------------------------------------------------------
+   This file is intentionally loaded AFTER the active theme CSS.
+   New HTML should use these semantic classes instead of writing
+   colors directly. Values come from /css/tokens.css + active
+   /css/themes/*.css, so light/dark auto adapt.
+   ========================================================= */
+
+html {
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+
+body {
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+
+/* ---------- Scrollbars ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-track);
+  border-radius: var(--radius-pill);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border: 2px solid var(--color-scrollbar-track);
+  border-radius: var(--radius-pill);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-thumb-hover);
+}
+
+/* ---------- Layout / surfaces ---------- */
+.app-page,
+.ui-page {
+  min-height: 100vh;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+
+.app-shell,
+.ui-shell {
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+
+.app-panel,
+.ui-panel,
+.app-card,
+.ui-card {
+  background: var(--color-bg-panel);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+}
+
+.app-card,
+.ui-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.app-section,
+.ui-section,
+.app-surface,
+.ui-surface {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.app-toolbar,
+.ui-toolbar,
+.app-header-surface,
+.ui-header-surface {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.log-panel {
+  background: var(--bg-panel-glass);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+}
+
+.app-divider,
+.ui-divider {
+  border: 0;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+/* ---------- Typography ---------- */
+.app-title,
+.ui-title {
+  color: var(--color-text-primary);
+  font-weight: 750;
+  letter-spacing: -.01em;
+}
+
+.app-subtitle,
+.ui-subtitle,
+.app-body,
+.ui-body {
+  color: var(--color-text-secondary);
+}
+
+.app-muted,
+.ui-muted,
+.app-caption,
+.ui-caption,
+.app-help,
+.ui-help {
+  color: var(--color-text-muted);
+}
+
+.app-faint,
+.ui-faint {
+  color: var(--color-text-faint);
+}
+
+.app-link,
+.ui-link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.app-link:hover,
+.ui-link:hover {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+}
+
+/* ---------- Buttons ---------- */
+.btn,
+.ui-btn,
+button.btn,
+button.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-control);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-control);
+  font-weight: 650;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+.btn:hover,
+.ui-btn:hover,
+button.btn:hover,
+button.ui-btn:hover {
+  background: var(--color-bg-control-hover);
+  border-color: var(--color-border-control-hover);
+  box-shadow: var(--shadow-control-hover);
+}
+
+.btn:active,
+.ui-btn:active,
+button.btn:active,
+button.ui-btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+.ui-btn:disabled,
+button.btn:disabled,
+button.ui-btn:disabled {
+  opacity: .52;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-primary,
+.ui-btn-primary,
+button.btn-primary,
+button.ui-btn-primary {
+  background: var(--color-accent);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:hover,
+.ui-btn-primary:hover,
+button.btn-primary:hover,
+button.ui-btn-primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: var(--color-text-inverse);
+}
+
+.btn-secondary,
+.ui-btn-secondary,
+button.btn-secondary,
+button.ui-btn-secondary {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent-line);
+  box-shadow: none;
+}
+
+.btn-secondary:hover,
+.ui-btn-secondary:hover,
+button.btn-secondary:hover,
+button.ui-btn-secondary:hover {
+  background: var(--color-accent-soft-hover);
+  color: var(--color-accent-hover);
+  border-color: var(--color-accent-line-strong);
+}
+
+.btn-ghost,
+.ui-btn-ghost,
+button.btn-ghost,
+button.ui-btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.btn-ghost:hover,
+.ui-btn-ghost:hover,
+button.btn-ghost:hover,
+button.ui-btn-ghost:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-subtle);
+}
+
+.btn-danger,
+.ui-btn-danger,
+button.btn-danger,
+button.ui-btn-danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border-color: var(--color-danger-line);
+  box-shadow: none;
+}
+
+.btn-danger:hover,
+.ui-btn-danger:hover,
+button.btn-danger:hover,
+button.ui-btn-danger:hover {
+  background: var(--color-danger-soft-hover);
+  color: var(--color-danger-strong);
+  border-color: var(--color-danger-line-strong);
+}
+
+.btn-success,
+.ui-btn-success,
+button.btn-success,
+button.ui-btn-success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  border-color: var(--color-success-line);
+  box-shadow: none;
+}
+
+.btn-icon,
+.ui-btn-icon {
+  width: 34px;
+  min-width: 34px;
+  padding: 0;
+}
+
+/* ---------- Form controls ---------- */
+.input,
+.ui-input,
+.select,
+.ui-select,
+.textarea,
+.ui-textarea,
+input.input,
+select.select,
+textarea.textarea {
+  background: var(--color-bg-input);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-inset);
+  outline: none;
+}
+
+.input,
+.ui-input,
+select.select,
+.select,
+.ui-select {
+  min-height: 34px;
+  padding: 7px 10px;
+}
+
+.textarea,
+.ui-textarea,
+textarea.textarea {
+  padding: 10px;
+  line-height: 1.5;
+}
+
+.input:focus,
+.ui-input:focus,
+.select:focus,
+.ui-select:focus,
+.textarea:focus,
+.ui-textarea:focus,
+input.input:focus,
+select.select:focus,
+textarea.textarea:focus {
+  border-color: var(--color-accent-line-strong);
+  box-shadow: var(--focus-ring);
+}
+
+.input::placeholder,
+.ui-input::placeholder,
+.textarea::placeholder,
+.ui-textarea::placeholder {
+  color: var(--color-text-faint);
+}
+
+.field,
+.ui-field {
+  display: grid;
+  gap: 6px;
+}
+
+.field-label,
+.ui-field-label {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+/* ---------- Badges / chips ---------- */
+.badge,
+.ui-badge,
+.chip,
+.ui-chip,
+.pill,
+.ui-pill,
+.tag,
+.ui-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 22px;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-chip);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-line);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.badge-muted,
+.ui-badge-muted,
+.chip-muted,
+.ui-chip-muted {
+  background: var(--color-bg-subtle);
+  color: var(--color-text-muted);
+  border-color: var(--color-border-subtle);
+}
+
+.badge-success,
+.ui-badge-success,
+.badge.ok,
+.chip-success,
+.ui-chip-success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  border-color: var(--color-success-line);
+}
+
+.badge-warning,
+.ui-badge-warning,
+.badge.warn,
+.chip-warning,
+.ui-chip-warning {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+  border-color: var(--color-warning-line);
+}
+
+.badge-danger,
+.ui-badge-danger,
+.badge.fail,
+.chip-danger,
+.ui-chip-danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border-color: var(--color-danger-line);
+}
+
+/* ---------- Rows / states ---------- */
+.ui-row,
+.app-row,
+.ui-list-row,
+.app-list-row {
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.ui-row:hover,
+.app-row:hover,
+.ui-list-row:hover,
+.app-list-row:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-border-control-hover);
+}
+
+.is-selected,
+.ui-selected,
+.app-selected {
+  background: var(--color-accent-soft) !important;
+  border-color: var(--color-accent-line-strong) !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: inset 3px 0 0 var(--color-accent), var(--shadow-selected) !important;
+}
+
+.is-running,
+.ui-running {
+  border-color: var(--color-accent-line-strong) !important;
+  box-shadow: inset 3px 0 0 var(--color-accent), var(--shadow-selected) !important;
+}
+
+/* ---------- Existing project compatibility ---------- */
+/* These selectors migrate existing UI toward tokens without changing HTML. */
+.panel,
+.device,
+.profile,
+.step,
+.snippet-panel,
+.remote-crumbs,
+.config-panel,
+.dump-pane,
+.dump-page-tools,
+.dump-command-card,
+.app-permission-details,
+.log-card,
+.settings-card,
+.device-section,
+.action-section,
+.workflow-section,
+.node-section,
+.action-group,
+.action-category,
+.library-group,
+.quick-section,
+.sidebar-section,
+.workflow-area,
+.workflow-editor,
+.execution-panel,
+.plan-panel,
+.variable-row,
+.variable-bar,
+.variable-help,
+.example-box,
+.preview-box,
+.empty-state,
+.result-table,
+.inspector-screen-wrap,
+.inspector-tree,
+.inspector-detail {
+  background: var(--color-bg-panel) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+.panel-head,
+.step-head,
+.modal-head,
+.modal-foot,
+.dump-pane-head,
+.remote-table-head,
+.result-head,
+.dump-list-row.head {
+  background: var(--color-bg-elevated) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+button:not(.unstyled),
+.remote-crumbs button,
+.snippet-buttons button,
+.action-item,
+.action-tile,
+.action-btn,
+.library-action,
+.quick-action,
+.node-template,
+button[data-add] {
+  background: var(--color-bg-control) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+button:not(.unstyled):hover,
+.remote-crumbs button:hover,
+.snippet-buttons button:hover,
+.action-item:hover,
+.action-tile:hover,
+.action-btn:hover,
+.library-action:hover,
+.quick-action:hover,
+.node-template:hover,
+button[data-add]:hover {
+  background: var(--color-bg-control-hover) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-control-hover) !important;
+}
+
+button.primary,
+button.blue,
+button[data-dump-view].blue,
+.theme-switch-btn.primary,
+.config-run-primary,
+.node-run-btn {
+  background: var(--color-accent) !important;
+  color: var(--color-text-inverse) !important;
+  border-color: var(--color-accent) !important;
+  box-shadow: var(--shadow-primary) !important;
+}
+
+button.primary:hover,
+button.blue:hover,
+button[data-dump-view].blue:hover,
+.theme-switch-btn.primary:hover,
+.config-run-primary:hover,
+.node-run-btn:hover {
+  background: var(--color-accent-hover) !important;
+  color: var(--color-text-inverse) !important;
+  border-color: var(--color-accent-hover) !important;
+}
+
+button.danger,
+button.btn-danger,
+.node-inline-actions button.danger {
+  color: var(--color-danger) !important;
+  background: var(--color-danger-soft) !important;
+  border-color: var(--color-danger-line) !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select,
+.code-box {
+  background: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-accent-line-strong) !important;
+  box-shadow: var(--focus-ring) !important;
+}
+
+.muted,
+.empty,
+label span,
+.remote-meta,
+.app-permissions,
+.app-permission-empty,
+.dump-node-sub,
+.dump-node-line .k,
+.tiny,
+.config-run-feedback {
+  color: var(--color-text-muted) !important;
+}
+
+.dump-node-value,
+.dump-node-line .v,
+.dump-node-line code,
+.dump-node-text,
+.dump-node-line.primary .v,
+.dump-node-title strong,
+.remote-name,
+.app-title,
+.app-package,
+.node-title {
+  color: var(--color-text-primary) !important;
+}
+
+.dump-node-tag,
+.step-index,
+.dump-node-depth,
+.dump-node-class,
+.node-status.on,
+.workflow-editor button[data-node-action="toggle"],
+.node-inline-actions [data-node-action="toggle"] {
+  background: var(--color-accent-soft) !important;
+  border-color: var(--color-accent-line) !important;
+  color: var(--color-accent) !important;
+}
+
+.badge.ok,
+.dump-node-tag.strong,
+.status-online,
+.device-online {
+  background: var(--color-success-soft) !important;
+  border-color: var(--color-success-line) !important;
+  color: var(--color-success) !important;
+}
+
+.remote-entry,
+.app-entry,
+.app-item,
+.result-row,
+.preview-item,
+.dump-list-row,
+.dump-tree-row,
+.inspect-tree-row,
+.flow-node,
+.workflow-node,
+.node-card,
+.action-node {
+  background: var(--color-bg-card) !important;
+  border-color: var(--color-border-subtle) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.remote-entry:hover,
+.app-entry:hover,
+.result-row:hover,
+.preview-item:hover,
+.dump-list-row:hover,
+.dump-tree-row:hover,
+.inspect-tree-row:hover,
+.flow-node:hover,
+.workflow-node:hover,
+.node-card:hover,
+.action-node:hover {
+  background: var(--color-bg-hover) !important;
+  border-color: var(--color-border-control-hover) !important;
+}
+
+.remote-entry.selected,
+.dump-tree-row.selected,
+.dump-list-row.selected,
+.inspect-tree-row.selected,
+.step.active,
+.device.active,
+.device:has(input:checked),
+.flow-node.active,
+.workflow-node.active,
+.node-card.active,
+.action-node.active {
+  background: var(--color-accent-soft) !important;
+  border-color: var(--color-accent-line-strong) !important;
+  box-shadow: inset 3px 0 0 var(--color-accent), var(--shadow-selected) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.preview-command,
+.command-preview,
+.preview-box,
+pre,
+code,
+.example,
+.example-panel,
+.example-code,
+.command-example,
+.path-example,
+.hint-box,
+.tip-box,
+.inspector-raw,
+.dump-detail pre,
+.dump-command-card pre,
+.dump-node-line code {
+  background: var(--color-bg-code) !important;
+  color: var(--color-text-code) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+/* Workflow layout defaults: left list should not starve the detail panel. */
+#steps.workflow-editor,
+.workflow-editor.steps {
+  grid-template-columns: minmax(320px, .86fr) minmax(520px, 1.14fr) !important;
+}
+
+#steps.workflow-editor .flow-canvas,
+.workflow-editor.steps .flow-canvas {
+  min-width: 0 !important;
+}
+
+#steps.workflow-editor .node-config,
+.workflow-editor.steps .node-config {
+  min-width: 460px !important;
+}
+
+@media (max-width: 1240px) {
+  #steps.workflow-editor,
+  .workflow-editor.steps {
+    grid-template-columns: 1fr !important;
+  }
+  #steps.workflow-editor .node-config,
+  .workflow-editor.steps .node-config {
+    min-width: 0 !important;
+  }
+}
+
+/* Final component-class wins over compatibility selectors. */
+button.btn-primary,
+.btn.btn-primary,
+button.ui-btn-primary,
+.ui-btn.ui-btn-primary {
+  background: var(--color-accent) !important;
+  color: var(--color-text-inverse) !important;
+  border-color: var(--color-accent) !important;
+  box-shadow: var(--shadow-primary) !important;
+}
+button.btn-primary:hover,
+.btn.btn-primary:hover,
+button.ui-btn-primary:hover,
+.ui-btn.ui-btn-primary:hover {
+  background: var(--color-accent-hover) !important;
+  border-color: var(--color-accent-hover) !important;
+  color: var(--color-text-inverse) !important;
+}
+button.btn-secondary,
+.btn.btn-secondary,
+button.ui-btn-secondary,
+.ui-btn.ui-btn-secondary {
+  background: var(--color-accent-soft) !important;
+  color: var(--color-accent) !important;
+  border-color: var(--color-accent-line) !important;
+  box-shadow: none !important;
+}
+button.btn-ghost,
+.btn.btn-ghost,
+button.ui-btn-ghost,
+.ui-btn.ui-btn-ghost {
+  background: transparent !important;
+  color: var(--color-text-secondary) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+button.btn-danger,
+.btn.btn-danger,
+button.ui-btn-danger,
+.ui-btn.ui-btn-danger {
+  background: var(--color-danger-soft) !important;
+  color: var(--color-danger) !important;
+  border-color: var(--color-danger-line) !important;
+  box-shadow: none !important;
+}
+button.btn-success,
+.btn.btn-success,
+button.ui-btn-success,
+.ui-btn.ui-btn-success {
+  background: var(--color-success-soft) !important;
+  color: var(--color-success) !important;
+  border-color: var(--color-success-line) !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   Theme hardening layer
+   ---------------------------------------------------------
+   Goal: legacy pages must not leak light-theme white blocks
+   when dark mode is active. This layer is intentionally loaded
+   last by theme-boot.js and uses semantic tokens only.
+   ========================================================= */
+
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  background: var(--color-bg-page) !important;
+  color: var(--color-text-primary) !important;
+}
+
+html[data-theme="dark"] .app-header,
+html[data-theme="dark"] .main-layout,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .panel-body,
+html[data-theme="dark"] .panel-head,
+html[data-theme="dark"] .device-panel,
+html[data-theme="dark"] .action-panel,
+html[data-theme="dark"] .workflow-panel,
+html[data-theme="dark"] .execution-panel,
+html[data-theme="dark"] .config-panel,
+html[data-theme="dark"] .plan-panel,
+html[data-theme="dark"] .action-catalog,
+html[data-theme="dark"] .action-group,
+html[data-theme="dark"] .workflow-area,
+html[data-theme="dark"] .workflow-editor,
+html[data-theme="dark"] .node-config,
+html[data-theme="dark"] .config-card,
+html[data-theme="dark"] .config-section,
+html[data-theme="dark"] .quick-section,
+html[data-theme="dark"] .variable-bar,
+html[data-theme="dark"] .example-box,
+html[data-theme="dark"] .empty,
+html[data-theme="dark"] .empty-state,
+html[data-theme="dark"] .drop-zone,
+html[data-theme="dark"] .step,
+html[data-theme="dark"] .step-body,
+html[data-theme="dark"] .step-head,
+html[data-theme="dark"] .flow-guide,
+html[data-theme="dark"] .runbar,
+html[data-theme="dark"] .log,
+html[data-theme="dark"] .dump-shell,
+html[data-theme="dark"] .dump-topbar,
+html[data-theme="dark"] .dump-control-card,
+html[data-theme="dark"] .dump-pane,
+html[data-theme="dark"] .dump-pane-head,
+html[data-theme="dark"] .dump-page-tools,
+html[data-theme="dark"] .dump-tree-row,
+html[data-theme="dark"] .dump-list-row,
+html[data-theme="dark"] .dump-command-card,
+html[data-theme="dark"] .dump-detail,
+html[data-theme="dark"] .inspect-command {
+  background-color: var(--color-bg-panel) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+html[data-theme="dark"] .panel-head,
+html[data-theme="dark"] .dump-pane-head,
+html[data-theme="dark"] .step-head,
+html[data-theme="dark"] .config-action-bar,
+html[data-theme="dark"] .toolbar,
+html[data-theme="dark"] .top-actions,
+html[data-theme="dark"] .profile-row,
+html[data-theme="dark"] .variable-row,
+html[data-theme="dark"] .detail-grid,
+html[data-theme="dark"] .settings-card,
+html[data-theme="dark"] .device-section,
+html[data-theme="dark"] .device,
+html[data-theme="dark"] .profile,
+html[data-theme="dark"] .snippet-panel,
+html[data-theme="dark"] .preview-box,
+html[data-theme="dark"] .command-preview,
+html[data-theme="dark"] .preview-command,
+html[data-theme="dark"] .path-example,
+html[data-theme="dark"] .hint-box,
+html[data-theme="dark"] .tip-box {
+  background-color: var(--color-bg-subtle) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+html[data-theme="dark"] button,
+html[data-theme="dark"] .button,
+html[data-theme="dark"] [role="button"],
+html[data-theme="dark"] .action-buttons button,
+html[data-theme="dark"] .top-actions button,
+html[data-theme="dark"] .snippet-buttons button,
+html[data-theme="dark"] .quick-buttons button,
+html[data-theme="dark"] .node-inline-actions button,
+html[data-theme="dark"] .config-action-bar button,
+html[data-theme="dark"] .dump-top-actions button,
+html[data-theme="dark"] .dump-command-card button,
+html[data-theme="dark"] .device-action-grid button,
+html[data-theme="dark"] .remote-crumbs button {
+  background-color: var(--color-bg-control) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-control) !important;
+}
+
+html[data-theme="dark"] button:hover:not(:disabled),
+html[data-theme="dark"] .button:hover:not(:disabled),
+html[data-theme="dark"] [role="button"]:hover,
+html[data-theme="dark"] .action-buttons button:hover:not(:disabled),
+html[data-theme="dark"] .top-actions button:hover:not(:disabled),
+html[data-theme="dark"] .snippet-buttons button:hover:not(:disabled),
+html[data-theme="dark"] .quick-buttons button:hover:not(:disabled),
+html[data-theme="dark"] .node-inline-actions button:hover:not(:disabled),
+html[data-theme="dark"] .config-action-bar button:hover:not(:disabled),
+html[data-theme="dark"] .dump-top-actions button:hover:not(:disabled),
+html[data-theme="dark"] .dump-command-card button:hover:not(:disabled),
+html[data-theme="dark"] .device-action-grid button:hover:not(:disabled),
+html[data-theme="dark"] .remote-crumbs button:hover:not(:disabled) {
+  background-color: var(--color-bg-control-hover) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-control-hover) !important;
+  box-shadow: var(--shadow-control-hover) !important;
+}
+
+html[data-theme="dark"] button:disabled,
+html[data-theme="dark"] .button:disabled,
+html[data-theme="dark"] .action-buttons button:disabled,
+html[data-theme="dark"] .top-actions button:disabled,
+html[data-theme="dark"] .snippet-buttons button:disabled,
+html[data-theme="dark"] .quick-buttons button:disabled,
+html[data-theme="dark"] .node-inline-actions button:disabled,
+html[data-theme="dark"] .config-action-bar button:disabled,
+html[data-theme="dark"] .dump-command-card button:disabled {
+  background-color: var(--color-bg-subtle) !important;
+  color: var(--color-text-faint) !important;
+  border-color: var(--color-border-subtle) !important;
+  opacity: .72 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] button.primary,
+html[data-theme="dark"] button.blue,
+html[data-theme="dark"] .btn-primary,
+html[data-theme="dark"] .ui-btn-primary,
+html[data-theme="dark"] .node-run-btn,
+html[data-theme="dark"] .config-run-primary,
+html[data-theme="dark"] #runAll,
+html[data-theme="dark"] #dumpRefresh,
+html[data-theme="dark"] [data-run-step] {
+  background: var(--color-accent) !important;
+  color: var(--color-text-inverse) !important;
+  border-color: var(--color-accent) !important;
+  box-shadow: var(--shadow-primary) !important;
+}
+
+html[data-theme="dark"] button.primary:hover:not(:disabled),
+html[data-theme="dark"] button.blue:hover:not(:disabled),
+html[data-theme="dark"] .btn-primary:hover:not(:disabled),
+html[data-theme="dark"] .ui-btn-primary:hover:not(:disabled),
+html[data-theme="dark"] .node-run-btn:hover:not(:disabled),
+html[data-theme="dark"] .config-run-primary:hover:not(:disabled),
+html[data-theme="dark"] #runAll:hover:not(:disabled),
+html[data-theme="dark"] #dumpRefresh:hover:not(:disabled),
+html[data-theme="dark"] [data-run-step]:hover:not(:disabled) {
+  background: var(--color-accent-hover) !important;
+  color: var(--color-text-inverse) !important;
+  border-color: var(--color-accent-hover) !important;
+}
+
+html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select,
+html[data-theme="dark"] .input,
+html[data-theme="dark"] .select,
+html[data-theme="dark"] .textarea,
+html[data-theme="dark"] .code-box,
+html[data-theme="dark"] .log textarea,
+html[data-theme="dark"] .execution-panel textarea,
+html[data-theme="dark"] .config-panel textarea,
+html[data-theme="dark"] .dump-detail input,
+html[data-theme="dark"] .dump-detail textarea,
+html[data-theme="dark"] .dump-detail select {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-control) !important;
+  caret-color: var(--color-accent) !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: var(--color-text-faint) !important;
+}
+
+html[data-theme="dark"] select option {
+  background: var(--color-bg-panel) !important;
+  color: var(--color-text-primary) !important;
+}
+
+html[data-theme="dark"] .badge,
+html[data-theme="dark"] .server-badge,
+html[data-theme="dark"] .transport-badge,
+html[data-theme="dark"] .step-index,
+html[data-theme="dark"] .chip,
+html[data-theme="dark"] .token-chip,
+html[data-theme="dark"] .dump-node-tag,
+html[data-theme="dark"] .node-status,
+html[data-theme="dark"] .action-group-title,
+html[data-theme="dark"] .quick-section-title,
+html[data-theme="dark"] .snippet-category-title,
+html[data-theme="dark"] .device-action-section-title {
+  background-color: var(--color-bg-chip) !important;
+  color: var(--color-accent) !important;
+  border-color: var(--color-accent-line) !important;
+}
+
+html[data-theme="dark"] .badge.ok,
+html[data-theme="dark"] .status-online,
+html[data-theme="dark"] .device-online {
+  background-color: var(--color-success-soft) !important;
+  color: var(--color-success) !important;
+  border-color: var(--color-success-line) !important;
+}
+
+html[data-theme="dark"] .step.active,
+html[data-theme="dark"] .device.active,
+html[data-theme="dark"] .device:has(input:checked),
+html[data-theme="dark"] .dump-tree-row.selected,
+html[data-theme="dark"] .dump-list-row.selected,
+html[data-theme="dark"] .flow-node.active,
+html[data-theme="dark"] .workflow-node.active,
+html[data-theme="dark"] .node-card.active,
+html[data-theme="dark"] .action-node.active {
+  background-color: var(--color-accent-soft) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-accent-line-strong) !important;
+  box-shadow: inset 3px 0 0 var(--color-accent), var(--shadow-selected) !important;
+}
+
+html[data-theme="dark"] pre,
+html[data-theme="dark"] code,
+html[data-theme="dark"] .example,
+html[data-theme="dark"] .example-panel,
+html[data-theme="dark"] .example-code,
+html[data-theme="dark"] .command-example,
+html[data-theme="dark"] .path-example,
+html[data-theme="dark"] .inspector-raw,
+html[data-theme="dark"] .dump-detail pre,
+html[data-theme="dark"] .dump-command-card pre,
+html[data-theme="dark"] .dump-node-line code {
+  background-color: var(--color-bg-code) !important;
+  color: var(--color-text-code) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] .node-title,
+html[data-theme="dark"] .config-title,
+html[data-theme="dark"] .app-title,
+html[data-theme="dark"] .dump-title,
+html[data-theme="dark"] strong {
+  color: var(--color-text-primary) !important;
+}
+
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .tiny,
+html[data-theme="dark"] .brand-subtitle,
+html[data-theme="dark"] .config-run-feedback,
+html[data-theme="dark"] .action-search-note,
+html[data-theme="dark"] .node-subtitle,
+html[data-theme="dark"] .dump-node-sub,
+html[data-theme="dark"] .dump-node-line .k,
+html[data-theme="dark"] label,
+html[data-theme="dark"] label span {
+  color: var(--color-text-muted) !important;
+}
+
+/* Inline-style white background emergency bridge. Do not apply to the phone screenshot stage/image. */
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background: white"],
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background:white"],
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background: #fff"],
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background:#fff"],
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background-color: white"],
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background-color:white"],
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background-color: #fff"],
+html[data-theme="dark"] body :not(img):not(canvas):not(svg):not(.dump-stage-inner):not(#dumpStage)[style*="background-color:#fff"] {
+  background: var(--color-bg-panel) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+/* Keep actual phone screenshots readable while app chrome remains themed. */
+html[data-theme="dark"] .phone-preview-frame img,
+html[data-theme="dark"] #screenshotFullscreenImage,
+html[data-theme="dark"] .dump-stage-inner,
+html[data-theme="dark"] .dump-stage-inner > img,
+html[data-theme="dark"] #dumpStage .dump-stage-inner,
+html[data-theme="dark"] #dumpStage .dump-stage-inner > img {
+  color-scheme: light !important;
+}
+
+/* =========================================================
+   Workflow editor layout hardening
+   ---------------------------------------------------------
+   Keep the flow list and node detail split identical in light/dark.
+   Previous theme-specific overrides made the two themes use different
+   column widths, and old absolute inline actions could protrude outside
+   the flow list.
+   ========================================================= */
+#steps.workflow-editor,
+.workflow-editor.steps {
+  display: grid !important;
+  grid-template-columns: minmax(420px, 0.92fr) minmax(560px, 1.08fr) !important;
+  gap: 16px !important;
+  align-items: start !important;
+}
+
+#steps.workflow-editor .flow-canvas,
+.workflow-editor.steps .flow-canvas,
+#steps.workflow-editor .node-config,
+.workflow-editor.steps .node-config {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+#steps.workflow-editor .node-config,
+.workflow-editor.steps .node-config {
+  width: 100% !important;
+}
+
+#steps .flow-node,
+.workflow-editor.steps .flow-node {
+  position: relative !important;
+  grid-template-columns: 18px 38px 46px minmax(0, 1fr) !important;
+  padding-right: 216px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+#steps .flow-node .node-main,
+.workflow-editor.steps .flow-node .node-main {
+  min-width: 0 !important;
+}
+
+#steps .flow-node .node-status,
+.workflow-editor.steps .flow-node .node-status {
+  display: none !important;
+}
+
+#steps .node-inline-actions,
+.workflow-editor.steps .node-inline-actions {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  width: 196px !important;
+  max-width: 196px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* The detail panel already has full move-to-top / move-to-bottom actions.
+   In the compact list, keep only high-frequency debugging controls. */
+#steps .node-inline-actions [data-node-action="top"],
+#steps .node-inline-actions [data-node-action="bottom"],
+.workflow-editor.steps .node-inline-actions [data-node-action="top"],
+.workflow-editor.steps .node-inline-actions [data-node-action="bottom"] {
+  display: none !important;
+}
+
+#steps .node-inline-actions button,
+.workflow-editor.steps .node-inline-actions button {
+  flex: 0 0 auto !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+}
+
+#steps .node-inline-actions .node-run-btn,
+.workflow-editor.steps .node-inline-actions .node-run-btn,
+#steps .node-inline-actions [data-node-action="toggle"],
+.workflow-editor.steps .node-inline-actions [data-node-action="toggle"] {
+  width: auto !important;
+  min-width: 44px !important;
+  padding: 0 10px !important;
+}
+
+#steps .node-inline-actions button.danger,
+.workflow-editor.steps .node-inline-actions button.danger {
+  width: 32px !important;
+  min-width: 32px !important;
+}
+
+@media (max-width: 1440px) {
+  #steps.workflow-editor,
+  .workflow-editor.steps {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  #steps.workflow-editor .node-config,
+  .workflow-editor.steps .node-config {
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  #steps .flow-node,
+  .workflow-editor.steps .flow-node {
+    padding-right: 14px !important;
+    padding-bottom: 52px !important;
+  }
+  #steps .node-inline-actions,
+  .workflow-editor.steps .node-inline-actions {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 10px !important;
+    top: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+    justify-content: flex-start !important;
+  }
+}
+
+/* 2026-05 workflow/modal layout hardening: use one width model across themes. */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --workflow-list-width: clamp(520px, 52vw, 760px);
+  --workflow-detail-min: 460px;
+  --device-action-modal-width: min(1320px, 96vw);
+}
+
+.workflow-editor,
+#steps.workflow-editor {
+  display: grid !important;
+  grid-template-columns: minmax(0, var(--workflow-list-width)) minmax(var(--workflow-detail-min), 1fr) !important;
+  gap: 16px !important;
+  align-items: start !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.flow-canvas,
+.node-config,
+.flow-node,
+.node-list,
+.device-action-panel,
+.device-action-body,
+.device-action-left,
+.device-action-right,
+.device-action-grid,
+.device-action-grid button {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.flow-canvas {
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+#steps.workflow-editor.is-empty-flow,
+.workflow-editor.steps.is-empty-flow {
+  grid-template-columns: 1fr !important;
+}
+
+.workflow-empty {
+  min-height: 300px;
+  padding: var(--space-6);
+}
+
+.workflow-empty-card {
+  width: min(820px, 100%);
+  margin: 0 auto;
+}
+
+.dump-flow-hint {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+}
+
+.dump-flow-hint span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dump-flow-hint b {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 11px;
+}
+
+.dump-empty-guide {
+  align-content: center;
+  gap: var(--space-2);
+  min-height: 220px;
+  padding: var(--space-5);
+  text-align: center;
+}
+
+.dump-empty-guide strong {
+  color: var(--color-text);
+  font-size: 16px;
+}
+
+.dump-empty-guide span:last-child {
+  max-width: 320px;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+.flow-step {
+  transition: background var(--motion-normal), border-color var(--motion-normal), color var(--motion-normal), transform var(--motion-fast);
+}
+
+.flow-step.current {
+  border-color: var(--color-accent-line-strong);
+  background: var(--color-accent-soft);
+  transform: translateY(-1px);
+}
+
+.flow-step.pending {
+  opacity: .68;
+}
+
+#steps .node-icon,
+.workflow-editor.steps .node-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#steps .node-icon .ui-icon,
+.workflow-editor.steps .node-icon .ui-icon {
+  width: 17px;
+  height: 17px;
+}
+
+#steps .node-icon.big .ui-icon,
+.workflow-editor.steps .node-icon.big .ui-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.node-config {
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.node-config .config-action-bar,
+.node-config .secondary-actions,
+.node-config [data-run-step],
+.node-config [data-move-to],
+.node-config [data-move],
+.node-config [data-remove] {
+  display: none !important;
+}
+
+.node-config .config-note {
+  color: var(--color-text-muted) !important;
+  background: var(--color-bg-subtle) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: 12px !important;
+  padding: 9px 12px !important;
+  margin: 8px 0 14px !important;
+  line-height: 1.55 !important;
+}
+
+.flow-node {
+  display: grid !important;
+  grid-template-columns: 18px 44px 48px minmax(120px, 1fr) auto auto !important;
+  gap: 10px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+}
+
+.flow-node .node-main,
+.flow-node .node-title,
+.flow-node .node-desc {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.flow-node .node-inline-actions {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-width: max-content !important;
+}
+
+.flow-node .node-inline-actions button {
+  flex: 0 0 auto !important;
+}
+
+#deviceActionModal .device-action-panel {
+  width: var(--device-action-modal-width) !important;
+  max-width: var(--device-action-modal-width) !important;
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-action-body {
+  display: grid !important;
+  grid-template-columns: minmax(520px, 1.05fr) minmax(520px, .95fr) !important;
+  gap: 18px !important;
+  align-items: stretch !important;
+}
+
+#deviceActionModal .device-action-left,
+#deviceActionModal .device-action-right {
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-action-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+#deviceActionModal .device-action-grid button {
+  width: 100% !important;
+  overflow: hidden !important;
+  align-items: center !important;
+}
+
+#deviceActionModal .device-action-grid button > span,
+#deviceActionModal .device-action-grid button > small {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 1180px) {
+  .workflow-editor,
+  #steps.workflow-editor {
+    grid-template-columns: 1fr !important;
+  }
+  #deviceActionModal .device-action-body {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .flow-node {
+    grid-template-columns: 18px 38px minmax(0, 1fr) !important;
+  }
+  .flow-node .node-icon { display: none !important; }
+  .flow-node .node-status { display: none !important; }
+  .flow-node .node-inline-actions {
+    grid-column: 1 / -1 !important;
+    justify-content: flex-start !important;
+    min-width: 0 !important;
+  }
+  #deviceActionModal .device-action-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 2026-05-11 device action modal final layout hardening.
+   Goal: one geometry across light/dark, no min-width overflow, no forced ellipsis in action cards. */
+:root {
+  --device-action-modal-width: min(1480px, calc(100vw - 32px));
+  --device-action-modal-gutter: clamp(14px, 1.7vw, 24px);
+  --device-action-card-min-h: 104px;
+}
+
+#deviceActionModal.modal.open {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-action-panel {
+  width: var(--device-action-modal-width) !important;
+  max-width: var(--device-action-modal-width) !important;
+  max-height: calc(100vh - 32px) !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-action-head,
+#deviceActionModal .device-action-foot {
+  flex: none !important;
+}
+
+#deviceActionModal .device-action-head {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+}
+
+#deviceActionModal .device-action-head > div {
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-action-head h2,
+#deviceActionModal .device-action-subtitle {
+  overflow-wrap: anywhere !important;
+}
+
+#deviceActionModal .device-action-body {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr) !important;
+  gap: var(--device-action-modal-gutter) !important;
+  padding: var(--device-action-modal-gutter) !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+#deviceActionModal .device-action-left,
+#deviceActionModal .device-action-right {
+  min-width: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-action-section-title {
+  display: block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+#deviceActionModal .device-action-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-action-grid button {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: var(--device-action-card-min-h) !important;
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) 18px !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 12px !important;
+  row-gap: 4px !important;
+  align-items: center !important;
+  text-align: left !important;
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-action-grid button::after {
+  content: "›" !important;
+  grid-column: 3 !important;
+  grid-row: 1 / span 2 !important;
+  align-self: center !important;
+  justify-self: end !important;
+  font-size: 26px !important;
+  line-height: 1 !important;
+  opacity: .75 !important;
+}
+
+#deviceActionModal .device-action-grid button > span,
+#deviceActionModal .device-action-grid button > small {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: anywhere !important;
+}
+
+#deviceActionModal .device-action-grid button > span {
+  grid-row: 1 !important;
+  line-height: 1.25 !important;
+}
+
+#deviceActionModal .device-action-grid button > small {
+  grid-row: 2 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  line-height: 1.35 !important;
+}
+
+#deviceActionModal .device-shell-card {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 12px !important;
+  align-items: end !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+#deviceActionModal .device-shell-card label,
+#deviceActionModal #deviceShellCommand {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+#deviceActionModal #deviceRunShell {
+  flex: none !important;
+  min-width: 82px !important;
+  white-space: nowrap !important;
+}
+
+#deviceActionModal .device-result {
+  min-width: 0 !important;
+  width: 100% !important;
+  overflow: auto !important;
+}
+
+#deviceActionModal .device-detail-grid,
+#deviceActionModal .detail-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-kv,
+#deviceActionModal .detail-grid .kv {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-kv strong,
+#deviceActionModal .detail-grid .kv strong {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+@media (max-width: 1080px) {
+  #deviceActionModal .device-action-body {
+    grid-template-columns: 1fr !important;
+  }
+  #deviceActionModal .device-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  #deviceActionModal .device-result {
+    min-height: 220px !important;
+  }
+}
+
+@media (max-width: 680px) {
+  #deviceActionModal.modal.open {
+    padding: 10px !important;
+  }
+  #deviceActionModal .device-action-panel {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: calc(100vh - 20px) !important;
+  }
+  #deviceActionModal .device-action-grid,
+  #deviceActionModal .device-detail-grid,
+  #deviceActionModal .detail-grid,
+  #deviceActionModal .device-shell-card {
+    grid-template-columns: 1fr !important;
+  }
+  #deviceActionModal #deviceRunShell {
+    width: 100% !important;
+  }
+}
+
+/* 2026-05-11 device action modal invariant typography.
+   Theme files may change color tokens only. Geometry and type scale must stay
+   identical across light/dark so switching themes never changes layout width. */
+:root {
+  --device-action-modal-width: min(1480px, calc(100vw - 32px));
+  --device-action-modal-gutter: clamp(14px, 1.7vw, 24px);
+  --device-action-title-size: 20px;
+  --device-action-subtitle-size: 13px;
+  --device-action-section-title-size: 14px;
+  --device-action-card-title-size: 15px;
+  --device-action-card-desc-size: 13px;
+  --device-action-label-size: 12px;
+  --device-action-value-size: 14px;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-panel,
+html[data-theme="dark"] #deviceActionModal .device-action-panel,
+#deviceActionModal .device-action-panel {
+  width: var(--device-action-modal-width) !important;
+  max-width: var(--device-action-modal-width) !important;
+  max-height: calc(100vh - 32px) !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-head,
+html[data-theme="dark"] #deviceActionModal .device-action-head,
+#deviceActionModal .device-action-head {
+  padding: 22px 26px !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-foot,
+html[data-theme="dark"] #deviceActionModal .device-action-foot,
+#deviceActionModal .device-action-foot {
+  padding: 22px 26px !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-body,
+html[data-theme="dark"] #deviceActionModal .device-action-body,
+#deviceActionModal .device-action-body {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr) !important;
+  gap: var(--device-action-modal-gutter) !important;
+  padding: var(--device-action-modal-gutter) !important;
+  overflow: auto !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-left,
+html[data-theme="light"] #deviceActionModal .device-action-right,
+html[data-theme="dark"] #deviceActionModal .device-action-left,
+html[data-theme="dark"] #deviceActionModal .device-action-right,
+#deviceActionModal .device-action-left,
+#deviceActionModal .device-action-right {
+  padding: 20px !important;
+  border-radius: 20px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-head h2,
+html[data-theme="dark"] #deviceActionModal .device-action-head h2,
+#deviceActionModal .device-action-head h2 {
+  font-size: var(--device-action-title-size) !important;
+  line-height: 1.22 !important;
+  font-weight: 850 !important;
+  letter-spacing: -.015em !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-subtitle,
+html[data-theme="dark"] #deviceActionModal .device-action-subtitle,
+#deviceActionModal .device-action-subtitle {
+  font-size: var(--device-action-subtitle-size) !important;
+  line-height: 1.45 !important;
+  font-weight: 500 !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-section-title,
+html[data-theme="dark"] #deviceActionModal .device-action-section-title,
+#deviceActionModal .device-action-section-title {
+  font-size: var(--device-action-section-title-size) !important;
+  line-height: 1.35 !important;
+  font-weight: 800 !important;
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-grid,
+html[data-theme="dark"] #deviceActionModal .device-action-grid,
+#deviceActionModal .device-action-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-grid button,
+html[data-theme="dark"] #deviceActionModal .device-action-grid button,
+#deviceActionModal .device-action-grid button {
+  min-height: 104px !important;
+  padding: 16px 16px !important;
+  grid-template-columns: 34px minmax(0, 1fr) 18px !important;
+  column-gap: 12px !important;
+  row-gap: 4px !important;
+  box-sizing: border-box !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-grid button::after,
+html[data-theme="dark"] #deviceActionModal .device-action-grid button::after,
+#deviceActionModal .device-action-grid button::after {
+  font-size: 24px !important;
+  line-height: 1 !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-grid button > span,
+html[data-theme="dark"] #deviceActionModal .device-action-grid button > span,
+#deviceActionModal .device-action-grid button > span {
+  font-size: var(--device-action-card-title-size) !important;
+  line-height: 1.28 !important;
+  font-weight: 800 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-action-grid button > small,
+html[data-theme="dark"] #deviceActionModal .device-action-grid button > small,
+#deviceActionModal .device-action-grid button > small {
+  font-size: var(--device-action-card-desc-size) !important;
+  line-height: 1.35 !important;
+  font-weight: 600 !important;
+  white-space: normal !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-shell-card label span,
+html[data-theme="dark"] #deviceActionModal .device-shell-card label span,
+#deviceActionModal .device-shell-card label span,
+html[data-theme="light"] #deviceActionModal .device-kv span,
+html[data-theme="light"] #deviceActionModal .detail-grid .kv span,
+html[data-theme="dark"] #deviceActionModal .device-kv span,
+html[data-theme="dark"] #deviceActionModal .detail-grid .kv span,
+#deviceActionModal .device-kv span,
+#deviceActionModal .detail-grid .kv span {
+  font-size: var(--device-action-label-size) !important;
+  line-height: 1.35 !important;
+  font-weight: 650 !important;
+}
+
+html[data-theme="light"] #deviceActionModal .device-kv strong,
+html[data-theme="light"] #deviceActionModal .detail-grid .kv strong,
+html[data-theme="dark"] #deviceActionModal .device-kv strong,
+html[data-theme="dark"] #deviceActionModal .detail-grid .kv strong,
+#deviceActionModal .device-kv strong,
+#deviceActionModal .detail-grid .kv strong {
+  font-size: var(--device-action-value-size) !important;
+  line-height: 1.35 !important;
+  font-weight: 800 !important;
+}
+
+html[data-theme="light"] #deviceActionModal input,
+html[data-theme="light"] #deviceActionModal textarea,
+html[data-theme="light"] #deviceActionModal select,
+html[data-theme="dark"] #deviceActionModal input,
+html[data-theme="dark"] #deviceActionModal textarea,
+html[data-theme="dark"] #deviceActionModal select,
+#deviceActionModal input,
+#deviceActionModal textarea,
+#deviceActionModal select {
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 1080px) {
+  html[data-theme="light"] #deviceActionModal .device-action-body,
+  html[data-theme="dark"] #deviceActionModal .device-action-body,
+  #deviceActionModal .device-action-body {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 2026-05 workflow node action hardening: list owns execute/sort/delete, detail owns config. */
+#steps .flow-node,
+.workflow-editor.steps .flow-node,
+.flow-node {
+  display: grid !important;
+  grid-template-columns: 18px 44px 48px minmax(0, 1fr) max-content !important;
+  gap: 10px !important;
+  align-items: center !important;
+  padding: 14px 12px !important;
+  padding-right: 12px !important;
+  overflow: visible !important;
+  min-width: 0 !important;
+}
+
+#steps .node-inline-actions,
+.workflow-editor.steps .node-inline-actions,
+.flow-node .node-inline-actions {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: max-content !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+}
+
+#steps .node-inline-actions [data-node-action="top"],
+#steps .node-inline-actions [data-node-action="bottom"],
+.workflow-editor.steps .node-inline-actions [data-node-action="top"],
+.workflow-editor.steps .node-inline-actions [data-node-action="bottom"] {
+  display: inline-flex !important;
+}
+
+#steps .node-inline-actions button,
+.workflow-editor.steps .node-inline-actions button,
+.flow-node .node-inline-actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+}
+
+#steps .node-inline-actions .node-run-btn,
+.workflow-editor.steps .node-inline-actions .node-run-btn,
+.flow-node .node-inline-actions .node-run-btn {
+  width: 44px !important;
+  min-width: 44px !important;
+  padding: 0 10px !important;
+}
+
+#steps .node-inline-actions [data-node-action="toggle"],
+.workflow-editor.steps .node-inline-actions [data-node-action="toggle"],
+.flow-node .node-inline-actions [data-node-action="toggle"] {
+  width: auto !important;
+  min-width: 48px !important;
+  padding: 0 10px !important;
+}
+
+.flow-node .node-validation {
+  grid-column: 4 / -1;
+  margin-top: -3px;
+  color: var(--color-warning);
+  font-size: 12px;
+  line-height: 1.4;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flow-node .node-run-btn:disabled {
+  cursor: not-allowed !important;
+  opacity: .52 !important;
+  filter: grayscale(.1) !important;
+}
+
+.log-panel .log,
+#log.log {
+  width: 100% !important;
+  min-height: 360px !important;
+  max-height: none !important;
+  height: clamp(360px, 46vh, 680px) !important;
+  overflow: auto !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+#resultSummary .result-table {
+  max-width: 100% !important;
+  overflow: auto !important;
+}
+
+@media (max-width: 1280px) {
+  #steps .flow-node,
+  .workflow-editor.steps .flow-node,
+  .flow-node {
+    grid-template-columns: 18px 40px 44px minmax(0, 1fr) !important;
+  }
+  #steps .node-inline-actions,
+  .workflow-editor.steps .node-inline-actions,
+  .flow-node .node-inline-actions {
+    grid-column: 4 / -1;
+    justify-content: flex-start !important;
+    margin-top: 8px;
+  }
+  .flow-node .node-validation {
+    grid-column: 4 / -1;
+  }
+}
+
+/* Workflow execution readiness: visually disabled but still clickable for feedback. */
+#runAll.run-blocked,
+#previewRunNow.run-blocked,
+button.run-blocked {
+  background: var(--color-bg-control-disabled) !important;
+  color: var(--color-text-disabled) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  filter: none !important;
+}
+
+#runAll.run-blocked:hover,
+#previewRunNow.run-blocked:hover,
+button.run-blocked:hover {
+  background: var(--color-bg-control-disabled) !important;
+  color: var(--color-text-disabled) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+#previewRun.run-needs-attention {
+  border-color: var(--color-warning-line) !important;
+  color: var(--color-warning) !important;
+  background: var(--color-warning-soft) !important;
+}
+
+/* UX hardening: workflow state machine and action decluttering. */
+.flow-node {
+  align-items: start !important;
+}
+
+.flow-node .node-readiness {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.flow-node .node-readiness.ready {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  border-color: var(--color-success-line);
+}
+
+.flow-node .node-readiness.invalid {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+  border-color: var(--color-warning-line);
+}
+
+.flow-node .node-readiness.skipped {
+  background: var(--color-bg-control-disabled);
+  color: var(--color-text-muted);
+  border-color: var(--color-border-subtle);
+}
+
+.flow-node .node-readiness.running {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-primary-line);
+}
+
+/* Keep the two high-frequency actions visible; reveal sort/delete on hover or active node. */
+.flow-node .node-secondary-action {
+  opacity: 0 !important;
+  transform: translateY(2px);
+  pointer-events: none;
+  transition: opacity .14s ease, transform .14s ease, background .14s ease, border-color .14s ease;
+}
+
+.flow-node:hover .node-secondary-action,
+.flow-node.active .node-secondary-action,
+.flow-node:focus-within .node-secondary-action {
+  opacity: 1 !important;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.flow-node .node-primary-action,
+.flow-node .node-run-btn {
+  opacity: 1 !important;
+  pointer-events: auto;
+}
+
+.flow-node.disabled-step .node-readiness.skipped + .node-inline-actions .node-run-btn {
+  opacity: .46 !important;
+}
+
+.flow-node .node-validation {
+  color: var(--color-warning) !important;
+  background: var(--color-warning-soft);
+  border: 1px solid var(--color-warning-line);
+  border-radius: 10px;
+  padding: 6px 9px;
+}
+
+.preview-diagnostic-head {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 14px;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+}
+
+.preview-diagnostic-head strong {
+  color: var(--color-text-primary);
+}
+
+.preview-section-title {
+  margin: 14px 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.preview-item.is-skipped {
+  opacity: .78;
+}
+
+.preview-item.is-invalid {
+  border-color: var(--color-warning-line) !important;
+  background: var(--color-warning-soft) !important;
+}
+
+.preview-item.is-ready {
+  border-color: var(--color-border-subtle) !important;
+}
+
+.log-panel .log,
+#log.log {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+  line-height: 1.65 !important;
+}
+
+@media (max-width: 1380px) {
+  .flow-node .node-secondary-action {
+    opacity: 1 !important;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+/* Workflow node hover actions fix: actions must never cover validation hints.
+   Keep node information on the first row, action buttons on their own row,
+   and validation feedback on a separate row. This avoids the hover-only
+   sort/delete controls floating over the orange "需要配置" message. */
+#steps .flow-node,
+.workflow-editor.steps .flow-node,
+.flow-node {
+  grid-template-columns: 18px 44px 48px minmax(0, 1fr) auto !important;
+  grid-template-rows: auto auto auto !important;
+  align-items: center !important;
+  row-gap: 8px !important;
+  overflow: visible !important;
+}
+
+.flow-node .drag-handle { grid-column: 1 !important; grid-row: 1 !important; }
+.flow-node .step-index { grid-column: 2 !important; grid-row: 1 !important; }
+.flow-node .node-icon { grid-column: 3 !important; grid-row: 1 !important; }
+.flow-node .node-main { grid-column: 4 !important; grid-row: 1 !important; }
+.flow-node .node-readiness {
+  grid-column: 5 !important;
+  grid-row: 1 !important;
+  justify-self: end !important;
+}
+
+/* The old enable/disable text status is redundant with the readiness pill. */
+.flow-node .node-status {
+  display: none !important;
+}
+
+#steps .node-inline-actions,
+.workflow-editor.steps .node-inline-actions,
+.flow-node .node-inline-actions {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  overflow: visible !important;
+}
+
+/* Hide low-frequency controls without reserving width. Reveal them only when
+   the node is hovered, selected, or focused. */
+.flow-node .node-secondary-action {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: none !important;
+}
+.flow-node:hover .node-secondary-action,
+.flow-node.active .node-secondary-action,
+.flow-node:focus-within .node-secondary-action {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.flow-node .node-validation {
+  grid-column: 1 / -1 !important;
+  grid-row: 3 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin-top: 0 !important;
+  box-sizing: border-box !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* ===== UX hardening: navigation, device workbench, structured logs ===== */
+.app-nav {
+  gap: 8px;
+  align-items: center;
+}
+
+.nav-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid var(--color-border-subtle, var(--app-border));
+  border-radius: var(--radius-pill, 999px);
+  background: color-mix(in srgb, var(--color-bg-panel, var(--app-surface)) 88%, transparent);
+}
+
+.nav-group button {
+  min-height: 32px;
+  white-space: nowrap;
+}
+
+#log.log {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
+  line-height: 1.65;
+  max-height: min(52vh, 520px);
+  padding: 14px;
+  border-radius: var(--radius-lg, 16px);
+  border: 1px solid var(--color-border-subtle, var(--app-border));
+  background: var(--color-bg-inset, var(--app-input));
+  color: var(--color-text-primary, var(--app-text));
+}
+
+#deviceActionModal .device-action-workbench {
+  display: grid !important;
+  grid-template-columns: minmax(180px, 0.55fr) minmax(420px, 1.15fr) minmax(380px, 0.95fr) !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+}
+
+#deviceActionModal .device-action-zone {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid var(--color-border-subtle, var(--app-border)) !important;
+  border-radius: var(--radius-xl, 18px) !important;
+  background: color-mix(in srgb, var(--color-bg-panel, var(--app-surface)) 94%, transparent) !important;
+  padding: 16px !important;
+}
+
+#deviceActionModal .device-action-device-zone {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+#deviceActionModal .device-action-current-card,
+#deviceActionModal .operation-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius-lg, 16px);
+  border: 1px solid var(--color-border-subtle, var(--app-border));
+  background: var(--color-bg-card, var(--app-card));
+}
+
+#deviceActionModal .device-action-current-card strong {
+  display: block;
+  margin-top: 4px;
+  word-break: break-all;
+}
+
+#deviceActionModal .device-action-kicker,
+#deviceActionModal .device-action-help,
+#deviceActionModal .operation-stage span {
+  color: var(--color-text-muted, var(--app-muted));
+}
+
+#deviceActionModal .operation-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 6px 10px;
+  border-radius: var(--radius-pill, 999px);
+  font-weight: 800;
+  border: 1px solid var(--color-border-subtle, var(--app-border));
+  background: var(--color-bg-card, var(--app-card));
+  color: var(--color-text-secondary, var(--app-muted));
+}
+
+#deviceActionModal .operation-state.running,
+#deviceActionModal .operation-stage.running {
+  border-color: color-mix(in srgb, var(--app-accent) 38%, transparent);
+  background: color-mix(in srgb, var(--app-accent) 10%, var(--app-card));
+  color: var(--app-accent);
+}
+
+#deviceActionModal .operation-state.success,
+#deviceActionModal .operation-stage.success {
+  border-color: color-mix(in srgb, var(--app-success) 38%, transparent);
+  background: color-mix(in srgb, var(--app-success) 10%, var(--app-card));
+  color: var(--app-success);
+}
+
+#deviceActionModal .operation-state.failed,
+#deviceActionModal .operation-stage.failed {
+  border-color: color-mix(in srgb, var(--app-danger) 38%, transparent);
+  background: color-mix(in srgb, var(--app-danger) 10%, var(--app-card));
+  color: var(--app-danger);
+}
+
+#deviceActionModal .operation-stage {
+  align-items: flex-start;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+#deviceActionModal .device-action-subsection-title {
+  margin: 12px 0 8px;
+  color: var(--color-text-secondary, var(--app-muted));
+  font-weight: 800;
+}
+
+#deviceActionModal .device-action-config-zone .device-action-grid {
+  margin-bottom: 14px !important;
+}
+
+#deviceActionModal .device-action-result-zone .device-result {
+  min-height: 100% !important;
+  max-height: min(62vh, 620px);
+  overflow: auto;
+}
+
+@media (max-width: 1280px) {
+  #deviceActionModal .device-action-workbench {
+    grid-template-columns: 1fr 1.2fr !important;
+  }
+  #deviceActionModal .device-action-device-zone {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  #deviceActionModal .device-action-workbench {
+    grid-template-columns: 1fr !important;
+  }
+  .app-nav,
+  .nav-group {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}
+
+/* 2026-05-12 device action modal IA/layout refinement.
+   Make device info a compact status strip and give the workbench two stable columns:
+   left = operation configuration, right = execution result. This avoids the large
+   empty device panel and prevents result previews from pushing other sections. */
+#deviceActionModal.modal.open {
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#deviceActionModal .device-action-panel {
+  width: min(1500px, calc(100vw - 40px)) !important;
+  max-width: min(1500px, calc(100vw - 40px)) !important;
+  max-height: calc(100vh - 40px) !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+}
+
+#deviceActionModal .device-action-workbench {
+  display: grid !important;
+  grid-template-columns: minmax(560px, 1.08fr) minmax(460px, .92fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  grid-template-areas:
+    "device device"
+    "config result" !important;
+  gap: 18px !important;
+  padding: 22px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+#deviceActionModal .device-action-zone {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+#deviceActionModal .device-action-device-zone {
+  grid-area: device !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 14px !important;
+  padding: 14px 16px !important;
+  min-height: 0 !important;
+}
+
+#deviceActionModal .device-action-device-zone .device-action-section-title {
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+#deviceActionModal .device-action-current-card {
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 0 !important;
+}
+
+#deviceActionModal .device-action-current-card > div {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-action-current-card strong {
+  margin: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+#deviceActionModal .device-action-help {
+  margin: 0 !important;
+  justify-self: end !important;
+  text-align: right !important;
+  max-width: 520px !important;
+}
+
+#deviceActionModal .device-action-config-zone {
+  grid-area: config !important;
+  overflow: auto !important;
+  max-height: min(68vh, 760px) !important;
+}
+
+#deviceActionModal .device-action-result-zone {
+  grid-area: result !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  max-height: min(68vh, 760px) !important;
+}
+
+#deviceActionModal .device-action-result-zone .device-result {
+  flex: 1 1 auto !important;
+  min-height: 280px !important;
+  max-height: none !important;
+  overflow: auto !important;
+}
+
+#deviceActionModal .device-action-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+#deviceActionModal .device-action-grid button {
+  min-height: 108px !important;
+}
+
+#deviceActionModal .device-clipboard-card {
+  display: grid !important;
+  gap: 12px !important;
+  margin: 10px 0 18px !important;
+  padding: 14px !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 16px !important;
+  background: var(--bg-card) !important;
+  box-shadow: var(--shadow-card) !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-clipboard-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-clipboard-head > div:first-child {
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-clipboard-head strong,
+#deviceActionModal .device-clipboard-result-title {
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+#deviceActionModal .device-clipboard-head span,
+#deviceActionModal .device-clipboard-editor span,
+#deviceActionModal .device-clipboard-output span {
+  color: var(--text-muted) !important;
+  font-size: 12px !important;
+}
+
+#deviceActionModal .device-clipboard-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 0 0 auto !important;
+}
+
+#deviceActionModal .device-clipboard-editor,
+#deviceActionModal .device-clipboard-output {
+  display: grid !important;
+  gap: 7px !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal #deviceClipboardText {
+  min-height: 104px !important;
+  resize: vertical !important;
+}
+
+#deviceActionModal .device-clipboard-output pre,
+#deviceActionModal .device-clipboard-result-card pre {
+  margin: 0 !important;
+  padding: 12px !important;
+  min-height: 74px !important;
+  max-height: 220px !important;
+  overflow: auto !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 12px !important;
+  background: var(--bg-panel) !important;
+  color: var(--text-primary) !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+#deviceActionModal .device-clipboard-result-card {
+  display: grid !important;
+  gap: 8px !important;
+  margin: 12px 0 !important;
+  padding: 12px !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 14px !important;
+  background: var(--bg-card) !important;
+}
+
+#deviceActionModal .device-agent-card {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 12px !important;
+  border: 1px solid var(--border-soft) !important;
+  border-radius: 14px !important;
+  background: var(--bg-panel) !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-agent-card > div {
+  display: grid !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+#deviceActionModal .device-agent-card strong {
+  color: var(--text-primary) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+#deviceActionModal .device-agent-card span {
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  overflow-wrap: anywhere !important;
+}
+
+#deviceActionModal .device-agent-card button {
+  flex: 0 0 auto !important;
+}
+
+#deviceActionModal .device-result img,
+#deviceActionModal .device-result canvas,
+#deviceActionModal .device-result video {
+  max-width: 100% !important;
+  max-height: 58vh !important;
+  object-fit: contain !important;
+}
+
+#deviceActionModal .device-result pre,
+#deviceActionModal .device-result code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+@media (max-width: 1180px) {
+  #deviceActionModal .device-action-workbench {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto auto !important;
+    grid-template-areas:
+      "device"
+      "config"
+      "result" !important;
+  }
+  #deviceActionModal .device-action-device-zone {
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
+  }
+  #deviceActionModal .device-action-help {
+    justify-self: stretch !important;
+    text-align: left !important;
+    max-width: none !important;
+  }
+  #deviceActionModal .device-action-config-zone,
+  #deviceActionModal .device-action-result-zone {
+    max-height: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  #deviceActionModal .device-action-panel {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: calc(100vh - 20px) !important;
+  }
+  #deviceActionModal .device-action-workbench {
+    padding: 12px !important;
+    gap: 12px !important;
+  }
+  #deviceActionModal .device-action-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Unified top navigation.
+   Page tabs are navigation only; page/device actions live beside their own work areas. */
+.app-header-right,
+.app-nav {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end;
+  gap: 12px !important;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.app-header-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.app-header-actions .server-badge {
+  max-width: min(360px, 32vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brand-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+  margin-top: 4px;
+}
+
+.brand-meta .brand-subtitle {
+  margin-top: 0;
+}
+
+.brand-health {
+  max-width: min(420px, 42vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.main-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-bg-elevated, var(--app-surface-2));
+  border: 1px solid var(--color-border-subtle, var(--app-border));
+  box-sizing: border-box;
+  min-width: 0;
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.main-tabs .nav-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  min-width: 72px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius-pill, 999px);
+  background: transparent;
+  color: var(--color-text-secondary, var(--app-muted));
+  font-size: 12px !important;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.main-tabs .nav-tab:hover {
+  background: var(--color-bg-hover, var(--app-hover));
+  color: var(--color-text-primary, var(--app-text));
+  text-decoration: none;
+}
+
+.main-tabs .nav-tab.active,
+.main-tabs .nav-tab[aria-current="page"] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent-line);
+  box-shadow: var(--shadow-selected);
+  text-decoration: none;
+}
+
+.main-tabs .nav-tab:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.theme-switch-btn.btn-icon {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+.app-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-width: 0;
+}
+
+.app-page-title {
+  min-width: 0;
+}
+
+.dump-topbar.app-page-header {
+  height: auto !important;
+  min-height: 72px;
+  padding: 14px 18px !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.dump-topbar.app-page-header .dump-brand {
+  min-width: 0;
+}
+
+.dump-topbar.app-page-header .dump-brand h1,
+.dump-topbar.app-page-header .dump-brand p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keep every top navigation surface aligned with the workflow header. */
+.app-header,
+.workbench-header,
+.storage-header,
+.dump-topbar.app-page-header {
+  top: 0 !important;
+  width: 100% !important;
+  height: 76px !important;
+  min-height: 76px !important;
+  margin: 0 !important;
+  padding: 0 22px !important;
+  border-width: 0 0 1px !important;
+  border-radius: 0 !important;
+}
+
+.dump-redesign-page,
+.dump-redesign-page .dump-shell,
+.storage-center-page,
+.storage-center-page .storage-shell {
+  margin: 0 !important;
+}
+
+.dump-primary-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  min-width: 0;
+}
+
+.dump-primary-actions .btn {
+  min-height: 36px !important;
+}
+
+.workflow-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.workflow-header-actions #profileName {
+  width: min(320px, 32vw);
+  min-width: 200px;
+}
+
+.device-toolbar + .device-toolbar {
+  margin-top: 8px;
+}
+
+/* =========================================================
+   Workbench UI v2
+   ---------------------------------------------------------
+   A shared shell and component refinement layer for CQClaw's
+   engineering workbench pages. It keeps existing HTML working
+   while moving the product toward one coherent design system.
+   ========================================================= */
+
+html,
+body {
+  font-family: var(--font-sans);
+  text-rendering: geometricPrecision;
+}
+
+.app-page,
+.device-manager-page,
+.log-workbench-page,
+.storage-center-page,
+.dump-redesign-page {
+  background: var(--bg-page-gradient);
+}
+
+.app-header,
+.device-manager-header,
+.workbench-header,
+.storage-header,
+.dump-topbar.app-page-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: var(--z-header) !important;
+  min-height: var(--shell-header-height) !important;
+  height: var(--shell-header-height) !important;
+  padding-inline: 22px !important;
+  background: var(--bg-toolbar-glass) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-card) !important;
+  backdrop-filter: blur(24px) saturate(1.22);
+}
+
+.brand-icon,
+.app-page-icon,
+.dump-logo,
+.device-avatar {
+  box-shadow: var(--shadow-control);
+}
+
+.brand-block,
+.device-manager-title,
+.workbench-title,
+.storage-title,
+.dump-brand {
+  min-width: 0;
+}
+
+.brand-block h1,
+.device-manager-title h1,
+.workbench-title h1,
+.storage-title h1,
+.dump-brand h1 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xl) !important;
+  line-height: var(--line-tight);
+  letter-spacing: 0;
+}
+
+.brand-subtitle,
+.device-manager-title p,
+.workbench-title p,
+.storage-title p,
+.dump-brand p {
+  color: var(--color-text-muted) !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: var(--line-body);
+}
+
+.main-tabs {
+  min-height: 38px;
+  padding: var(--space-1);
+  background: var(--color-bg-control);
+  border-color: var(--color-border-subtle);
+  box-shadow: var(--shadow-control);
+}
+
+.main-tabs .nav-tab {
+  height: 30px;
+  min-height: 30px;
+  transition:
+    background var(--motion-normal),
+    color var(--motion-normal),
+    box-shadow var(--motion-normal),
+    transform var(--motion-fast);
+}
+
+.main-tabs .nav-tab:hover {
+  transform: translateY(-1px);
+}
+
+.main-tabs .nav-tab.active,
+.main-tabs .nav-tab[aria-current="page"] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-selected);
+}
+
+.module-hero-art {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-card);
+  opacity: .92;
+}
+
+.module-hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(.98) contrast(.99);
+}
+
+.module-theme-art-dark {
+  display: none !important;
+}
+
+html[data-theme="dark"] .module-theme-art-light {
+  display: none !important;
+}
+
+html[data-theme="dark"] .module-theme-art-dark {
+  display: block !important;
+}
+
+.module-hero-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--bg-toolbar-glass) 72%, transparent), color-mix(in srgb, var(--bg-toolbar-glass) 8%, transparent) 42%, color-mix(in srgb, var(--bg-toolbar-glass) 42%, transparent)),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-bg-card) 8%, transparent), color-mix(in srgb, var(--bg-toolbar-glass) 38%, transparent));
+}
+
+.app-header > *,
+.device-manager-header > *,
+.workbench-header > *,
+.storage-header > *,
+.dump-topbar.app-page-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dump-module-art {
+  top: 8px;
+  left: clamp(260px, 24vw, 420px);
+  right: auto;
+  width: min(460px, 32vw);
+  height: 58px;
+}
+
+.module-hero-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(135deg, var(--bg-panel-glass), color-mix(in srgb, var(--color-accent-soft) 40%, var(--color-bg-card))),
+    var(--color-bg-card);
+  box-shadow: var(--shadow-card);
+}
+
+.workflow-visual-strip {
+  min-height: 116px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+}
+
+.workflow-visual-strip .module-theme-art {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: min(54%, 640px);
+  height: 100%;
+  object-fit: cover;
+  opacity: .9;
+  filter: saturate(.98) contrast(.98);
+}
+
+.workflow-visual-strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(90deg, var(--color-bg-card) 0%, color-mix(in srgb, var(--color-bg-card) 88%, transparent) 42%, color-mix(in srgb, var(--color-bg-card) 18%, transparent) 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-accent-soft) 26%, transparent), transparent);
+}
+
+.module-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 460px;
+  display: grid;
+  gap: 6px;
+}
+
+.module-hero-copy strong {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-tight);
+}
+
+.module-hero-copy span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-body);
+}
+
+html[data-theme="dark"] .module-hero-art,
+html[data-theme="dark"] .workflow-visual-strip .module-theme-art {
+  opacity: .9;
+  filter: saturate(.98) contrast(1.02);
+}
+
+@media (max-width: 1180px) {
+  .module-hero-art {
+    display: none;
+  }
+
+  .workflow-visual-strip {
+    min-height: 88px;
+  }
+
+  .workflow-visual-strip .module-theme-art {
+    opacity: .32;
+    width: 100%;
+  }
+}
+
+.app-panel,
+.ui-panel,
+.app-card,
+.ui-card,
+.panel,
+.dump-control-card,
+.dump-card,
+.device-sidebar,
+.device-main,
+.action-dock,
+.anchor-rail,
+.log-main,
+.storage-table-panel {
+  background: var(--bg-panel-glass) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-panel) !important;
+  backdrop-filter: blur(20px) saturate(1.16);
+}
+
+.app-card,
+.ui-card,
+.device-card-pro,
+.info-tile,
+.capture-state,
+.anchor-item,
+.storage-grid-item {
+  transition:
+    background var(--motion-normal),
+    border-color var(--motion-normal),
+    box-shadow var(--motion-normal),
+    transform var(--motion-fast);
+}
+
+.app-card:hover,
+.ui-card:hover,
+.device-card-pro:hover,
+.anchor-item:hover,
+.storage-grid-item:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-border-control-hover) !important;
+}
+
+.btn,
+.input,
+.select,
+.textarea,
+button.btn,
+input.input,
+select.select,
+textarea.textarea {
+  min-height: var(--control-height-md);
+}
+
+.btn,
+button.btn {
+  font-weight: var(--weight-semibold);
+}
+
+.btn:focus-visible,
+.input:focus-visible,
+.select:focus-visible,
+.textarea:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring) !important;
+}
+
+.empty-state,
+.phone-empty-visual,
+.log-empty,
+.storage-preview-list:empty {
+  color: var(--color-text-muted);
+}
+
+.code-box,
+pre,
+code,
+.log-row,
+.log-cell,
+.command-preview,
+.output-box {
+  font-family: var(--font-mono);
+}
+
+.device-manager-layout,
+.workbench-grid,
+.dump-workbench,
+.storage-main,
+.layout.console-layout {
+  gap: var(--shell-page-gap) !important;
+}
+
+/* Workflow page refinements. */
+.console-layout.layout {
+  background: transparent !important;
+  grid-template-columns: 310px 232px minmax(620px, 1fr) 360px;
+  min-height: calc(100vh - var(--shell-header-height));
+}
+
+.workflow-titlebar,
+.flow-guide,
+.variable-bar,
+.flow-canvas,
+.node-config,
+.action-catalog,
+.action-group,
+.settings-drawer {
+  background: var(--color-bg-subtle) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.brand-icon,
+.node-icon,
+.step-index {
+  background: var(--color-accent-soft) !important;
+  color: var(--color-accent) !important;
+  border-color: var(--color-accent-line) !important;
+}
+
+.flow-node,
+.step,
+.device,
+.profile,
+.action-buttons button {
+  background: var(--color-bg-card) !important;
+  border-color: var(--color-border-subtle) !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.flow-node:hover,
+.flow-node.active,
+.step:hover,
+.device:hover,
+.device.selected,
+.profile:hover,
+.action-buttons button:hover {
+  border-color: var(--color-accent-line-strong) !important;
+  box-shadow: var(--shadow-selected) !important;
+}
+
+.node-title,
+.serial,
+.config-head h3,
+.panel-head h2,
+h2 {
+  color: var(--color-text-primary) !important;
+  letter-spacing: 0 !important;
+}
+
+.node-desc,
+.device-subline,
+.flow-step,
+.drag-handle,
+.empty,
+.settings-drawer summary {
+  color: var(--color-text-muted) !important;
+}
+
+.code-box,
+.log,
+pre {
+  background: var(--color-bg-code) !important;
+  color: var(--color-text-code) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+.server-badge,
+.badge.ok {
+  background: var(--color-success-soft) !important;
+  color: var(--color-success) !important;
+  border-color: var(--color-success-line) !important;
+}
+
+.badge.fail {
+  background: var(--color-danger-soft) !important;
+  color: var(--color-danger) !important;
+  border-color: var(--color-danger-line) !important;
+}
+
+@media (max-width: 1380px) {
+  .console-layout.layout {
+    grid-template-columns: 300px 220px minmax(560px, 1fr) 340px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app-header,
+  .app-header-right,
+  .app-nav,
+  .workflow-titlebar {
+    align-items: flex-start !important;
+  }
+  .app-header-right {
+    justify-content: flex-start;
+    width: 100%;
+  }
+  .app-header-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+  .main-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .dump-topbar.app-page-header {
+    align-items: flex-start;
+  }
+  .workflow-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .workflow-header-actions #profileName {
+    flex: 1 1 240px;
+    width: auto;
+  }
+}
+
+/* Log diagnostics toolbar: keeps execution output readable without changing raw log content. */
+.log-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-bg-elevated);
+}
+.log-filter-bar button {
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-panel);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.2;
+}
+.log-filter-bar button.active,
+.log-filter-bar button:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* Workflow homepage layout: keep the action library compact so the editor gets more room. */
+.console-layout.layout {
+  grid-template-columns: 310px 232px minmax(620px, 1fr) 360px !important;
+}
+
+@media (max-width: 1700px) {
+  .console-layout.layout {
+    grid-template-columns: 300px 220px minmax(560px, 1fr) 340px !important;
+  }
+}

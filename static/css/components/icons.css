@@ -1,0 +1,183 @@
+/* CQClaw icon system: small, token-driven SVG symbols shared across pages. */
+
+.ui-icon {
+  width: 1.08em;
+  height: 1.08em;
+  flex: 0 0 auto;
+  display: inline-block;
+  color: currentColor;
+  vertical-align: -0.16em;
+}
+
+.nav-tab .ui-icon,
+.toolbar-label .ui-icon,
+.panel-title-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.nav-tab .ui-icon {
+  color: var(--color-text-muted);
+  transition: color var(--motion-normal), transform var(--motion-fast);
+}
+
+.nav-tab:hover .ui-icon,
+.nav-tab.active .ui-icon,
+.nav-tab[aria-current="page"] .ui-icon {
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.panel-title-icon,
+.toolbar-label .ui-icon {
+  color: var(--color-accent);
+}
+
+.main-tabs .nav-tab,
+.panel-head h2,
+.dump-card-head strong,
+.storage-title-row h2,
+.toolbar-title-row h2,
+.panel-title-row h2,
+.log-view-title h2,
+.toolbar-label,
+.device-action-card h3,
+.device-detail-card h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.panel-head h2,
+.dump-card-head strong,
+.storage-title-row h2,
+.toolbar-title-row h2,
+.panel-title-row h2,
+.log-view-title h2,
+.device-action-card h3,
+.device-detail-card h3 {
+  letter-spacing: 0;
+}
+
+.action-buttons button {
+  position: relative;
+  overflow: hidden;
+}
+
+.action-buttons button .ui-icon {
+  width: 18px;
+  height: 18px;
+  padding: 4px;
+  box-sizing: content-box;
+  color: var(--color-accent);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-soft);
+  box-shadow: var(--shadow-control);
+}
+
+.action-buttons button:hover .ui-icon {
+  background: var(--color-accent-soft-hover);
+}
+
+.btn .ui-icon,
+button .ui-icon,
+.icon-label .ui-icon {
+  width: 15px;
+  height: 15px;
+  margin-inline-end: 6px;
+}
+
+.btn-icon .ui-icon,
+button[aria-label] .ui-icon:only-child,
+.icon-only .ui-icon {
+  margin-inline-end: 0;
+}
+
+.icon-label,
+.btn-iconized {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.ui-icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  box-shadow: var(--shadow-control);
+}
+
+.ui-icon-chip .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.empty-visual-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) minmax(220px, 1fr);
+  align-items: center;
+  gap: var(--space-5);
+  width: min(760px, calc(100% - var(--space-6)));
+  min-height: 220px;
+  padding: var(--space-5);
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-card);
+  text-align: left;
+}
+
+.empty-visual-media {
+  position: relative;
+  min-height: 152px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+}
+
+.empty-visual-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 152px;
+  object-fit: cover;
+  display: block;
+  opacity: .9;
+}
+
+.empty-visual-copy {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.empty-visual-copy strong {
+  color: var(--color-text);
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.empty-visual-copy span {
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+.empty-visual-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+@media (max-width: 860px) {
+  .empty-visual-card {
+    grid-template-columns: 1fr;
+  }
+}

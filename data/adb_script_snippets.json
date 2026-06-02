@@ -1,0 +1,337 @@
+{
+  "groups": [
+    {
+      "title": "按键",
+      "items": [
+        {
+          "label": "电源键",
+          "text": "adb shell input keyevent POWER",
+          "title": "等同于按一下手机电源键"
+        },
+        {
+          "label": "唤醒",
+          "text": "adb shell input keyevent WAKEUP",
+          "title": "点亮屏幕"
+        },
+        {
+          "label": "熄屏",
+          "text": "adb shell input keyevent SLEEP",
+          "title": "关闭屏幕"
+        },
+        {
+          "label": "Home",
+          "text": "adb shell input keyevent HOME",
+          "title": "回到桌面"
+        },
+        {
+          "label": "返回",
+          "text": "adb shell input keyevent BACK",
+          "title": "执行返回键"
+        },
+        {
+          "label": "最近任务",
+          "text": "adb shell input keyevent APP_SWITCH",
+          "title": "打开最近任务"
+        }
+      ]
+    },
+    {
+      "title": "触控",
+      "items": [
+        {
+          "label": "点击坐标",
+          "text": "adb shell input tap 500 500",
+          "title": "按屏幕坐标点击"
+        },
+        {
+          "label": "滑动",
+          "text": "adb shell input swipe 500 1800 500 400 300",
+          "title": "按屏幕坐标滑动"
+        },
+        {
+          "label": "输入文本",
+          "text": "adb shell input text hello",
+          "title": "输入一段文本，空格可写成 %s"
+        },
+        {
+          "label": "亮屏解锁",
+          "title": "适合无密码或测试机",
+          "text": "adb shell input keyevent WAKEUP\nadb shell wm dismiss-keyguard\nadb shell input keyevent HOME"
+        }
+      ]
+    },
+    {
+      "title": "初始化",
+      "items": [
+        {
+          "label": "跳过开机向导",
+          "title": "不同 ROM 支持程度不同，失败行默认继续",
+          "patch": {
+            "continueOnLineError": true
+          },
+          "text": "# 跳过开机向导：不同 ROM 支持程度不同\nadb shell settings put global device_provisioned 1\nadb shell settings put secure user_setup_complete 1\nadb shell settings put secure tv_user_setup_complete 1\nadb shell pm disable-user --user 0 com.google.android.setupwizard || true\nadb shell pm disable-user --user 0 com.google.android.partnersetup || true\nadb shell pm disable-user --user 0 com.android.provision || true\nadb shell input keyevent HOME"
+        },
+        {
+          "label": "开发者选项",
+          "text": "adb shell am start -a android.settings.APPLICATION_DEVELOPMENT_SETTINGS",
+          "title": "打开开发者选项页面"
+        },
+        {
+          "label": "Wi-Fi 设置",
+          "text": "adb shell am start -a android.settings.WIFI_SETTINGS",
+          "title": "打开 Wi-Fi 设置页面"
+        }
+      ]
+    },
+    {
+      "title": "查看",
+      "items": [
+        {
+          "label": "顶部 Activity",
+          "text": "adb shell dumpsys activity top",
+          "title": "查看当前前台 Activity 相关信息"
+        },
+        {
+          "label": "设备信息",
+          "title": "查看型号、系统、分辨率、电池",
+          "text": "adb shell getprop ro.product.model\nadb shell getprop ro.build.version.release\nadb shell wm size\nadb shell wm density\nadb shell dumpsys battery"
+        },
+        {
+          "label": "清空日志",
+          "text": "adb logcat -c",
+          "title": "清空设备 logcat 缓冲区"
+        },
+        {
+          "label": "最近日志",
+          "text": "adb logcat -d -t 200",
+          "title": "输出最近 200 行 logcat"
+        }
+      ]
+    },
+    {
+      "title": "DSL：点击 / 长按",
+      "items": [
+        {
+          "label": "点文字",
+          "text": "tapText(\"确定\")",
+          "title": "按文字定位并点击，UIAutomator 优先"
+        },
+        {
+          "label": "点文字+OCR",
+          "text": "tapText(\"确定\", { fallbackOcr: true })",
+          "title": "UIAutomator 找不到时截图 OCR 兜底"
+        },
+        {
+          "label": "只用 OCR 点",
+          "text": "tapText(\"图片按钮\", { onlyOcr: true })",
+          "title": "跳过 UI 节点，直接用截图 OCR 定位"
+        },
+        {
+          "label": "点 id",
+          "text": "tapById(\"com.example:id/button\")",
+          "title": "按 resource-id 定位并点击，优先用于稳定控件"
+        },
+        {
+          "label": "长按文字",
+          "text": "longPressText(\"微信\")",
+          "title": "按文字或 content-desc 找到控件后长按，默认 1000ms"
+        },
+        {
+          "label": "长按文字 1.2s",
+          "text": "longPressText(\"微信\", 1200)",
+          "title": "按文字定位后长按，并指定长按毫秒数"
+        },
+        {
+          "label": "长按文字+OCR",
+          "text": "longPressText(\"图片按钮\", 1200, { fallbackOcr: true })",
+          "title": "UIAutomator 找不到时使用 OCR 兜底后长按"
+        },
+        {
+          "label": "长按 id",
+          "text": "longPressId(\"com.example:id/item\")",
+          "title": "按 resource-id 精确定位后长按"
+        },
+        {
+          "label": "长按坐标",
+          "text": "longPress(500, 500, 1200)",
+          "title": "按坐标长按；适合没有可识别节点的区域"
+        },
+        {
+          "label": "点百分比",
+          "text": "tapPercent(50.0, 50.0)",
+          "title": "按屏幕百分比点击，适配不同分辨率"
+        },
+        {
+          "label": "点右上角",
+          "text": "tapTopRight()",
+          "title": "点击屏幕右上角"
+        },
+        {
+          "label": "点底部中间",
+          "text": "tapBottomCenter()",
+          "title": "点击屏幕底部中间"
+        }
+      ]
+    },
+    {
+      "title": "DSL：等待 / 条件",
+      "items": [
+        {
+          "label": "等文字再点",
+          "text": "waitTextAndTap(\"登录\", 5000)",
+          "title": "等待文字出现后点击"
+        },
+        {
+          "label": "OCR 等文字",
+          "text": "waitText(\"验证码\", 5000, { fallbackOcr: true })",
+          "title": "等待文字时也可启用 OCR 兜底"
+        },
+        {
+          "label": "二选一等待",
+          "text": "waitAnyText([\"允许\", \"拒绝\"], 5000)",
+          "title": "等待任意一个文字出现"
+        },
+        {
+          "label": "全部出现",
+          "text": "waitAllText([\"账号\", \"密码\"], 5000)",
+          "title": "等待多个文字全部出现"
+        },
+        {
+          "label": "等待 id",
+          "text": "waitId(\"com.example:id/button\", 5000)",
+          "title": "等待 resource-id 出现"
+        },
+        {
+          "label": "条件分支",
+          "title": "有更新弹窗就取消，否则继续",
+          "text": "ifTextExists(\"更新\") {\n  tapText(\"取消\")\n} else {\n  tapText(\"继续\")\n}"
+        },
+        {
+          "label": "重试块",
+          "title": "整段动作失败后重试",
+          "text": "retry(3) {\n  tapText(\"登录\")\n  waitText(\"首页\", 5000)\n}"
+        },
+        {
+          "label": "嵌套条件",
+          "title": "retry 里嵌套 if / else if",
+          "text": "retry(3) {\n  ifTextExists(\"登录\") {\n    tapText(\"登录\")\n  } else ifTextExists(\"拨号\") {\n    tapText(\"拨号\")\n  }\n}"
+        }
+      ]
+    },
+    {
+      "title": "DSL：滚动 / 手势",
+      "items": [
+        {
+          "label": "滚动找文字",
+          "text": "scrollToText(\"隐私政策\", 6)",
+          "title": "边滚动边查找文字"
+        },
+        {
+          "label": "向上滑",
+          "text": "swipeUp()",
+          "title": "向上滑动页面"
+        },
+        {
+          "label": "向下滑",
+          "text": "swipeDown()",
+          "title": "向下滑动页面"
+        },
+        {
+          "label": "左滑",
+          "text": "swipeLeft()",
+          "title": "向左滑动"
+        },
+        {
+          "label": "右滑",
+          "text": "swipeRight()",
+          "title": "向右滑动"
+        },
+        {
+          "label": "自定义滑动",
+          "text": "swipe(500, 1800, 500, 400, 300)",
+          "title": "按坐标执行滑动"
+        }
+      ]
+    },
+    {
+      "title": "DSL：输入 / 权限",
+      "items": [
+        {
+          "label": "输入文本",
+          "text": "inputText(\"hello123\")",
+          "title": "输入英文、数字和常见符号"
+        },
+        {
+          "label": "输入中文",
+          "text": "inputChinese(\"测试内容\")",
+          "title": "通过剪贴板/输入法方案输入中文"
+        },
+        {
+          "label": "剪贴板粘贴",
+          "text": "setClipboard(\"中文内容\")\npaste()",
+          "title": "先写入剪贴板，再粘贴到当前输入框"
+        },
+        {
+          "label": "清空后输入",
+          "text": "clearAndInput(\"admin\")",
+          "title": "清空当前输入框后输入内容"
+        },
+        {
+          "label": "权限处理",
+          "text": "handlePermission()",
+          "title": "尝试处理常见 Android 权限弹窗"
+        },
+        {
+          "label": "关闭弹窗",
+          "text": "autoClosePopup()",
+          "title": "尝试关闭常见系统弹窗"
+        }
+      ]
+    },
+    {
+      "title": "DSL：断言 / 调试",
+      "items": [
+        {
+          "label": "断言文字",
+          "text": "assertText(\"首页\")",
+          "title": "找不到会自动截图和保存 UI XML"
+        },
+        {
+          "label": "断言 id",
+          "text": "assertId(\"com.example:id/button\")",
+          "title": "断言 resource-id 存在"
+        },
+        {
+          "label": "当前 Activity",
+          "text": "currentActivity()",
+          "title": "输出当前顶部 Activity"
+        },
+        {
+          "label": "断言 Activity",
+          "text": "assertActivity(\".MainActivity\")",
+          "title": "断言当前 Activity 包含指定名称"
+        },
+        {
+          "label": "保存截图",
+          "text": "screenshot(\"当前页面\")",
+          "title": "保存当前屏幕截图"
+        },
+        {
+          "label": "失败截图",
+          "text": "screenshotOnFail(\"失败现场\")",
+          "title": "失败时保存截图证据"
+        },
+        {
+          "label": "Dump UI",
+          "text": "dumpUI()",
+          "title": "保存当前 UIAutomator XML"
+        },
+        {
+          "label": "日志标记",
+          "text": "log(\"进入登录页\")",
+          "title": "在执行结果里输出一条自定义日志"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,434 @@
+/* CQClaw Storage Center - focused resource workbench */
+
+.storage-center-page {
+  background: var(--bg-page-gradient) !important;
+}
+
+.storage-center-page .storage-main.storage-modern-main {
+  width: min(calc(100% - 32px), 1520px) !important;
+  max-width: 1520px !important;
+  display: grid !important;
+  gap: var(--space-4) !important;
+  align-content: start !important;
+  margin: 0 auto !important;
+}
+
+.storage-center-page .storage-command-center,
+.storage-center-page .storage-category-panel,
+.storage-center-page .storage-preview-panel {
+  border: 1px solid var(--color-border-subtle) !important;
+  background: var(--bg-panel-glass) !important;
+  box-shadow: var(--shadow-panel) !important;
+  backdrop-filter: blur(22px) saturate(1.18) !important;
+}
+
+.storage-center-page .storage-command-center {
+  display: grid !important;
+  grid-template-columns: minmax(320px, .96fr) minmax(360px, 1.34fr) auto !important;
+  gap: var(--space-5) !important;
+  align-items: stretch !important;
+  padding: var(--space-5) !important;
+  overflow: hidden !important;
+}
+
+.storage-center-page .storage-command-copy {
+  display: grid !important;
+  gap: var(--space-2) !important;
+  align-content: center !important;
+}
+
+.storage-center-page .storage-kicker {
+  display: inline-flex !important;
+  width: max-content !important;
+  align-items: center !important;
+  gap: var(--space-2) !important;
+  color: var(--color-accent) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--weight-bold) !important;
+}
+
+.storage-center-page .storage-command-copy h2 {
+  max-width: 460px !important;
+  margin: 0 !important;
+  color: var(--color-text-primary) !important;
+  font-size: clamp(var(--font-size-2xl), 2vw, 32px) !important;
+  line-height: var(--line-tight) !important;
+}
+
+.storage-center-page .storage-command-copy p {
+  max-width: 560px !important;
+  margin: 0 !important;
+  color: var(--color-text-muted) !important;
+  font-size: var(--font-size-md) !important;
+  line-height: var(--line-body) !important;
+}
+
+.storage-center-page .storage-summary-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: var(--space-3) !important;
+}
+
+.storage-center-page .storage-summary-card {
+  min-height: 128px !important;
+  display: grid !important;
+  gap: var(--space-2) !important;
+  align-content: center !important;
+  padding: var(--space-4) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 92%, transparent), color-mix(in srgb, var(--color-accent-soft) 46%, transparent)) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.storage-center-page .storage-summary-card span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: var(--space-2) !important;
+  color: var(--color-text-muted) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--weight-semibold) !important;
+}
+
+.storage-center-page .storage-summary-card .ui-icon {
+  color: var(--color-accent) !important;
+}
+
+.storage-center-page .storage-summary-card strong {
+  overflow: hidden !important;
+  color: var(--color-text-primary) !important;
+  font-size: var(--font-size-2xl) !important;
+  font-weight: var(--weight-bold) !important;
+  line-height: var(--line-tight) !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.storage-center-page .storage-summary-card em {
+  overflow: hidden !important;
+  color: var(--color-text-faint) !important;
+  font-style: normal !important;
+  font-size: var(--font-size-sm) !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.storage-center-page .storage-hero-actions {
+  display: grid !important;
+  align-content: center !important;
+  gap: var(--space-2) !important;
+  min-width: 172px !important;
+}
+
+.storage-center-page .storage-hero-actions .btn,
+.storage-center-page .storage-preview-controls .btn {
+  min-height: 38px !important;
+  justify-content: center !important;
+  gap: var(--space-2) !important;
+  white-space: nowrap !important;
+}
+
+.storage-center-page .storage-workspace {
+  display: grid !important;
+  grid-template-columns: minmax(620px, 1fr) minmax(360px, 440px) !important;
+  gap: var(--space-4) !important;
+  align-items: start !important;
+}
+
+.storage-center-page .storage-category-panel,
+.storage-center-page .storage-preview-panel {
+  padding: var(--space-4) !important;
+  border-radius: var(--radius-xl) !important;
+}
+
+.storage-center-page .storage-panel-head {
+  min-height: auto !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: var(--space-3) !important;
+  margin-bottom: var(--space-3) !important;
+}
+
+.storage-center-page .storage-panel-head h2 {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: var(--space-2) !important;
+  margin: 0 !important;
+  color: var(--color-text-primary) !important;
+  font-size: var(--font-size-lg) !important;
+  line-height: var(--line-tight) !important;
+}
+
+.storage-center-page .storage-panel-head p {
+  margin: var(--space-1) 0 0 !important;
+  color: var(--color-text-muted) !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: var(--line-body) !important;
+}
+
+.storage-center-page .storage-category-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(280px, 1fr)) !important;
+  gap: var(--space-3) !important;
+}
+
+.storage-center-page .storage-category-card.storage-row {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: var(--space-3) !important;
+  min-height: 190px !important;
+  padding: var(--space-4) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  background: var(--color-bg-card) !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: transform var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast), background var(--motion-fast) !important;
+}
+
+.storage-center-page .storage-category-card.storage-row:hover,
+.storage-center-page .storage-category-card.storage-row.is-active {
+  transform: translateY(-1px) !important;
+  border-color: var(--color-accent-line-strong) !important;
+  background: color-mix(in srgb, var(--color-bg-card) 88%, var(--color-accent-soft)) !important;
+  box-shadow: var(--shadow-selected) !important;
+}
+
+.storage-center-page .storage-card-top,
+.storage-center-page .storage-card-footer,
+.storage-center-page .storage-card-main {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: var(--space-3) !important;
+}
+
+.storage-center-page .storage-card-icon {
+  width: 38px !important;
+  height: 38px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border-radius: var(--radius-md) !important;
+  background: var(--color-accent-soft) !important;
+  color: var(--color-accent) !important;
+  border: 1px solid var(--color-accent-line) !important;
+}
+
+.storage-center-page .storage-category-card[data-storage-tone="green"] .storage-card-icon {
+  background: var(--color-success-soft) !important;
+  color: var(--color-success) !important;
+  border-color: var(--color-success-line) !important;
+}
+
+.storage-center-page .storage-category-card[data-storage-tone="orange"] .storage-card-icon {
+  background: var(--color-warning-soft) !important;
+  color: var(--color-warning) !important;
+  border-color: var(--color-warning-line) !important;
+}
+
+.storage-center-page .storage-category-card[data-storage-tone="purple"] .storage-card-icon {
+  background: color-mix(in srgb, var(--color-accent-hover) 14%, transparent) !important;
+  color: var(--color-accent-hover) !important;
+  border-color: color-mix(in srgb, var(--color-accent-hover) 28%, transparent) !important;
+}
+
+.storage-center-page .storage-card-main {
+  align-items: flex-end !important;
+}
+
+.storage-center-page .storage-card-main strong {
+  color: var(--color-text-primary) !important;
+  font-size: var(--font-size-lg) !important;
+  font-weight: var(--weight-bold) !important;
+}
+
+.storage-center-page .storage-card-main span {
+  color: var(--color-text-secondary) !important;
+  font-family: var(--font-mono) !important;
+  font-size: var(--font-size-lg) !important;
+  font-weight: var(--weight-semibold) !important;
+}
+
+.storage-center-page .storage-card-meter {
+  height: 8px !important;
+  overflow: hidden !important;
+  border-radius: var(--radius-pill) !important;
+  background: var(--color-bg-subtle) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+}
+
+.storage-center-page .storage-card-meter i {
+  width: var(--storage-meter) !important;
+  height: 100% !important;
+  display: block !important;
+  border-radius: inherit !important;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover)) !important;
+}
+
+.storage-center-page .storage-category-card p {
+  min-height: 38px !important;
+  margin: 0 !important;
+  color: var(--color-text-muted) !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: var(--line-body) !important;
+}
+
+.storage-center-page .storage-card-footer {
+  align-items: flex-end !important;
+}
+
+.storage-center-page .storage-card-footer .storage-actions {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  gap: var(--space-2) !important;
+  justify-content: flex-end !important;
+}
+
+.storage-center-page .storage-card-footer .btn {
+  min-height: 32px !important;
+  padding-inline: var(--space-3) !important;
+  gap: var(--space-1) !important;
+}
+
+.storage-center-page .storage-meta {
+  color: var(--color-text-faint) !important;
+  font-size: var(--font-size-sm) !important;
+}
+
+.storage-center-page .storage-preview-panel {
+  position: sticky !important;
+  top: calc(var(--shell-header-height) + var(--space-4)) !important;
+  display: grid !important;
+  gap: var(--space-3) !important;
+  max-height: calc(100vh - var(--shell-header-height) - var(--space-8)) !important;
+}
+
+.storage-center-page .storage-preview-controls {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: var(--space-2) !important;
+}
+
+.storage-center-page .storage-preview-list {
+  min-height: 360px !important;
+  max-height: min(52vh, 620px) !important;
+  display: grid !important;
+  gap: var(--space-2) !important;
+  align-content: start !important;
+  overflow: auto !important;
+  padding: var(--space-2) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  background: color-mix(in srgb, var(--color-bg-card) 72%, transparent) !important;
+}
+
+.storage-center-page .storage-preview-row {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) auto !important;
+  gap: var(--space-3) !important;
+  align-items: center !important;
+  padding: var(--space-3) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  border-radius: var(--radius-md) !important;
+  background: var(--color-bg-card) !important;
+}
+
+.storage-center-page .storage-preview-kind {
+  width: 30px !important;
+  height: 30px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  border-radius: var(--radius-sm) !important;
+  background: var(--color-bg-chip) !important;
+  color: var(--color-accent) !important;
+}
+
+.storage-center-page .storage-preview-row strong,
+.storage-center-page .storage-preview-row .storage-path {
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.storage-center-page .storage-preview-row strong {
+  color: var(--color-text-primary) !important;
+  font-size: var(--font-size-sm) !important;
+}
+
+.storage-center-page .storage-preview-row .storage-path {
+  margin-top: var(--space-1) !important;
+  color: var(--color-text-muted) !important;
+  font-family: var(--font-mono) !important;
+  font-size: var(--font-size-xs) !important;
+}
+
+.storage-center-page .storage-preview-empty,
+.storage-center-page .storage-loading-card {
+  min-height: 280px !important;
+  display: grid !important;
+  place-items: center !important;
+  align-content: center !important;
+  gap: var(--space-2) !important;
+  padding: var(--space-5) !important;
+  color: var(--color-text-muted) !important;
+  text-align: center !important;
+  border: 1px dashed var(--color-border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-bg-subtle) 82%, transparent), color-mix(in srgb, var(--color-accent-soft) 22%, transparent)) !important;
+}
+
+.storage-center-page .storage-preview-empty .ui-icon {
+  width: 36px !important;
+  height: 36px !important;
+  color: var(--color-accent) !important;
+}
+
+.storage-center-page .storage-preview-empty strong {
+  color: var(--color-text-primary) !important;
+  font-size: var(--font-size-lg) !important;
+}
+
+.storage-center-page .storage-preview-empty span {
+  max-width: 300px !important;
+  line-height: var(--line-body) !important;
+}
+
+.storage-center-page .storage-loading-card {
+  min-height: 140px !important;
+}
+
+@media (max-width: 1280px) {
+  .storage-center-page .storage-command-center {
+    grid-template-columns: 1fr !important;
+  }
+
+  .storage-center-page .storage-hero-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .storage-center-page .storage-workspace {
+    grid-template-columns: 1fr !important;
+  }
+
+  .storage-center-page .storage-preview-panel {
+    position: static !important;
+    max-height: none !important;
+  }
+}
+
+@media (max-width: 820px) {
+  .storage-center-page .storage-summary-grid,
+  .storage-center-page .storage-category-grid,
+  .storage-center-page .storage-hero-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .storage-center-page .storage-card-footer,
+  .storage-center-page .storage-card-main,
+  .storage-center-page .storage-preview-row {
+    grid-template-columns: 1fr !important;
+  }
+}

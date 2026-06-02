@@ -1,0 +1,2360 @@
+
+/* Log Insight focused shell: move global navigation to the left and give rows more height. */
+.log-workbench-page {
+  overflow: hidden;
+}
+
+.log-workbench-page .workbench-shell {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+}
+
+.log-side-nav {
+  grid-column: 1;
+  grid-row: 1 / 4;
+  min-width: 0;
+  padding: 10px 8px;
+  border: 1px solid var(--border-subtle, rgba(148, 163, 184, .22));
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--surface-elevated, #fff) 88%, transparent);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, .08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.log-side-brand,
+.log-side-links a,
+.log-side-theme {
+  width: 52px;
+  min-height: 48px;
+  border-radius: 18px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-secondary, #64748b);
+  text-decoration: none;
+  border: 1px solid transparent;
+  background: transparent;
+  font: inherit;
+}
+
+.log-side-brand {
+  color: var(--color-primary, #2563eb);
+  background: color-mix(in srgb, var(--color-primary, #2563eb) 10%, transparent);
+}
+
+.log-side-brand .brand-glyph {
+  width: 28px;
+  height: 28px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary, #2563eb), #7c3aed);
+  color: #fff;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--color-primary, #2563eb) 28%, transparent);
+}
+
+.log-side-brand strong {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.log-side-links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  flex: 1;
+}
+
+.log-side-links a .ui-icon,
+.log-side-theme .ui-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.log-side-links a span {
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.log-side-links a:hover,
+.log-side-theme:hover {
+  background: color-mix(in srgb, var(--color-primary, #2563eb) 7%, transparent);
+  color: var(--text-primary, #0f172a);
+}
+
+.log-side-links a.active {
+  color: var(--color-primary, #2563eb);
+  background: color-mix(in srgb, var(--color-primary, #2563eb) 13%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary, #2563eb) 22%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary, #2563eb) 8%, transparent);
+}
+
+.log-side-theme {
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.log-workbench-page .workbench-header,
+.log-workbench-page .workbench-toolbar,
+.log-workbench-page .workbench-grid {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.log-workbench-page .workbench-header {
+  min-height: 52px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.log-workbench-page .workbench-title {
+  min-width: 0;
+}
+
+.log-workbench-page .workbench-title h1 {
+  font-size: 20px;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.log-workbench-page .workbench-title p {
+  margin-top: 3px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: min(760px, 58vw);
+}
+
+.log-workbench-page .module-hero-art,
+.log-workbench-page .app-header-right {
+  display: none !important;
+}
+
+/* Top filter area: compact two-row workbench rather than a tall form wall. */
+.log-workbench-page .workbench-toolbar {
+  border-radius: 20px;
+  padding: 9px 10px;
+  gap: 9px;
+  display: grid;
+  grid-template-columns: minmax(470px, 1.15fr) minmax(460px, 1.3fr) minmax(230px, .72fr);
+  align-items: stretch;
+  max-height: 118px;
+  overflow: visible;
+}
+
+.log-workbench-page .toolbar-group {
+  min-width: 0;
+  gap: 6px;
+}
+
+.log-workbench-page .toolbar-label {
+  font-size: 11px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.log-workbench-page .filter-grid {
+  display: grid;
+  grid-template-columns: minmax(92px, .75fr) minmax(150px, 1fr) minmax(150px, .9fr) minmax(200px, 1.2fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.log-workbench-page .search-filter-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr .9fr;
+  gap: 6px;
+}
+
+.log-workbench-page .level-inline-filter,
+.log-workbench-page .filter-control,
+.log-workbench-page .capture-state {
+  min-height: 31px;
+}
+
+.log-workbench-page .filter-control,
+.log-workbench-page .capture-state {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.log-workbench-page .level-pill-list {
+  gap: 3px;
+}
+
+.log-workbench-page .level-pill,
+.log-workbench-page .level-pill button,
+.log-workbench-page .filter-prefix,
+.log-workbench-page .filter-field input.input,
+.log-workbench-page .search-filter-grid .input,
+.log-workbench-page .filter-grid .input {
+  font-size: 11px;
+}
+
+.log-workbench-page .filter-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.log-workbench-page .filter-quick-actions .btn,
+.log-workbench-page .toolbar-actions .btn,
+.log-workbench-page .advanced-capture > summary.btn {
+  min-height: 31px;
+  padding: 6px 9px;
+  font-size: 12px;
+}
+
+.log-workbench-page .time-format-hint,
+.log-workbench-page .capture-copy small {
+  display: none !important;
+}
+
+.log-workbench-page .capture-state {
+  padding-left: 10px;
+}
+
+.log-workbench-page .toolbar-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.log-workbench-page .capture-toggle-btn {
+  width: 100%;
+}
+
+/* Main log area. */
+.log-workbench-page .workbench-grid {
+  min-height: 0;
+  overflow: hidden;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.log-workbench-page .anchor-rail {
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.log-workbench-page .log-main,
+.log-workbench-page .log-stream-panel {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.log-workbench-page .viewer-title-row {
+  padding: 8px 10px;
+  gap: 8px;
+  align-items: center;
+}
+
+.log-workbench-page .log-view-title h2 {
+  font-size: 15px;
+}
+
+.log-workbench-page .detail-meta {
+  font-size: 11px;
+}
+
+.log-workbench-page .viewer-tools {
+  gap: 5px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 1px;
+  scrollbar-width: thin;
+}
+
+.log-workbench-page .viewer-tools .btn,
+.log-workbench-page .viewer-tools .badge,
+.log-workbench-page .viewer-tools .select,
+.log-workbench-page .viewer-tools .input {
+  min-height: 28px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.log-workbench-page .filter-find-bar {
+  padding: 3px 5px;
+  gap: 4px;
+}
+
+.log-workbench-page .filter-find-input {
+  width: 150px;
+}
+
+.log-workbench-page .log-table-head {
+  min-height: 28px;
+  font-size: 11px;
+}
+
+.log-workbench-page .log-viewport {
+  min-height: 0;
+}
+
+.log-workbench-page .source-card-actions {
+  gap: 6px;
+}
+
+.log-workbench-page .source-card-actions .btn,
+.log-workbench-page .preset-actions .btn {
+  min-height: 30px;
+  font-size: 12px;
+}
+
+.log-workbench-page .log-source-card {
+  padding: 10px;
+}
+
+.log-workbench-page .toolbar-title-row h2,
+.log-workbench-page .panel-title-row h2 {
+  font-size: 15px;
+}
+
+@media (max-width: 1480px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: 1fr 1fr;
+    max-height: 160px;
+  }
+  .log-workbench-page .workbench-toolbar .toolbar-group:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto minmax(260px, 1fr) auto;
+    align-items: center;
+  }
+  .log-workbench-page .filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .log-workbench-page .workbench-shell {
+    grid-template-columns: 60px minmax(0, 1fr);
+    padding: 8px;
+  }
+  .log-side-nav {
+    padding: 8px 5px;
+    border-radius: 20px;
+  }
+  .log-side-brand,
+  .log-side-links a,
+  .log-side-theme {
+    width: 44px;
+  }
+  .log-side-links a span,
+  .log-side-brand strong {
+    display: none;
+  }
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: 1fr;
+    max-height: 260px;
+    overflow: auto;
+  }
+  .log-workbench-page .workbench-grid {
+    grid-template-columns: 1fr;
+  }
+  .log-workbench-page .anchor-rail {
+    display: none;
+  }
+}
+
+/* Hard fix: PID/TID cannot collapse into tiny pills; keep useful width. */
+.log-workbench-page .pidtid-filter-pair {
+  display: grid !important;
+  grid-template-columns: minmax(152px, 1fr) minmax(152px, 1fr) !important;
+  gap: 6px !important;
+  min-width: 310px;
+}
+
+.log-workbench-page .pidtid-filter-pair .segmented-filter,
+.log-workbench-page .pidtid-filter-pair .filter-control {
+  min-width: 0;
+  width: 100%;
+}
+
+.log-workbench-page #pidFilter,
+.log-workbench-page #tidFilter {
+  min-width: 72px;
+}
+
+/* Remove per-row copy button in Action; selected rows can still be copied from toolbar. */
+.log-workbench-page [data-copy-log] {
+  display: none !important;
+}
+
+.log-workbench-page .row-actions {
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.log-workbench-page .row-actions .btn {
+  min-height: 24px;
+  padding: 3px 7px;
+}
+
+/* Make sure old top navigation never consumes vertical space on Log page. */
+.log-workbench-page .workbench-header .app-header-right,
+.log-workbench-page .workbench-header .main-tabs,
+.log-workbench-page .workbench-header .cq-unified-topnav {
+  display: none !important;
+}
+
+/* More table height. */
+.log-workbench-page .workbench-header { min-height: 48px; }
+.log-workbench-page .workbench-toolbar { max-height: 112px; }
+.log-workbench-page .log-table-head [data-col="action"] { text-align: right; }
+
+@media (max-width: 1480px) {
+  .log-workbench-page .pidtid-filter-pair {
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(140px, 1fr)) !important;
+  }
+}
+
+/* v5: robust compact toolbar fitting - prevent overflowing labels and controls. */
+.log-workbench-page,
+.log-workbench-page * {
+  box-sizing: border-box;
+}
+
+.log-workbench-page .workbench-shell {
+  grid-template-columns: 68px minmax(0, 1fr);
+  grid-template-rows: 58px auto minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 10px;
+}
+
+.log-workbench-page .workbench-header {
+  min-height: 50px;
+  padding: 7px 12px;
+}
+
+.log-workbench-page .workbench-title h1 {
+  font-size: 18px;
+}
+
+.log-workbench-page .workbench-title p {
+  font-size: 11px;
+  max-width: 72vw;
+}
+
+.log-workbench-page .workbench-toolbar {
+  display: grid !important;
+  grid-template-columns: minmax(620px, 1.15fr) minmax(520px, 1fr) minmax(210px, .42fr) !important;
+  gap: 8px !important;
+  align-items: start !important;
+  padding: 8px !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.log-workbench-page .toolbar-group {
+  min-width: 0 !important;
+  overflow: hidden;
+}
+
+.log-workbench-page .toolbar-label {
+  height: 16px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.log-workbench-page .filter-grid {
+  display: grid !important;
+  grid-template-columns: 86px minmax(150px, .9fr) minmax(280px, 1.15fr) minmax(190px, 1fr) !important;
+  grid-auto-rows: 30px;
+  gap: 5px !important;
+  align-items: center;
+}
+
+.log-workbench-page .level-inline-filter { grid-column: 1; grid-row: 1; }
+.log-workbench-page .filter-grid > .segmented-filter:nth-of-type(1) { grid-column: 2; grid-row: 1; }
+.log-workbench-page .pidtid-filter-pair { grid-column: 3; grid-row: 1; }
+.log-workbench-page .filter-quick-actions { grid-column: 4; grid-row: 1; }
+.log-workbench-page .time-filter-field { grid-column: 1 / 3; grid-row: 2; }
+.log-workbench-page .filter-field-tag { grid-column: 3 / 5; grid-row: 2; }
+
+.log-workbench-page .pidtid-filter-pair {
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(130px, 1fr) minmax(130px, 1fr) !important;
+  gap: 5px !important;
+}
+
+.log-workbench-page .filter-quick-actions {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+
+.log-workbench-page .filter-control,
+.log-workbench-page .capture-state,
+.log-workbench-page .level-inline-filter,
+.log-workbench-page .btn,
+.log-workbench-page .select,
+.log-workbench-page .input {
+  min-height: 30px;
+}
+
+.log-workbench-page .filter-control {
+  min-width: 0 !important;
+  width: 100%;
+  padding: 4px 8px !important;
+  gap: 6px !important;
+  overflow: hidden;
+}
+
+.log-workbench-page .filter-prefix {
+  flex: 0 0 auto;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px !important;
+}
+
+.log-workbench-page .filter-field input.input,
+.log-workbench-page .search-filter-grid .input,
+.log-workbench-page .filter-grid .input {
+  min-width: 0 !important;
+  width: 100% !important;
+  font-size: 11px !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+.log-workbench-page .filter-field {
+  min-width: 0 !important;
+  width: 100%;
+}
+
+.log-workbench-page .filter-field > input[type="checkbox"] {
+  flex: 0 0 auto;
+}
+
+.log-workbench-page .time-filter-inputs {
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 4px !important;
+}
+
+.log-workbench-page .level-inline-filter {
+  padding: 3px 6px !important;
+  gap: 3px !important;
+  overflow: hidden;
+}
+
+.log-workbench-page .level-inline-label {
+  font-size: 10px;
+  width: auto;
+}
+
+.log-workbench-page .level-pill-list {
+  min-width: 0;
+  display: flex;
+  gap: 2px !important;
+  overflow: hidden;
+}
+
+.log-workbench-page .level-pill,
+.log-workbench-page .level-pill button {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  padding: 0 !important;
+  font-size: 10px !important;
+}
+
+.log-workbench-page .filter-quick-actions .btn,
+.log-workbench-page .toolbar-actions .btn,
+.log-workbench-page .advanced-capture > summary.btn {
+  min-width: 0 !important;
+  min-height: 30px !important;
+  padding: 5px 7px !important;
+  font-size: 11px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-workbench-page .filter-quick-actions .btn .ui-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.log-workbench-page .search-filter-grid {
+  grid-template-columns: minmax(260px, 1.3fr) minmax(230px, 1fr) minmax(220px, .92fr) !important;
+  gap: 5px !important;
+}
+
+.log-workbench-page .message-filter-include .filter-prefix { max-width: 64px; }
+.log-workbench-page .message-filter-exclude .filter-prefix { max-width: 86px; }
+.log-workbench-page .message-filter-highlight .filter-prefix { max-width: 94px; }
+
+.log-workbench-page .capture-state {
+  min-width: 0 !important;
+  width: 100%;
+  padding: 5px 9px !important;
+}
+
+.log-workbench-page .capture-copy {
+  min-width: 0;
+}
+
+.log-workbench-page .capture-copy strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.log-workbench-page .toolbar-actions {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 6px !important;
+}
+
+.log-workbench-page .workbench-grid {
+  grid-template-columns: 220px minmax(0, 1fr) !important;
+  gap: 8px !important;
+}
+
+.log-workbench-page .anchor-rail,
+.log-workbench-page .log-stream-panel {
+  border-radius: 18px;
+}
+
+.log-workbench-page .viewer-title-row {
+  min-height: 46px;
+  padding: 7px 9px !important;
+}
+
+.log-workbench-page .viewer-tools {
+  min-width: 0;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+}
+
+.log-workbench-page .viewer-tools .btn,
+.log-workbench-page .viewer-tools .badge,
+.log-workbench-page .viewer-tools .select,
+.log-workbench-page .viewer-tools .input {
+  min-height: 27px !important;
+  font-size: 11px !important;
+}
+
+.log-workbench-page .log-table-head {
+  min-height: 26px !important;
+}
+
+.log-workbench-page .log-table-head .col,
+.log-workbench-page .log-row .col {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-workbench-page [data-col="action"],
+.log-workbench-page .col-action {
+  width: 82px !important;
+  min-width: 82px !important;
+  max-width: 82px !important;
+}
+
+.log-workbench-page [data-copy-log],
+.log-workbench-page .copy-log-btn {
+  display: none !important;
+}
+
+@media (max-width: 1500px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .log-workbench-page .workbench-toolbar .toolbar-group:last-child {
+    grid-column: 1 / -1;
+    display: grid !important;
+    grid-template-columns: 80px minmax(260px, 1fr) minmax(220px, 320px);
+    gap: 8px;
+    align-items: center;
+  }
+  .log-workbench-page .workbench-toolbar .toolbar-group:last-child .toolbar-label { margin: 0; }
+}
+
+@media (max-width: 1280px) {
+  .log-workbench-page .filter-grid {
+    grid-template-columns: 86px minmax(130px, 1fr) minmax(250px, 1.1fr) !important;
+  }
+  .log-workbench-page .filter-quick-actions { grid-column: 1 / 4; grid-row: 2; }
+  .log-workbench-page .time-filter-field { grid-column: 1 / 3; grid-row: 3; }
+  .log-workbench-page .filter-field-tag { grid-column: 3; grid-row: 3; }
+}
+
+/* v6: final log toolbar fit - give multi filters more room and make Message secondary. */
+.log-workbench-page .workbench-shell {
+  grid-template-rows: 54px auto minmax(0, 1fr) !important;
+  gap: 7px !important;
+}
+
+.log-workbench-page .workbench-header {
+  min-height: 48px !important;
+  max-height: 54px !important;
+  overflow: hidden !important;
+  position: relative;
+  z-index: 1;
+}
+
+.log-workbench-page .workbench-toolbar {
+  margin-top: 2px !important;
+  position: relative;
+  z-index: 2;
+  grid-template-columns: minmax(735px, 1.52fr) minmax(390px, .82fr) minmax(220px, .46fr) !important;
+  align-items: start !important;
+}
+
+.log-workbench-page .filter-grid {
+  grid-template-columns: 94px minmax(168px, .85fr) minmax(312px, 1.18fr) minmax(232px, .95fr) !important;
+  grid-auto-rows: 30px !important;
+}
+
+.log-workbench-page .level-inline-filter {
+  min-width: 0 !important;
+}
+
+.log-workbench-page .level-pill-list {
+  flex-wrap: nowrap !important;
+}
+
+.log-workbench-page .level-pill,
+.log-workbench-page .level-pill button {
+  width: 21px !important;
+  min-width: 21px !important;
+  height: 21px !important;
+}
+
+.log-workbench-page .filter-quick-actions {
+  grid-template-columns: repeat(4, minmax(48px, 1fr)) !important;
+}
+
+.log-workbench-page .filter-quick-actions .btn {
+  justify-content: center !important;
+  gap: 3px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.log-workbench-page .filter-quick-actions .btn .ui-icon {
+  flex: 0 0 auto;
+}
+
+.log-workbench-page .search-filter-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-auto-rows: 30px !important;
+  gap: 5px !important;
+}
+
+.log-workbench-page .message-filter-include {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+}
+
+.log-workbench-page .message-filter-exclude {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-highlight {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-exclude .filter-prefix,
+.log-workbench-page .message-filter-highlight .filter-prefix {
+  max-width: 82px !important;
+}
+
+.log-workbench-page .message-filter-highlight .filter-prefix {
+  max-width: 78px !important;
+}
+
+.log-workbench-page .toolbar-group.search-toolbar-group {
+  max-width: 100%;
+}
+
+.log-workbench-page .capture-toggle-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+.log-workbench-page .capture-toggle-btn .ui-icon {
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 auto;
+  display: inline-block !important;
+}
+
+.log-workbench-page .capture-toggle-btn span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-workbench-page .capture-state {
+  min-height: 30px !important;
+}
+
+.log-workbench-page .capture-dot {
+  width: 8px !important;
+  height: 8px !important;
+  flex: 0 0 8px;
+}
+
+.log-workbench-page .toolbar-actions {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+}
+
+@media (max-width: 1500px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .72fr) !important;
+  }
+  .log-workbench-page .workbench-toolbar .toolbar-group:last-child {
+    grid-column: 1 / -1;
+    grid-template-columns: 72px minmax(240px, 1fr) minmax(220px, 300px) !important;
+  }
+}
+
+@media (max-width: 1280px) {
+  .log-workbench-page .filter-grid {
+    grid-template-columns: 90px minmax(150px, 1fr) minmax(280px, 1.2fr) !important;
+  }
+  .log-workbench-page .filter-quick-actions {
+    grid-column: 1 / 4 !important;
+    grid-row: 2 !important;
+  }
+}
+
+/* v7: no-overlap toolbar layout. Give level pills enough width and shrink Tag field. */
+.log-workbench-page .workbench-shell {
+  grid-template-rows: 62px auto minmax(0, 1fr) !important;
+  gap: 8px !important;
+}
+
+.log-workbench-page .workbench-header {
+  min-height: 56px !important;
+  max-height: 62px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.log-workbench-page .workbench-toolbar {
+  margin-top: 0 !important;
+  grid-template-columns: minmax(860px, 1.42fr) minmax(380px, .72fr) minmax(220px, .42fr) !important;
+  gap: 8px !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .filter-grid {
+  grid-template-columns: 174px 168px 304px 212px !important;
+  grid-template-rows: 30px 30px !important;
+  grid-auto-rows: 30px !important;
+  column-gap: 6px !important;
+  row-gap: 5px !important;
+  align-items: center !important;
+}
+
+.log-workbench-page .level-inline-filter {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.log-workbench-page .level-inline-label {
+  flex: 0 0 20px !important;
+  text-align: center;
+}
+
+.log-workbench-page .level-pill-list {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .level-pill,
+.log-workbench-page .level-pill button {
+  width: 20px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+}
+
+.log-workbench-page .filter-grid > .segmented-filter:nth-of-type(1) {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+}
+
+.log-workbench-page .pidtid-filter-pair {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  grid-template-columns: minmax(146px, 1fr) minmax(146px, 1fr) !important;
+  gap: 5px !important;
+}
+
+.log-workbench-page .filter-quick-actions {
+  grid-column: 4 !important;
+  grid-row: 1 !important;
+  grid-template-columns: repeat(4, minmax(48px, 1fr)) !important;
+  gap: 4px !important;
+}
+
+.log-workbench-page .time-filter-field {
+  grid-column: 1 / 3 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .filter-field-tag {
+  grid-column: 3 !important;
+  grid-row: 2 !important;
+  max-width: 304px !important;
+}
+
+.log-workbench-page .filter-field-tag .input {
+  max-width: 190px !important;
+}
+
+.log-workbench-page .filter-grid > * {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.log-workbench-page .search-filter-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-rows: 30px 30px !important;
+}
+
+.log-workbench-page .message-filter-include,
+.log-workbench-page .message-filter-exclude,
+.log-workbench-page .message-filter-highlight {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .message-filter-include .filter-prefix { max-width: 62px !important; }
+.log-workbench-page .message-filter-exclude .filter-prefix { max-width: 76px !important; }
+.log-workbench-page .message-filter-highlight .filter-prefix { max-width: 84px !important; }
+
+.log-workbench-page .capture-toggle-btn::before {
+  content: "▶";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.log-workbench-page .capture-toggle-btn .ui-icon + span,
+.log-workbench-page .capture-toggle-btn::before + span {
+  margin-left: 0;
+}
+
+@media (max-width: 1600px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: minmax(760px, 1fr) minmax(360px, .65fr) !important;
+  }
+  .log-workbench-page .workbench-toolbar .toolbar-group:last-child {
+    grid-column: 1 / -1;
+    display: grid !important;
+    grid-template-columns: 62px minmax(260px, 1fr) minmax(220px, 300px) !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+  .log-workbench-page .filter-grid {
+    grid-template-columns: 170px 160px 292px 200px !important;
+  }
+}
+
+@media (max-width: 1350px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: 1fr !important;
+    max-height: none !important;
+  }
+  .log-workbench-page .filter-grid {
+    grid-template-columns: 170px minmax(150px, 1fr) minmax(290px, 1fr) minmax(196px, .8fr) !important;
+  }
+}
+
+/* v8: production toolbar layout. Stop fighting by giving each task a real lane. */
+.log-workbench-page .workbench-shell {
+  grid-template-rows: 58px auto minmax(0, 1fr) !important;
+}
+
+.log-workbench-page .workbench-header {
+  min-height: 52px !important;
+  max-height: 58px !important;
+  border-radius: 18px !important;
+  margin-bottom: 0 !important;
+}
+
+.log-workbench-page .workbench-toolbar {
+  /* Three clear lanes: filters are the priority, Message is secondary, Capture is compact. */
+  display: grid !important;
+  grid-template-columns: minmax(1036px, 1.6fr) minmax(348px, .54fr) minmax(210px, .32fr) !important;
+  gap: 7px !important;
+  padding: 8px 10px !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  align-items: start !important;
+}
+
+.log-workbench-page .workbench-toolbar > .toolbar-group {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .toolbar-label {
+  height: 15px !important;
+  line-height: 15px !important;
+  margin: 0 0 4px !important;
+  font-size: 10.5px !important;
+  letter-spacing: 0 !important;
+}
+
+/* Multi-filter: fixed, non-overlapping desktop grid. */
+.log-workbench-page .filter-grid {
+  display: grid !important;
+  grid-template-columns: 184px 224px 316px 284px !important;
+  grid-template-rows: 31px 31px !important;
+  gap: 5px 6px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .level-inline-filter {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 184px !important;
+  padding: 4px 6px !important;
+  gap: 4px !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .level-inline-label {
+  flex: 0 0 22px !important;
+  width: 22px !important;
+  font-size: 10px !important;
+  text-align: center !important;
+}
+
+.log-workbench-page .level-pill-list {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  gap: 3px !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .level-pill,
+.log-workbench-page .level-pill button {
+  width: 21px !important;
+  min-width: 21px !important;
+  height: 21px !important;
+  line-height: 21px !important;
+  font-size: 10px !important;
+}
+
+.log-workbench-page .filter-grid > .segmented-filter:nth-of-type(1) {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: 224px !important;
+}
+
+.log-workbench-page .pidtid-filter-pair {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  width: 316px !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 155px 155px !important;
+  gap: 6px !important;
+}
+
+.log-workbench-page .filter-quick-actions {
+  grid-column: 4 !important;
+  grid-row: 1 !important;
+  width: 284px !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 5px !important;
+}
+
+.log-workbench-page .filter-quick-actions .btn {
+  min-width: 0 !important;
+  min-height: 31px !important;
+  padding: 5px 7px !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  font-size: 11px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.log-workbench-page .filter-quick-actions .btn .ui-icon {
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 13px !important;
+}
+
+.log-workbench-page .time-filter-field {
+  grid-column: 1 / 3 !important;
+  grid-row: 2 !important;
+  width: 414px !important;
+}
+
+.log-workbench-page .filter-field-tag {
+  grid-column: 3 !important;
+  grid-row: 2 !important;
+  width: 316px !important;
+  max-width: 316px !important;
+}
+
+.log-workbench-page .filter-field-tag .filter-prefix {
+  max-width: 34px !important;
+}
+
+.log-workbench-page .filter-field-tag .input {
+  min-width: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Free the 4th lower slot so the top action buttons keep a healthy width. */
+.log-workbench-page .filter-grid::after {
+  content: "";
+  grid-column: 4;
+  grid-row: 2;
+  min-width: 0;
+}
+
+.log-workbench-page .filter-control {
+  height: 31px !important;
+  min-height: 31px !important;
+  padding: 4px 8px !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .filter-prefix {
+  flex: 0 0 auto !important;
+  max-width: 78px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.log-workbench-page .filter-field input[type="checkbox"] {
+  flex: 0 0 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.log-workbench-page .input,
+.log-workbench-page .select {
+  min-width: 0 !important;
+}
+
+.log-workbench-page .time-filter-inputs {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+}
+
+/* Message lane: intentionally narrower, but internally balanced. */
+.log-workbench-page .search-filter-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 31px 31px !important;
+  gap: 5px !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .message-filter-include {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+}
+
+.log-workbench-page .message-filter-exclude {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-highlight {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-include .filter-prefix {
+  max-width: 64px !important;
+}
+
+.log-workbench-page .message-filter-exclude .filter-prefix,
+.log-workbench-page .message-filter-highlight .filter-prefix {
+  max-width: 72px !important;
+}
+
+.log-workbench-page .message-filter-highlight .filter-prefix {
+  max-width: 76px !important;
+}
+
+.log-workbench-page .search-filter-grid .input {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Capture lane: compact but readable. */
+.log-workbench-page .capture-state {
+  height: 31px !important;
+  min-height: 31px !important;
+  padding: 5px 9px !important;
+}
+
+.log-workbench-page .capture-copy strong {
+  font-size: 11.5px !important;
+}
+
+.log-workbench-page .toolbar-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 5px !important;
+}
+
+.log-workbench-page .capture-toggle-btn,
+.log-workbench-page .advanced-capture > summary.btn {
+  height: 31px !important;
+  min-height: 31px !important;
+  padding: 5px 8px !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  font-size: 11.5px !important;
+}
+
+.log-workbench-page .capture-toggle-btn::before {
+  content: "" !important;
+  display: none !important;
+}
+
+.log-workbench-page .capture-toggle-btn .ui-icon {
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 13px !important;
+  display: inline-block !important;
+}
+
+/* The log area should win all remaining space. */
+.log-workbench-page .workbench-grid {
+  grid-template-columns: 218px minmax(0, 1fr) !important;
+  gap: 8px !important;
+}
+
+.log-workbench-page [data-col="action"],
+.log-workbench-page .col-action {
+  width: 74px !important;
+  min-width: 74px !important;
+  max-width: 74px !important;
+}
+
+.log-workbench-page [data-copy-log],
+.log-workbench-page .copy-log-btn {
+  display: none !important;
+}
+
+/* Tablet / narrow desktop: do not squeeze; wrap lanes instead. */
+@media (max-width: 1680px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: minmax(1036px, 1fr) minmax(348px, .42fr) !important;
+  }
+
+  .log-workbench-page .workbench-toolbar > .toolbar-group:nth-child(3) {
+    grid-column: 1 / -1 !important;
+    display: grid !important;
+    grid-template-columns: 64px minmax(260px, 1fr) 260px !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .log-workbench-page .workbench-toolbar > .toolbar-group:nth-child(3) .toolbar-label {
+    margin: 0 !important;
+  }
+}
+
+@media (max-width: 1480px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: 1fr !important;
+    overflow: auto !important;
+  }
+
+  .log-workbench-page .filter-grid {
+    grid-template-columns: 184px 224px 316px 284px !important;
+    width: 1034px !important;
+    max-width: none !important;
+  }
+
+  .log-workbench-page .toolbar-group:first-child {
+    overflow-x: auto !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+/* v9: calm toolbar fit. Shorten Message controls and remove odd white checkbox gaps. */
+.log-workbench-page .workbench-toolbar {
+  grid-template-columns: minmax(1010px, 1.42fr) minmax(430px, .72fr) minmax(220px, .36fr) !important;
+  background: color-mix(in srgb, var(--surface-elevated, #fff) 88%, transparent) !important;
+}
+
+.log-workbench-page .toolbar-group.search-toolbar-group {
+  min-width: 430px !important;
+}
+
+.log-workbench-page .search-filter-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-rows: 31px 31px !important;
+  gap: 5px !important;
+}
+
+.log-workbench-page .message-filter-include {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+}
+
+.log-workbench-page .message-filter-exclude {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-highlight {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-include .filter-prefix,
+.log-workbench-page .message-filter-exclude .filter-prefix,
+.log-workbench-page .message-filter-highlight .filter-prefix {
+  flex: 0 0 32px !important;
+  width: 32px !important;
+  max-width: 32px !important;
+  text-align: center !important;
+  color: var(--text-secondary, #64748b) !important;
+}
+
+.log-workbench-page .search-filter-grid .filter-control {
+  padding-left: 7px !important;
+  padding-right: 7px !important;
+  background: color-mix(in srgb, var(--surface-elevated, #fff) 92%, var(--background-subtle, #f1f5f9)) !important;
+}
+
+.log-workbench-page .search-filter-grid .input {
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+}
+
+/* Remove the confusing separate white square created by checkbox layout; keep the state programmatically available. */
+.log-workbench-page .segmented-filter > input[type="checkbox"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.log-workbench-page .segmented-filter {
+  position: relative !important;
+  display: block !important;
+  min-width: 0 !important;
+}
+
+.log-workbench-page .segmented-filter .filter-control {
+  width: 100% !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--border-subtle, #dbe4f0) 82%, transparent) !important;
+}
+
+.log-workbench-page .filter-grid {
+  grid-template-columns: 184px 218px 310px 278px !important;
+}
+
+.log-workbench-page .filter-grid > .segmented-filter:nth-of-type(1) {
+  width: 218px !important;
+}
+
+.log-workbench-page .pidtid-filter-pair {
+  width: 310px !important;
+  grid-template-columns: 152px 152px !important;
+}
+
+.log-workbench-page .filter-quick-actions {
+  width: 278px !important;
+}
+
+.log-workbench-page .filter-field-tag {
+  width: 310px !important;
+  max-width: 310px !important;
+}
+
+.log-workbench-page .time-filter-field {
+  width: 408px !important;
+}
+
+.log-workbench-page .capture-state,
+.log-workbench-page .capture-toggle-btn,
+.log-workbench-page .advanced-capture > summary.btn,
+.log-workbench-page .filter-control,
+.log-workbench-page .level-inline-filter {
+  background-clip: padding-box !important;
+}
+
+@media (max-width: 1680px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: minmax(1010px, 1fr) minmax(430px, .55fr) !important;
+  }
+  .log-workbench-page .toolbar-group.search-toolbar-group {
+    min-width: 430px !important;
+  }
+}
+
+@media (max-width: 1480px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: 1fr !important;
+    overflow: auto !important;
+  }
+  .log-workbench-page .toolbar-group.search-toolbar-group {
+    min-width: 0 !important;
+  }
+}
+
+/* v10: clean form redesign. One-piece fields, no segmented half-round labels, no overlap. */
+.log-workbench-page .workbench-shell {
+  grid-template-rows: 56px auto minmax(0, 1fr) !important;
+  gap: 8px !important;
+}
+
+.log-workbench-page .workbench-header {
+  min-height: 52px !important;
+  max-height: 56px !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, .04) !important;
+}
+
+.log-workbench-page .workbench-toolbar {
+  display: grid !important;
+  grid-template-columns: minmax(1008px, 1.38fr) minmax(500px, .7fr) minmax(226px, .32fr) !important;
+  gap: 8px !important;
+  padding: 9px 10px !important;
+  border-radius: 20px !important;
+  align-items: start !important;
+  overflow: hidden !important;
+  background: color-mix(in srgb, var(--surface-elevated, #fff) 92%, var(--background-subtle, #f8fafc)) !important;
+}
+
+.log-workbench-page .workbench-toolbar > .toolbar-group {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .toolbar-label {
+  height: 15px !important;
+  margin: 0 0 5px !important;
+  line-height: 15px !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: var(--color-primary, #2563eb) !important;
+  letter-spacing: .02em !important;
+}
+
+/* Multi filter lane: exact lanes, no stretching into neighbors. */
+.log-workbench-page .filter-grid {
+  display: grid !important;
+  grid-template-columns: 178px 228px 320px 258px !important;
+  grid-template-rows: 32px 32px !important;
+  gap: 6px 7px !important;
+  align-items: center !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .level-inline-filter {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 178px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 4px 6px !important;
+  border-radius: 12px !important;
+  border: 1px solid color-mix(in srgb, var(--border-subtle, #dbe4f0) 82%, transparent) !important;
+  background: var(--surface-elevated, #fff) !important;
+}
+
+.log-workbench-page .level-inline-label {
+  flex: 0 0 24px !important;
+  width: 24px !important;
+  font-size: 10px !important;
+  color: var(--text-secondary, #64748b) !important;
+}
+
+.log-workbench-page .level-pill-list {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex !important;
+  gap: 3px !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .level-pill,
+.log-workbench-page .level-pill button {
+  width: 21px !important;
+  min-width: 21px !important;
+  height: 21px !important;
+  line-height: 20px !important;
+  padding: 0 !important;
+  font-size: 10px !important;
+}
+
+.log-workbench-page .filter-grid > .segmented-filter:nth-of-type(1) {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  width: 228px !important;
+}
+
+.log-workbench-page .pidtid-filter-pair {
+  grid-column: 3 !important;
+  grid-row: 1 !important;
+  width: 320px !important;
+  min-width: 320px !important;
+  display: grid !important;
+  grid-template-columns: 156px 156px !important;
+  gap: 8px !important;
+}
+
+.log-workbench-page .filter-quick-actions {
+  grid-column: 4 !important;
+  grid-row: 1 !important;
+  width: 258px !important;
+  display: grid !important;
+  grid-template-columns: 65px 66px 58px 60px !important;
+  gap: 3px !important;
+}
+
+.log-workbench-page .filter-quick-actions .btn {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 6px !important;
+  border-radius: 12px !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.log-workbench-page .filter-quick-actions .btn .ui-icon {
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 13px !important;
+}
+
+.log-workbench-page .time-filter-field {
+  grid-column: 1 / 3 !important;
+  grid-row: 2 !important;
+  width: 413px !important;
+}
+
+.log-workbench-page .filter-field-tag {
+  grid-column: 3 / 5 !important;
+  grid-row: 2 !important;
+  width: 585px !important;
+  max-width: 585px !important;
+}
+
+.log-workbench-page .time-filter-inputs {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+}
+
+/* One-piece field style: prefix is text only, not a left rounded sub-control. */
+.log-workbench-page .segmented-filter {
+  position: relative !important;
+  display: block !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.log-workbench-page .segmented-filter > input[type="checkbox"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.log-workbench-page .filter-control {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  padding: 0 10px !important;
+  border-radius: 12px !important;
+  border: 1px solid color-mix(in srgb, var(--border-subtle, #dbe4f0) 88%, transparent) !important;
+  background: var(--surface-elevated, #fff) !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .filter-prefix {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: 58px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-secondary, #64748b) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.log-workbench-page .filter-control .input,
+.log-workbench-page .filter-field input.input,
+.log-workbench-page .search-filter-grid .input,
+.log-workbench-page .filter-grid .input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+  color: var(--text-primary, #0f172a) !important;
+}
+
+.log-workbench-page .filter-control .input::placeholder {
+  color: color-mix(in srgb, var(--text-tertiary, #94a3b8) 82%, transparent) !important;
+  font-weight: 650 !important;
+}
+
+/* Message lane: clean stacked controls. */
+.log-workbench-page .toolbar-group.search-toolbar-group {
+  min-width: 500px !important;
+  max-width: 100% !important;
+}
+
+.log-workbench-page .search-filter-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 32px 32px !important;
+  gap: 6px !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .message-filter-include {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+}
+
+.log-workbench-page .message-filter-exclude {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-highlight {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+}
+
+.log-workbench-page .message-filter-include .filter-prefix,
+.log-workbench-page .message-filter-exclude .filter-prefix,
+.log-workbench-page .message-filter-highlight .filter-prefix {
+  width: 34px !important;
+  max-width: 34px !important;
+  text-align: left !important;
+}
+
+.log-workbench-page .message-filter-highlight .filter-prefix {
+  width: 34px !important;
+  max-width: 34px !important;
+}
+
+/* Capture lane. */
+.log-workbench-page .capture-state {
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 10px !important;
+  border-radius: 12px !important;
+  border: 1px solid color-mix(in srgb, var(--border-subtle, #dbe4f0) 88%, transparent) !important;
+  background: var(--surface-elevated, #fff) !important;
+  box-shadow: none !important;
+}
+
+.log-workbench-page .capture-copy strong {
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+}
+
+.log-workbench-page .toolbar-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+}
+
+.log-workbench-page .capture-toggle-btn,
+.log-workbench-page .advanced-capture > summary.btn {
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 9px !important;
+  border-radius: 12px !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  font-size: 11.5px !important;
+  font-weight: 850 !important;
+  white-space: nowrap !important;
+}
+
+.log-workbench-page .capture-toggle-btn::before {
+  content: "" !important;
+  display: none !important;
+}
+
+.log-workbench-page .capture-toggle-btn .ui-icon {
+  display: inline-block !important;
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 13px !important;
+}
+
+/* Keep table usable and actions small. */
+.log-workbench-page .workbench-grid {
+  grid-template-columns: 218px minmax(0, 1fr) !important;
+  gap: 8px !important;
+}
+
+.log-workbench-page [data-col="action"],
+.log-workbench-page .col-action {
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+}
+
+.log-workbench-page [data-copy-log],
+.log-workbench-page .copy-log-btn {
+  display: none !important;
+}
+
+@media (max-width: 1720px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: minmax(1008px, 1fr) minmax(500px, .55fr) !important;
+  }
+  .log-workbench-page .workbench-toolbar > .toolbar-group:nth-child(3) {
+    grid-column: 1 / -1 !important;
+    display: grid !important;
+    grid-template-columns: 70px minmax(280px, 1fr) 260px !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+  .log-workbench-page .workbench-toolbar > .toolbar-group:nth-child(3) .toolbar-label {
+    margin: 0 !important;
+  }
+}
+
+@media (max-width: 1540px) {
+  .log-workbench-page .workbench-toolbar {
+    grid-template-columns: 1fr !important;
+    overflow: auto !important;
+    max-height: 214px !important;
+  }
+  .log-workbench-page .toolbar-group:first-child {
+    overflow-x: auto !important;
+    padding-bottom: 2px !important;
+  }
+  .log-workbench-page .filter-grid {
+    width: 1008px !important;
+    max-width: none !important;
+  }
+  .log-workbench-page .toolbar-group.search-toolbar-group {
+    min-width: 0 !important;
+  }
+}
+
+/* v11: interaction polish. Only the prefix label toggles a filter; clicking the input focuses it. */
+.log-workbench-page .segmented-filter {
+  cursor: default !important;
+}
+
+.log-workbench-page .segmented-filter .filter-prefix {
+  cursor: pointer !important;
+  user-select: none !important;
+  border-radius: 9px !important;
+  padding: 2px 5px !important;
+  transition: color .16s ease, background .16s ease, opacity .16s ease !important;
+}
+
+.log-workbench-page .segmented-filter .filter-prefix:hover {
+  background: rgba(37, 99, 235, .08) !important;
+  color: var(--primary-600, #2563eb) !important;
+}
+
+.log-workbench-page .segmented-filter > input[type="checkbox"]:not(:checked) + .filter-control {
+  opacity: .62 !important;
+}
+
+.log-workbench-page .segmented-filter > input[type="checkbox"]:not(:checked) + .filter-control .filter-prefix {
+  color: var(--text-tertiary, #94a3b8) !important;
+  text-decoration: line-through !important;
+}
+
+.log-workbench-page .filter-control .input,
+.log-workbench-page .time-filter-inputs .input {
+  cursor: text !important;
+}
+
+/* Keep row action controls inside the Action column. The row already supports top-level copy, so row actions stay icon-sized. */
+.log-workbench-page .log-window .col-action {
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 4px !important;
+  overflow: hidden !important;
+  padding-right: 4px !important;
+}
+
+.log-workbench-page .log-window .col-action button,
+.log-workbench-page .log-window .col-action .btn {
+  width: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  border-radius: 999px !important;
+}
+
+.log-workbench-page .log-window .col-action button .ui-icon,
+.log-workbench-page .log-window .col-action .btn .ui-icon,
+.log-workbench-page .log-window .col-action svg {
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 13px !important;
+  margin: 0 !important;
+}
+
+.log-workbench-page [data-col="action"],
+.log-workbench-page .col-action {
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+}
+
+/* Context banner buttons can keep text but must not overflow their chips. */
+.log-workbench-page .context-actions .btn,
+.log-workbench-page .context-range-field {
+  min-width: 0 !important;
+  max-width: 128px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+
+/* v12: Empty-state behavior and size. Show it whenever the in-memory log count is zero,
+   and make the empty card feel like the main canvas instead of a tiny floating card. */
+.log-workbench-page .log-viewport {
+  display: block !important;
+}
+
+.log-workbench-page .log-window.is-empty {
+  position: absolute !important;
+  inset: 0 !important;
+  min-height: 100% !important;
+  display: flex !important;
+}
+
+.log-workbench-page .log-empty-state {
+  width: 100% !important;
+  min-height: 100% !important;
+  padding: 42px 28px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+
+.log-workbench-page .log-empty-card {
+  width: min(760px, 72%) !important;
+  min-height: 236px !important;
+  padding: 26px 30px !important;
+  display: grid !important;
+  grid-template-columns: minmax(240px, .88fr) minmax(280px, 1fr) !important;
+  gap: 28px !important;
+  align-items: center !important;
+  border-radius: 24px !important;
+  border: 1px solid color-mix(in srgb, var(--border-subtle, #dbe4f0) 82%, transparent) !important;
+  background: color-mix(in srgb, var(--surface-elevated, #fff) 94%, transparent) !important;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, .08) !important;
+  pointer-events: auto !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-media {
+  min-height: 170px !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  background: color-mix(in srgb, var(--color-primary, #2563eb) 6%, transparent) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy {
+  display: grid !important;
+  gap: 12px !important;
+  align-content: center !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy strong {
+  font-size: 20px !important;
+  line-height: 1.25 !important;
+  color: var(--text-primary, #0f172a) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy span {
+  max-width: 440px !important;
+  font-size: 14px !important;
+  line-height: 1.72 !important;
+  color: var(--text-secondary, #64748b) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-top: 2px !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-actions .btn {
+  min-height: 36px !important;
+  padding: 0 16px !important;
+  border-radius: 12px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.log-workbench-page .log-window.is-empty.is-filter-empty .log-empty-card {
+  width: min(680px, 68%) !important;
+}
+
+.log-workbench-page .log-window.is-empty.is-filter-empty .empty-visual-media {
+  display: none !important;
+}
+
+.log-workbench-page .log-window.is-empty.is-filter-empty .log-empty-card {
+  grid-template-columns: 1fr !important;
+  min-height: 190px !important;
+}
+
+@media (max-width: 1180px) {
+  .log-workbench-page .log-empty-card {
+    width: min(680px, 92%) !important;
+    grid-template-columns: 1fr !important;
+  }
+  .log-workbench-page .log-empty-card .empty-visual-media {
+    min-height: 128px !important;
+  }
+}
+
+
+/* v15: empty canvas reliability + destructive preset delete styling. */
+.log-workbench-page .log-spacer {
+  position: relative !important;
+  min-height: 100% !important;
+}
+
+.log-workbench-page .log-window.is-empty {
+  z-index: 2 !important;
+}
+
+.log-workbench-page #deleteFilterPresetBtn {
+  color: #dc2626 !important;
+  border-color: rgba(220, 38, 38, .26) !important;
+  background: rgba(254, 242, 242, .92) !important;
+}
+
+.log-workbench-page #deleteFilterPresetBtn:hover {
+  color: #b91c1c !important;
+  border-color: rgba(220, 38, 38, .38) !important;
+  background: rgba(254, 226, 226, .98) !important;
+  box-shadow: 0 10px 22px rgba(220, 38, 38, .10) !important;
+}
+
+[data-theme="dark"] .log-workbench-page #deleteFilterPresetBtn {
+  color: #fca5a5 !important;
+  border-color: rgba(248, 113, 113, .26) !important;
+  background: rgba(127, 29, 29, .28) !important;
+}
+
+[data-theme="dark"] .log-workbench-page #deleteFilterPresetBtn:hover {
+  color: #fecaca !important;
+  border-color: rgba(248, 113, 113, .42) !important;
+  background: rgba(127, 29, 29, .44) !important;
+}
+
+/* v17: Make log empty-state a real full-canvas onboarding surface. */
+.log-workbench-page .log-viewport:has(.log-window.is-empty) {
+  min-height: clamp(520px, calc(100vh - 310px), 760px) !important;
+}
+
+.log-workbench-page .log-window.is-empty {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.log-workbench-page .log-empty-state {
+  min-height: 100% !important;
+  padding: clamp(34px, 5vh, 72px) 40px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.log-workbench-page .log-empty-card {
+  width: min(980px, calc(100% - 96px)) !important;
+  min-height: 300px !important;
+  padding: 34px 42px !important;
+  grid-template-columns: minmax(280px, .92fr) minmax(360px, 1fr) !important;
+  gap: 36px !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-media {
+  min-height: 210px !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy strong {
+  font-size: 24px !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy span {
+  font-size: 15px !important;
+  max-width: 520px !important;
+}
+
+@media (max-width: 1240px) {
+  .log-workbench-page .log-empty-card {
+    width: min(860px, calc(100% - 40px)) !important;
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* v18: Redesign log empty states as a full-canvas onboarding surface.
+   The previous state was a small floating card, which made the log table look
+   unfinished. This keeps the empty state mounted in the same virtual viewport,
+   but lets it visually own the whole available canvas. */
+.log-workbench-page .log-viewport:has(.log-window.is-empty) {
+  min-height: clamp(560px, calc(100vh - 292px), 820px) !important;
+  background:
+    radial-gradient(circle at 22% 18%, color-mix(in srgb, var(--color-primary, #2563eb) 8%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-elevated, #fff) 84%, transparent), color-mix(in srgb, var(--surface, #f8fafc) 88%, transparent)) !important;
+  border: 1px dashed color-mix(in srgb, var(--border-subtle, #dbe4f0) 86%, transparent) !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .log-window.is-empty {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  background: transparent !important;
+  z-index: 3 !important;
+}
+
+.log-workbench-page .log-empty-state {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  padding: clamp(38px, 6vh, 76px) clamp(42px, 7vw, 96px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+
+.log-workbench-page .log-empty-card {
+  position: relative !important;
+  width: min(1120px, 100%) !important;
+  min-height: clamp(340px, 42vh, 460px) !important;
+  padding: clamp(32px, 4.2vw, 56px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(320px, .94fr) minmax(420px, 1.06fr) !important;
+  gap: clamp(34px, 5vw, 64px) !important;
+  align-items: center !important;
+  border-radius: 30px !important;
+  border: 1px solid color-mix(in srgb, var(--border-subtle, #dbe4f0) 78%, transparent) !important;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--surface-elevated, #fff) 96%, transparent), color-mix(in srgb, var(--surface, #f8fafc) 92%, transparent)) !important;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, .10) !important;
+  pointer-events: auto !important;
+  overflow: hidden !important;
+}
+
+.log-workbench-page .log-empty-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 84% 20%, color-mix(in srgb, var(--color-primary, #2563eb) 13%, transparent), transparent 28%),
+    linear-gradient(90deg, transparent 0, color-mix(in srgb, var(--color-primary, #2563eb) 4%, transparent) 100%);
+  opacity: .82;
+}
+
+.log-workbench-page .log-empty-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-media {
+  min-height: clamp(220px, 29vh, 320px) !important;
+  border-radius: 24px !important;
+  padding: 14px !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-elevated, #fff) 94%, transparent), color-mix(in srgb, var(--surface-muted, #eef4ff) 84%, transparent)) !important;
+  border: 1px solid color-mix(in srgb, var(--border-subtle, #dbe4f0) 84%, transparent) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.72), 0 18px 38px rgba(15, 23, 42, .08) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-media img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 18px !important;
+  opacity: .94 !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy {
+  max-width: 560px !important;
+  display: grid !important;
+  gap: 16px !important;
+  align-content: center !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy strong {
+  font-size: clamp(26px, 2.6vw, 36px) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -.04em !important;
+  color: var(--text-primary, #0f172a) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy span {
+  max-width: 560px !important;
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+  color: var(--text-secondary, #64748b) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 8px !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-actions .btn {
+  min-height: 40px !important;
+  padding: 0 18px !important;
+  border-radius: 14px !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+/* Filter-empty should be a focused recovery panel, not the same marketing-style hero. */
+.log-workbench-page .log-window.is-empty.is-filter-empty .log-empty-card {
+  width: min(820px, 100%) !important;
+  min-height: 280px !important;
+  grid-template-columns: 1fr !important;
+  gap: 18px !important;
+  padding: clamp(36px, 5vw, 58px) !important;
+}
+
+.log-workbench-page .log-window.is-empty.is-filter-empty .empty-visual-media {
+  display: none !important;
+}
+
+.log-workbench-page .log-window.is-empty.is-filter-empty .empty-visual-copy {
+  justify-items: start !important;
+}
+
+.log-workbench-page .log-window.is-empty.is-filter-empty .empty-visual-copy strong {
+  font-size: clamp(24px, 2.2vw, 32px) !important;
+}
+
+@media (max-width: 1280px) {
+  .log-workbench-page .log-empty-card {
+    grid-template-columns: 1fr !important;
+    width: min(860px, 100%) !important;
+    min-height: auto !important;
+  }
+  .log-workbench-page .log-empty-card .empty-visual-media {
+    min-height: 190px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .log-workbench-page .log-empty-state {
+    padding: 24px 16px !important;
+  }
+  .log-workbench-page .log-empty-card {
+    border-radius: 22px !important;
+    padding: 24px !important;
+  }
+  .log-workbench-page .log-empty-card .empty-visual-copy strong {
+    font-size: 24px !important;
+  }
+}
+
+[data-theme="dark"] .log-workbench-page .log-viewport:has(.log-window.is-empty) {
+  background:
+    radial-gradient(circle at 22% 18%, color-mix(in srgb, var(--color-primary, #7aa2ff) 13%, transparent), transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-elevated, #171a23) 88%, transparent), color-mix(in srgb, var(--surface, #0f1117) 94%, transparent)) !important;
+  border-color: color-mix(in srgb, var(--border-subtle, rgba(255,255,255,.12)) 82%, transparent) !important;
+}
+
+[data-theme="dark"] .log-workbench-page .log-empty-card {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--surface-elevated, #171a23) 96%, transparent), color-mix(in srgb, var(--surface, #0f1117) 92%, transparent)) !important;
+  border-color: color-mix(in srgb, var(--border-subtle, rgba(255,255,255,.12)) 86%, transparent) !important;
+  box-shadow: 0 30px 90px rgba(0,0,0,.42) !important;
+}
+
+[data-theme="dark"] .log-workbench-page .log-empty-card .empty-visual-media {
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025)) !important;
+  border-color: color-mix(in srgb, var(--border-subtle, rgba(255,255,255,.12)) 80%, transparent) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 18px 38px rgba(0,0,0,.28) !important;
+}
+
+/* v19: Unified log surface states. Keep empty/loading/timeline/log-table states
+   mutually exclusive and themed through one surface contract. */
+.log-workbench-page[data-log-surface-mode] .log-viewport {
+  transition: background .18s ease, border-color .18s ease;
+}
+.log-workbench-page .module-theme-art-dark { display: none !important; }
+.log-workbench-page .module-theme-art-light { display: block !important; }
+[data-theme="dark"] .log-workbench-page .module-theme-art-light,
+body.theme-dark .log-workbench-page .module-theme-art-light { display: none !important; }
+[data-theme="dark"] .log-workbench-page .module-theme-art-dark,
+body.theme-dark .log-workbench-page .module-theme-art-dark { display: block !important; }
+
+.log-workbench-page[data-log-surface-mode="logs-empty"] .log-empty-card {
+  transform: translateZ(0);
+}
+.log-workbench-page[data-log-surface-mode="logs-filter-empty"] .log-empty-card {
+  box-shadow: 0 18px 48px rgba(15, 23, 42, .08) !important;
+}
+.log-workbench-page[data-log-surface-mode="logs-filter-empty"] .log-empty-state {
+  padding-top: clamp(32px, 8vh, 80px) !important;
+}
+.log-workbench-page[data-log-surface-mode="timeline-loading"] .timeline-inline-list,
+.log-workbench-page[data-log-surface-mode="timeline-empty"] .timeline-inline-list,
+.log-workbench-page[data-log-surface-mode="timeline-empty-result"] .timeline-inline-list,
+.log-workbench-page[data-log-surface-mode="timeline-error"] .timeline-inline-list {
+  min-height: clamp(420px, calc(100vh - 360px), 720px) !important;
+  display: grid !important;
+  place-items: center !important;
+}
+[data-theme="dark"] .log-workbench-page .log-empty-card .empty-visual-copy strong,
+body.theme-dark .log-workbench-page .log-empty-card .empty-visual-copy strong {
+  color: var(--text-primary, #f4f7fb) !important;
+}
+[data-theme="dark"] .log-workbench-page .log-empty-card .empty-visual-copy span,
+body.theme-dark .log-workbench-page .log-empty-card .empty-visual-copy span {
+  color: var(--text-secondary, #98a6bd) !important;
+}
+[data-theme="dark"] .log-workbench-page .log-empty-card::before,
+body.theme-dark .log-workbench-page .log-empty-card::before {
+  background:
+    radial-gradient(circle at 82% 20%, color-mix(in srgb, var(--color-primary, #7aa2ff) 18%, transparent), transparent 30%),
+    linear-gradient(90deg, transparent 0, color-mix(in srgb, var(--color-primary, #7aa2ff) 7%, transparent) 100%) !important;
+  opacity: .9 !important;
+}

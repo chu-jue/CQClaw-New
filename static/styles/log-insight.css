@@ -1,0 +1,3 @@
+/* Log Insight stylesheet entry. Current visual output is preserved in the legacy layer. */
+@import url('/styles/legacy/log-insight.legacy.css');
+@import url('/styles/pages/log-insight.css');

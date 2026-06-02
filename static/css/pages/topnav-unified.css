@@ -1,0 +1,207 @@
+/* Canonical compact top navigation. All module pages use the same runtime nav. */
+.app-header-right.app-nav {
+  flex: 0 1 auto;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+  max-width: calc(100vw - 420px);
+}
+
+.main-tabs.cq-unified-topnav {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  max-width: min(68vw, 720px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  border: 1px solid var(--border-subtle, rgba(148, 163, 184, .24));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface, #fff) 92%, transparent);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, .055);
+  scrollbar-width: none;
+}
+.main-tabs.cq-unified-topnav::-webkit-scrollbar { display: none; }
+
+.main-tabs.cq-unified-topnav .nav-tab {
+  box-sizing: border-box;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  color: var(--text-secondary, #64748b);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -.01em;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background .16s ease, color .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.main-tabs.cq-unified-topnav .nav-tab:hover {
+  color: var(--text-primary, #0f172a);
+  background: var(--surface-hover, rgba(37, 99, 235, .06));
+}
+
+.main-tabs.cq-unified-topnav .nav-tab.active {
+  color: var(--accent, #2563eb);
+  background: color-mix(in srgb, var(--accent, #2563eb) 12%, var(--surface, #fff));
+  border-color: color-mix(in srgb, var(--accent, #2563eb) 24%, transparent);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+}
+
+.main-tabs.cq-unified-topnav .ui-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+/* Old badges caused width jitter and overlap. Keep top nav clean; Log is already second. */
+.main-tabs.cq-unified-topnav .topnav-hot,
+.main-tabs.cq-unified-topnav .cq-nav-hot { display: none !important; }
+.theme-switch-btn { flex: 0 0 auto; }
+
+@media (max-width: 1320px) {
+  .app-header-right.app-nav { max-width: calc(100vw - 300px); }
+  .main-tabs.cq-unified-topnav { max-width: 64vw; }
+  .main-tabs.cq-unified-topnav .nav-tab { padding: 0 10px; font-size: 13px; }
+}
+
+@media (max-width: 1040px) {
+  .main-tabs.cq-unified-topnav { max-width: 56vw; }
+  .main-tabs.cq-unified-topnav .nav-tab span { display: none; }
+  .main-tabs.cq-unified-topnav .nav-tab { width: 34px; padding: 0; }
+}
+
+/* v2 hard fix: legacy theme-system.css gave every .nav-tab a fixed 72px width.
+   Four-character labels such as 日志洞察 / 节点解析 overflowed the active pill.
+   Force content-sized tabs on desktop, then intentionally collapse to icon-only on small screens. */
+.main-tabs.cq-unified-topnav .nav-tab,
+.main-tabs.cq-unified-topnav .nav-tab.active,
+.main-tabs.cq-unified-topnav .nav-tab[aria-current="page"] {
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  flex: 0 0 auto !important;
+  padding-inline: 13px !important;
+  overflow: visible !important;
+}
+
+.main-tabs.cq-unified-topnav .nav-tab span {
+  display: inline-block !important;
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+
+.main-tabs.cq-unified-topnav .nav-tab .ui-icon {
+  flex: 0 0 15px !important;
+}
+
+@media (max-width: 1320px) {
+  .main-tabs.cq-unified-topnav .nav-tab,
+  .main-tabs.cq-unified-topnav .nav-tab.active,
+  .main-tabs.cq-unified-topnav .nav-tab[aria-current="page"] {
+    padding-inline: 11px !important;
+  }
+}
+
+@media (max-width: 1040px) {
+  .main-tabs.cq-unified-topnav .nav-tab,
+  .main-tabs.cq-unified-topnav .nav-tab.active,
+  .main-tabs.cq-unified-topnav .nav-tab[aria-current="page"] {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    padding-inline: 0 !important;
+    overflow: hidden !important;
+  }
+  .main-tabs.cq-unified-topnav .nav-tab span {
+    display: none !important;
+  }
+}
+
+/* v3: log-insight.html and storage-center.html load log-workbench.css directly, not app.css.
+   Keep their workbench header nav using exactly the same pill model as other pages. */
+.log-workbench-page .app-header-right.app-nav,
+.storage-center-page .app-header-right.app-nav {
+  flex: 0 1 auto !important;
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  max-width: calc(100vw - 420px) !important;
+}
+
+.log-workbench-page .main-tabs.cq-unified-topnav,
+.storage-center-page .main-tabs.cq-unified-topnav {
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 5px !important;
+  max-width: min(68vw, 720px) !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  white-space: nowrap !important;
+  border-radius: 999px !important;
+}
+
+.log-workbench-page .main-tabs.cq-unified-topnav .nav-tab,
+.storage-center-page .main-tabs.cq-unified-topnav .nav-tab {
+  box-sizing: border-box !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  padding: 0 13px !important;
+  flex: 0 0 auto !important;
+  border-radius: 999px !important;
+  line-height: 1 !important;
+  overflow: visible !important;
+}
+
+.log-workbench-page .main-tabs.cq-unified-topnav .nav-tab span,
+.storage-center-page .main-tabs.cq-unified-topnav .nav-tab span {
+  display: inline-block !important;
+  width: auto !important;
+  min-width: max-content !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+@media (max-width: 1040px) {
+  .log-workbench-page .main-tabs.cq-unified-topnav .nav-tab,
+  .storage-center-page .main-tabs.cq-unified-topnav .nav-tab {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    padding-inline: 0 !important;
+    overflow: hidden !important;
+  }
+  .log-workbench-page .main-tabs.cq-unified-topnav .nav-tab span,
+  .storage-center-page .main-tabs.cq-unified-topnav .nav-tab span {
+    display: none !important;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "CQClaw",
+  "version": "2.0.12",
+  "identifier": "com.cqclaw.client",
+  "build": {
+    "frontendDist": "../",
+    "devUrl": null,
+    "beforeDevCommand": "",
+    "beforeBuildCommand": ""
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "CQClaw",
+        "width": 940,
+        "height": 640,
+        "minWidth": 720,
+        "minHeight": 520,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "DeveloperTool",
+    "shortDescription": "CQClaw Android automation client",
+    "longDescription": "Desktop client for starting CQClaw, opening the web console, managing autostart, and checking connected Android devices."
+  }
+}

@@ -1,0 +1,3 @@
+# Optional OCR fallback dependencies.
+# This is not installed by default because EasyOCR pulls a large ML/image stack.
+easyocr==1.7.2

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CQClaw · 设置</title>
+  <link rel="stylesheet" href="/css/app.css?v=10"><script src="/js/core/theme-boot.js"></script>
+  <script src="/js/core/unified-nav.js?v=1" defer></script>
+</head>
+<body class="cq-shell-page settings-page">
+  <div class="cq-app-shell">
+    <aside class="cq-sidebar"><a class="cq-brand" href="/"><span class="cq-brand-mark">&gt;_</span><span><strong>CQClaw</strong><small>Settings</small></span></a>        <nav class="cq-nav">
+          <a href="/"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg><span>工作台</span></a>
+          <a href="/log-insight.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg><span>日志洞察</span> <em class="cq-nav-hot">高频</em></a>
+          <a href="/automation.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg><span>自动化</span></a>
+          <a href="/device-manager.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg><span>设备</span></a>
+          <a href="/dump.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg><span>节点解析</span></a>
+          <a href="/storage-center.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg><span>资源中心</span></a>
+          <a class="active" href="/settings.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg><span>设置</span></a>
+        </nav></aside>
+    <div class="cq-main-shell"><header class="cq-topbar"><div><strong>设置</strong><span class="cq-muted">ADB、目录、手机端能力与主题</span></div><button id="themeToggle" class="btn btn-icon theme-switch-btn" data-theme-toggle type="button" aria-label="切换主题"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button></header>
+    <main class="cq-page narrow"><section class="cq-section-title"><div><p class="cq-eyebrow">Preferences</p><h1>环境设置</h1></div><button id="saveSettings" class="cq-btn primary"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#save"></use></svg>保存设置</button></section>
+      <section class="cq-settings-grid">
+        <article class="cq-card"><h2>ADB 设置</h2><p class="cq-muted">用于检测设备、执行 shell、截图和文件传输。</p><label class="cq-field"><span>ADB 路径</span><input id="adbPath" placeholder="adb 或 /path/platform-tools/adb"></label><button id="pickAdbPath" class="cq-btn small">选择路径</button></article>
+        <article class="cq-card"><h2>输出目录</h2><p class="cq-muted">截图、录屏、拉取文件等最终产物会保存到这里。</p><label class="cq-field"><span>默认输出目录</span><input id="quickOutputDir" placeholder="例如 /Users/me/Desktop/cqclaw-output"></label><button id="pickQuickOutputDir" class="cq-btn small">选择目录</button></article>
+        <article class="cq-card"><h2>临时目录</h2><p class="cq-muted">页面脚本和运行时中间文件使用，不建议和输出目录混用。</p><label class="cq-field"><span>本机临时目录</span><input id="localTempDir" placeholder="例如 /tmp/cqclaw"></label><button id="pickLocalTempDir" class="cq-btn small">选择目录</button></article>
+        <article class="cq-card"><h2>手机端能力</h2><p class="cq-muted">剪切板、输入增强和设备协同由桥接服务自动处理；普通用户通常无需配置。</p><label class="cq-field"><span>桥接服务包路径</span><input id="agentApkPath" placeholder="可留空使用默认配置；仅企业分发时需要自定义"></label><button id="pickAgentApkPath" class="cq-btn small">选择文件</button></article>
+      </section><pre id="settingsStatus" class="cq-log-box">等待读取设置…</pre></main></div>
+  </div><script src="/js/theme-manager.js"></script><script src="/js/settings-page.js"></script>
+</body></html>

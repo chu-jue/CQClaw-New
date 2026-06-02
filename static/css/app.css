@@ -1,0 +1,20 @@
+/*
+ * Main stylesheet entry.
+ * Safe frontend refactor note:
+ * - Keep the existing visual output in legacy/app.legacy.css.
+ * - Add new component/page/theme layers above it incrementally.
+ */
+@import url('/css/tokens.css');
+@import url('/css/legacy/app.legacy.css');
+@import url('/css/components/theme-toggle.css');
+@import url('/css/components/icons.css');
+@import url('/css/components/theme-system.css');
+@import url('/css/pages/dump.css');
+
+@import url('/css/pages/cq-redesign.css');
+@import url('/css/pages/automation-polish.css?v=3');
+
+@import url('/css/pages/topnav-unified.css');
+
+@import url('/css/pages/side-nav-shell.css?v=1');
+@import url('/css/pages/dump-inspector-modern.css?v=1');

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>资源中心 - CQClaw</title>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components/icons.css?v=2">
+  <script src="/js/core/theme-boot.js"></script>
+  <link rel="stylesheet" href="/css/pages/log-workbench.css?v=8">
+  <link rel="stylesheet" href="/css/components/theme-system.css">
+  <link rel="stylesheet" href="/css/pages/topnav-unified.css?v=3">
+  <link rel="stylesheet" href="/css/pages/side-nav-shell.css?v=1">
+  <link rel="stylesheet" href="/css/pages/storage-center-modern.css?v=1">
+  <script src="/js/core/unified-nav.js?v=2" defer></script>
+  <script src="/js/core/side-nav.js?v=1" defer></script>
+</head>
+<body class="cq-side-nav-page storage-center-page app-page">
+  <div class="storage-shell">
+    <header class="storage-header app-toolbar">
+      <div class="storage-title">
+        <h1 class="app-title">资源中心</h1>
+        <p>统一治理截图、Dump、日志、APK、临时脚本与 Workflow 导出文件。</p>
+      </div>
+      <div class="module-hero-art storage-module-art" aria-hidden="true">
+        <img class="module-theme-art module-theme-art-light" src="/assets/workbench/storage-center-hero-light.png" alt="">
+        <img class="module-theme-art module-theme-art-dark" src="/assets/workbench/storage-center-hero-dark.png" alt="">
+      </div>
+      <div class="app-header-right app-nav" aria-label="主导航">
+                <nav class="main-tabs cq-unified-topnav" aria-label="工作区导航">
+          <a class="nav-tab" href="/"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg><span>工作台</span></a>
+          <a class="nav-tab" href="/log-insight.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg><span>日志洞察</span> <em class="topnav-hot">高频</em></a>
+          <a class="nav-tab" href="/automation.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg><span>自动化</span></a>
+          <a class="nav-tab" href="/device-manager.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg><span>设备</span></a>
+          <a class="nav-tab" href="/dump.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg><span>节点解析</span></a>
+          <a class="nav-tab active" href="/storage-center.html" aria-current="page"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg><span>资源中心</span></a>
+          <a class="nav-tab" href="/settings.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg><span>设置</span></a>
+        </nav>
+        <button class="btn btn-icon theme-switch-btn" type="button" data-theme-toggle aria-label="切换主题" title="切换主题"><svg class="ui-icon" aria-hidden="true"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button>
+      </div>
+    </header>
+
+    <main class="storage-main storage-modern-main">
+      <section class="storage-command-center app-panel" aria-labelledby="storageCommandTitle">
+        <div class="storage-command-copy">
+          <span class="storage-kicker"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#spark"></use></svg>资源体检</span>
+          <h2 id="storageCommandTitle">先看最大占用，再安全清理</h2>
+          <p id="storageRecommendation">正在扫描截图、Dump、日志、APK、临时脚本和导出文件。</p>
+          <div id="storageStatus" class="storage-meta">读取中...</div>
+        </div>
+        <div id="storageSummary" class="storage-summary-grid" aria-label="资源摘要"></div>
+        <div class="storage-hero-actions">
+          <button id="refreshStorageBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>重新扫描</button>
+          <button id="previewOldBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#eye"></use></svg>预览 7 天前</button>
+          <button id="cleanOldBtn" class="btn btn-danger" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#trash"></use></svg>清理 7 天前</button>
+        </div>
+      </section>
+
+      <section class="storage-workspace">
+        <section class="storage-category-panel app-panel" aria-labelledby="storageCategoryTitle">
+          <div class="storage-panel-head">
+            <div>
+              <h2 id="storageCategoryTitle"><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg>缓存类型</h2>
+              <p>点击卡片先预览，确认后再清理；正在使用或受保护的文件会自动跳过。</p>
+            </div>
+          </div>
+          <div id="storageRows" class="storage-grid storage-category-grid"></div>
+        </section>
+
+        <aside class="storage-preview-panel app-panel" aria-labelledby="storagePreviewTitle">
+          <div class="storage-panel-head storage-preview-head">
+            <div>
+              <h2 id="storagePreviewTitle"><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#broom"></use></svg>清理预览</h2>
+              <p id="previewMeta" class="storage-meta">选择缓存类型后，这里会列出可清理文件。</p>
+            </div>
+          </div>
+          <div class="storage-filter-grid storage-preview-controls">
+            <select id="previewCategory" class="select" aria-label="预览类型">
+              <option value="screenshots">截图缓存</option>
+              <option value="dump">Dump 缓存</option>
+              <option value="logs">日志缓存</option>
+              <option value="apk">APK 缓存</option>
+              <option value="app_cache">App 缓存</option>
+              <option value="default_output">默认输出目录</option>
+              <option value="local_temp">本机临时目录</option>
+              <option value="tmp_scripts">临时脚本</option>
+              <option value="workflow_exports">Workflow 导出</option>
+            </select>
+            <input id="olderThanDays" class="input" placeholder="只看 N 天前，可空">
+            <button id="previewCategoryBtn" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#eye"></use></svg>生成预览</button>
+          </div>
+          <div id="storagePreview" class="storage-preview-list"></div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/theme-manager.js"></script>
+  <script src="/js/pages/storage-center.js?v=1"></script>
+</body>
+</html>

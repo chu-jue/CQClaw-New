@@ -1,0 +1,3 @@
+/* Shared theme toggle affordance. Kept intentionally small to avoid changing layouts. */
+.theme-switch-btn[data-theme-current="light"] { filter: none; }
+.theme-switch-btn[data-theme-current="dark"] { filter: none; }

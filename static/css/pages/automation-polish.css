@@ -1,0 +1,844 @@
+/* Automation page conservative polish: fixes side panels without changing JS hooks. */
+
+.automation-page .console-layout.layout {
+  grid-template-columns: 300px 240px minmax(620px, 1fr) 320px;
+  gap: 12px;
+  align-items: start;
+}
+
+.automation-page .panel {
+  overflow: hidden;
+}
+
+.automation-page .panel-head {
+  min-height: 54px;
+}
+
+.automation-page .panel-head h2,
+.automation-page .panel-head .ui-icon,
+.automation-page .panel-title-icon {
+  vertical-align: middle;
+}
+
+/* Left action catalog: make items read as command rows instead of uneven buttons. */
+.automation-page .action-panel .panel-body {
+  padding: 12px;
+}
+
+.automation-page .action-search-note {
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+
+.automation-page .action-catalog {
+  gap: 10px;
+}
+
+.automation-page .action-group {
+  padding: 10px;
+  border-radius: 16px;
+}
+
+.automation-page .action-group-title {
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: .02em;
+}
+
+.automation-page .action-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.automation-page .action-buttons button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 11px;
+  text-align: left;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.automation-page .action-buttons button .ui-icon {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  padding: 4px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 12%, transparent);
+  color: var(--accent, #3b82f6);
+}
+
+/* Device column: keep cards compact and prevent the left side from becoming a long wall. */
+.automation-page .device-panel .panel-body,
+.automation-page .action-panel .panel-body {
+  max-height: calc(100vh - 148px);
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.automation-page .device-toolbar.row {
+  gap: 8px;
+}
+
+.automation-page .device-toolbar button,
+.automation-page #saveDeviceMeta,
+.automation-page #selectGroup {
+  min-height: 38px;
+}
+
+/* Main workflow canvas remains the visual center. */
+.automation-page .workflow-panel {
+  min-width: 0;
+}
+
+.automation-page .workflow-panel .panel-body {
+  padding: 12px;
+}
+
+.automation-page .workflow-visual-strip {
+  min-height: 112px;
+}
+
+.automation-page .workflow-row {
+  align-items: center;
+  gap: 8px;
+}
+
+/* Right run inspector: replace the huge blank-looking area with a clear, compact inspector. */
+.automation-page .log-panel .panel-body {
+  padding: 12px;
+  gap: 12px;
+}
+
+.automation-page .log-panel .profile-list:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: 1px dashed var(--line, rgba(148, 163, 184, .32));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--panel, #fff) 72%, var(--accent, #3b82f6) 5%);
+  color: var(--muted, #64748b);
+  font-size: 12px;
+}
+
+.automation-page .log-panel .profile-list:empty::before {
+  content: "暂无保存方案";
+}
+
+.automation-page .runbar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 10px;
+  margin: 0;
+  border: 1px solid var(--line, rgba(148, 163, 184, .28));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--panel, #fff) 84%, var(--bg, #f8fafc));
+}
+
+.automation-page .runbar > .muted {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.automation-page .runbar > .muted::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent, #3b82f6);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent, #3b82f6) 13%, transparent);
+}
+
+.automation-page .runbar .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.automation-page .runbar button {
+  min-height: 36px;
+  justify-content: center;
+}
+
+.automation-page #resultSummary:empty {
+  display: none;
+}
+
+.automation-page .log-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--line, rgba(148, 163, 184, .28));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--panel, #fff) 86%, var(--bg, #f8fafc));
+}
+
+.automation-page .log-filter-bar button {
+  min-width: 0;
+  min-height: 34px;
+  padding: 7px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.automation-page .log-filter-bar button.active {
+  background: color-mix(in srgb, var(--accent, #3b82f6) 13%, var(--panel, #fff));
+  border-color: color-mix(in srgb, var(--accent, #3b82f6) 42%, var(--line, #cbd5e1));
+  color: var(--accent, #2563eb);
+  font-weight: 800;
+}
+
+.automation-page #log.log {
+  min-height: 220px;
+  max-height: calc(100vh - 478px);
+  overflow: auto;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid var(--line, rgba(148, 163, 184, .28));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--panel, #fff) 92%, transparent), color-mix(in srgb, var(--bg, #f8fafc) 94%, transparent));
+  color: var(--muted, #64748b);
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 14px;
+  white-space: pre-wrap;
+}
+
+.automation-page #log.log::selection {
+  background: color-mix(in srgb, var(--accent, #3b82f6) 24%, transparent);
+}
+
+@media (max-width: 1500px) {
+  .automation-page .console-layout.layout {
+    grid-template-columns: 280px 220px minmax(560px, 1fr) 300px;
+  }
+  .automation-page .workflow-header-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 1220px) {
+  .automation-page .console-layout.layout {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+  .automation-page .action-panel,
+  .automation-page .log-panel {
+    grid-column: span 1;
+  }
+  .automation-page .workflow-panel {
+    grid-column: span 1;
+  }
+}
+
+/* 2026-05 polish: make automation empty state and right inspector understandable. */
+.automation-page .workflow-body {
+  min-height: calc(100vh - 210px);
+}
+
+.automation-page #steps.workflow-editor {
+  min-height: clamp(360px, calc(100vh - 570px), 620px);
+  border: 1px solid var(--line, rgba(148, 163, 184, .26));
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 18px 18px, color-mix(in srgb, var(--accent, #3b82f6) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel, #fff) 94%, transparent), color-mix(in srgb, var(--bg, #f8fafc) 96%, transparent));
+  background-size: 28px 28px, auto;
+  padding: 16px;
+}
+
+.automation-page #steps.workflow-editor.is-empty-flow {
+  display: flex !important;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.automation-page #steps.workflow-editor.is-empty-flow .workflow-empty {
+  width: 100%;
+  min-height: 100%;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.automation-page .workflow-empty-card {
+  width: 100% !important;
+  max-width: none;
+  min-height: 320px;
+  margin: 0;
+  grid-template-columns: minmax(220px, 38%) minmax(320px, 1fr);
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--accent, #3b82f6) 18%, var(--line, rgba(148, 163, 184, .28)));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 18px 48px rgba(15, 23, 42, .06);
+}
+
+.automation-page .workflow-empty-card .empty-visual-copy strong {
+  font-size: 20px;
+}
+
+.automation-page .workflow-empty-card .empty-visual-copy span {
+  max-width: 560px;
+  font-size: 13px;
+}
+
+.automation-page .empty-visual-actions .btn {
+  min-height: 38px;
+}
+
+.automation-page .log-panel .panel-body {
+  gap: 10px;
+}
+
+.automation-page .log-panel .profile-list:empty {
+  min-height: 46px;
+}
+
+.automation-page .runbar {
+  padding: 8px;
+}
+
+.automation-page .log-output-card {
+  display: grid;
+  grid-template-rows: auto minmax(210px, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--line, rgba(148, 163, 184, .28));
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--panel, #fff) 90%, var(--bg, #f8fafc));
+}
+
+.automation-page .log-output-head {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line, rgba(148, 163, 184, .2));
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent, #3b82f6) 8%, transparent), transparent 72%);
+}
+
+.automation-page .log-output-head strong {
+  color: var(--text, #0f172a);
+  font-size: 13px;
+}
+
+.automation-page .log-output-head span {
+  color: var(--muted, #64748b);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.automation-page #log.log {
+  min-height: 220px;
+  max-height: calc(100vh - 560px);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 14px;
+}
+
+.automation-page #log.log:only-child {
+  border: 1px solid var(--line, rgba(148, 163, 184, .28));
+  border-radius: 16px;
+}
+
+.automation-page .action-buttons button {
+  position: relative;
+  font-weight: 700;
+}
+
+.automation-page .action-buttons button .ui-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.automation-page .action-buttons button[data-add="agent_clipboard"]::after {
+  content: "推荐";
+  margin-left: auto;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 12%, transparent);
+  color: var(--accent, #2563eb);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+
+@media (max-width: 1480px) {
+  .automation-page .console-layout.layout {
+    grid-template-columns: 280px 220px minmax(560px, 1fr) 300px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .automation-page .workflow-empty-card {
+    grid-template-columns: 1fr;
+  }
+  .automation-page .workflow-empty-card .empty-visual-media {
+    display: none;
+  }
+}
+
+/* 2026-05 product polish: make the automation page easier to understand and safer to operate. */
+.automation-page .console-layout.layout {
+  grid-template-columns: 304px 236px minmax(640px, 1fr) 332px;
+}
+
+.automation-page .automation-help-card {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent, #3b82f6) 16%, var(--line, rgba(148, 163, 184, .28)));
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent, #3b82f6) 8%, transparent), transparent 68%),
+    color-mix(in srgb, var(--panel, #fff) 92%, var(--bg, #f8fafc));
+}
+
+.automation-page .automation-help-card strong {
+  color: var(--text, #0f172a);
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.automation-page .automation-help-card span {
+  color: var(--muted, #64748b);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.automation-page .device-panel .panel-head h2::after,
+.automation-page .action-panel .panel-head h2::after {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 10%, transparent);
+  color: var(--accent, #2563eb);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.automation-page .device-panel .panel-head h2::after { content: "第 1 步"; }
+.automation-page .action-panel .panel-head h2::after { content: "第 2 步"; }
+
+.automation-page .action-buttons button[data-add="agent_clipboard"]::after {
+  content: none !important;
+}
+
+.automation-page .action-buttons button[data-add="adb_script"] {
+  border-color: color-mix(in srgb, var(--accent, #3b82f6) 36%, var(--line, rgba(148, 163, 184, .28)));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent, #3b82f6) 12%, transparent), transparent 72%),
+    var(--panel, #fff);
+}
+
+.automation-page .action-buttons button[data-add="adb_script"]::after {
+  content: "推荐";
+  margin-left: auto;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 14%, transparent);
+  color: var(--accent, #2563eb);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.automation-page .node-inline-actions {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.automation-page .node-copy-action svg {
+  width: 14px;
+  height: 14px;
+}
+
+.automation-page .node-copy-action {
+  color: var(--accent, #2563eb);
+  border-color: color-mix(in srgb, var(--accent, #3b82f6) 24%, var(--line, rgba(148, 163, 184, .28)));
+  background: color-mix(in srgb, var(--accent, #3b82f6) 8%, var(--panel, #fff));
+}
+
+.automation-page .profile-section-head {
+  display: grid;
+  gap: 3px;
+  padding: 10px 11px;
+  border: 1px solid var(--line, rgba(148, 163, 184, .26));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--panel, #fff) 88%, var(--bg, #f8fafc));
+}
+
+.automation-page .profile-section-head strong {
+  color: var(--text, #0f172a);
+  font-size: 13px;
+}
+
+.automation-page .profile-section-head span {
+  color: var(--muted, #64748b);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.automation-page .log-panel .panel-body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 210px) auto minmax(0, auto) minmax(220px, 1fr);
+  max-height: calc(100vh - 148px);
+  overflow: hidden;
+}
+
+.automation-page .log-panel .profile-list {
+  min-height: 72px;
+  max-height: 210px;
+  overflow: auto;
+  padding-right: 2px;
+  scrollbar-gutter: stable;
+}
+
+.automation-page .log-panel .profile-list:not(:empty) {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  border: 1px solid var(--line, rgba(148, 163, 184, .24));
+  border-radius: 16px;
+  padding: 8px;
+  background: color-mix(in srgb, var(--panel, #fff) 92%, var(--bg, #f8fafc));
+}
+
+.automation-page .log-panel .profile-list:empty {
+  min-height: 72px;
+}
+
+.automation-page .profile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid var(--line, rgba(148, 163, 184, .24));
+  border-radius: 13px;
+  background: var(--panel, #fff);
+}
+
+.automation-page .profile-main {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.automation-page .profile-main strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text, #0f172a);
+}
+
+.automation-page .profile-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.automation-page .profile-actions button {
+  min-height: 30px;
+  padding: 5px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.automation-page .profile-actions .ui-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.automation-page .log-output-card {
+  min-height: 0;
+}
+
+.automation-page #log.log {
+  min-height: 0;
+  max-height: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .automation-page .automation-help-card,
+  :root:not([data-theme="light"]) .automation-page .profile-section-head,
+  :root:not([data-theme="light"]) .automation-page .log-panel .profile-list:not(:empty),
+  :root:not([data-theme="light"]) .automation-page .profile {
+    background: color-mix(in srgb, var(--panel, #171a23) 86%, var(--bg, #0f1117));
+    border-color: color-mix(in srgb, var(--line, rgba(255,255,255,.12)) 82%, transparent);
+  }
+}
+
+[data-theme="dark"] .automation-page .automation-help-card,
+[data-theme="dark"] .automation-page .profile-section-head,
+[data-theme="dark"] .automation-page .log-panel .profile-list:not(:empty),
+[data-theme="dark"] .automation-page .profile {
+  background: color-mix(in srgb, var(--panel, #171a23) 86%, var(--bg, #0f1117));
+  border-color: color-mix(in srgb, var(--line, rgba(255,255,255,.12)) 82%, transparent);
+}
+
+/* 2026-05 automation workflow polish: reduce left-side noise, move node copy to config panel, and make profile list truly scrollable. */
+.automation-page .console-layout.layout {
+  align-items: stretch;
+}
+
+.automation-page .device-panel,
+.automation-page .action-panel,
+.automation-page .workflow-panel,
+.automation-page .log-panel {
+  min-height: 0;
+}
+
+.automation-page .device-panel .panel-body,
+.automation-page .action-panel .panel-body {
+  padding: 12px;
+}
+
+.automation-page .automation-help-card {
+  position: relative;
+  padding-left: 14px;
+}
+
+.automation-page .automation-help-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 72%, transparent);
+}
+
+.automation-page .action-catalog {
+  display: grid;
+  gap: 12px;
+}
+
+.automation-page .action-group {
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--line, rgba(148, 163, 184, .28)) 86%, transparent);
+  background: color-mix(in srgb, var(--panel, #fff) 92%, var(--bg, #f8fafc));
+  padding: 10px;
+}
+
+.automation-page .action-group-title {
+  padding: 0 2px 8px;
+  letter-spacing: .02em;
+  color: var(--muted, #64748b);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.automation-page .action-buttons button {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  min-height: 42px;
+  padding: 9px 11px;
+  text-align: left;
+}
+
+.automation-page .action-buttons button .ui-icon {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  padding: 3px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent, #3b82f6) 10%, transparent);
+}
+
+.automation-page .flow-node .node-inline-actions .node-copy-action {
+  display: none !important;
+}
+
+.automation-page .config-head {
+  gap: 12px;
+  align-items: center;
+}
+
+.automation-page .config-head .grow {
+  min-width: 0;
+}
+
+.automation-page .config-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.automation-page .config-copy-node {
+  min-height: 34px;
+  padding: 7px 11px;
+  border-radius: 12px;
+  font-weight: 800;
+  color: var(--accent, #2563eb);
+  border-color: color-mix(in srgb, var(--accent, #3b82f6) 28%, var(--line, rgba(148, 163, 184, .28)));
+  background: color-mix(in srgb, var(--accent, #3b82f6) 8%, var(--panel, #fff));
+}
+
+.automation-page .config-copy-node .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.automation-page .config-note {
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg, #f8fafc) 80%, var(--panel, #fff));
+  border: 1px solid color-mix(in srgb, var(--line, rgba(148, 163, 184, .22)) 82%, transparent);
+}
+
+/* Right inspector: saved profiles must be a real scroll area, not a clipped stack. */
+.automation-page .log-panel .panel-body {
+  display: flex !important;
+  flex-direction: column;
+  min-height: 0;
+  max-height: calc(100vh - 148px);
+  overflow: hidden !important;
+}
+
+.automation-page .profile-section-head {
+  flex: 0 0 auto;
+}
+
+.automation-page .log-panel .profile-list {
+  flex: 0 0 auto;
+  min-height: 168px !important;
+  max-height: clamp(220px, 30vh, 360px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding-right: 5px !important;
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior: contain;
+}
+
+.automation-page .log-panel .profile-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.automation-page .log-panel .profile-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted, #64748b) 30%, transparent);
+}
+
+.automation-page .saved-profile-card {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 86px !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 12px !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  overflow: visible !important;
+  border-radius: 16px !important;
+}
+
+.automation-page .saved-profile-card + .saved-profile-card {
+  margin-top: 0;
+}
+
+.automation-page .saved-profile-card .profile-main {
+  align-self: stretch !important;
+  min-width: 0 !important;
+}
+
+.automation-page .saved-profile-card .profile-main strong {
+  display: block !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  line-height: 1.35 !important;
+  min-height: 18px !important;
+}
+
+.automation-page .saved-profile-card .profile-main .muted,
+.automation-page .saved-profile-card .profile-main .tiny {
+  margin-top: 3px !important;
+  line-height: 1.35 !important;
+}
+
+.automation-page .saved-profile-card .profile-actions {
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  width: 100% !important;
+  flex: 0 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+}
+
+.automation-page .saved-profile-card .profile-actions button {
+  white-space: nowrap !important;
+  justify-content: center !important;
+  min-height: 34px !important;
+  padding: 7px 8px !important;
+  border-radius: 12px !important;
+}
+
+.automation-page .saved-profile-card .profile-actions button {
+  width: auto !important;
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+.automation-page .runbar,
+.automation-page #resultSummary,
+.automation-page .log-filter-bar {
+  flex: 0 0 auto;
+}
+
+.automation-page .log-output-card {
+  flex: 1 1 auto;
+  min-height: 210px;
+}
+
+.automation-page #log.log {
+  min-height: 0 !important;
+  height: 100%;
+}
+
+@media (max-width: 1500px) {
+  .automation-page .console-layout.layout {
+    grid-template-columns: 292px 224px minmax(600px, 1fr) 316px;
+  }
+  .automation-page .action-buttons button {
+    min-height: 40px;
+    padding-inline: 10px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .automation-page .action-group,
+  :root:not([data-theme="light"]) .automation-page .config-note {
+    background: color-mix(in srgb, var(--panel, #171a23) 88%, var(--bg, #0f1117));
+    border-color: color-mix(in srgb, var(--line, rgba(255,255,255,.12)) 82%, transparent);
+  }
+}
+
+[data-theme="dark"] .automation-page .action-group,
+[data-theme="dark"] .automation-page .config-note {
+  background: color-mix(in srgb, var(--panel, #171a23) 88%, var(--bg, #0f1117));
+  border-color: color-mix(in srgb, var(--line, rgba(255,255,255,.12)) 82%, transparent);
+}

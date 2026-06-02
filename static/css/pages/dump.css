@@ -1,0 +1,96 @@
+/* Dump page-only overrides. */
+.dump-redesign-page .dump-shell {
+  gap: 10px !important;
+  padding: 0 0 12px !important;
+  margin: 0 !important;
+}
+
+.dump-redesign-page .dump-topbar.app-page-header,
+.dump-redesign-page .dump-topbar {
+  top: 0 !important;
+  width: 100% !important;
+  height: 76px !important;
+  min-height: 76px !important;
+  margin: 0 !important;
+  padding: 0 22px !important;
+  border-width: 0 0 1px !important;
+  border-radius: 0 !important;
+}
+
+.dump-redesign-page .dump-control-card,
+.dump-redesign-page .dump-workbench {
+  width: calc(100% - 24px) !important;
+  justify-self: center !important;
+}
+
+/* Dump Inspector modernization: a DevTools-like inspection surface. */
+.dump-redesign-page .dump-control-card {
+  background: var(--bg-toolbar-glass) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-card) !important;
+  backdrop-filter: blur(22px) saturate(1.18);
+}
+
+.dump-redesign-page .dump-card {
+  background: var(--bg-panel-glass) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-panel) !important;
+  backdrop-filter: blur(18px) saturate(1.14);
+}
+
+.dump-redesign-page .dump-card-head {
+  background: var(--color-bg-subtle) !important;
+  border-color: var(--color-border-subtle) !important;
+}
+
+.dump-redesign-page .dump-scroll {
+  background: var(--color-bg-card) !important;
+}
+
+.dump-redesign-page .dump-stage,
+.dump-redesign-page .dump-stage-inner,
+.dump-redesign-page .dump-shot-scroll {
+  background: var(--color-bg-code) !important;
+}
+
+.dump-redesign-page .dump-tree-row,
+.dump-redesign-page .dump-list-row {
+  background: var(--color-bg-card) !important;
+  border-color: var(--color-border-subtle) !important;
+  color: var(--color-text-primary) !important;
+  transition: background var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+}
+
+.dump-redesign-page .dump-tree-row:hover,
+.dump-redesign-page .dump-list-row:hover {
+  background: var(--color-bg-hover) !important;
+  border-color: var(--color-border-control-hover) !important;
+}
+
+.dump-redesign-page .dump-tree-row.selected,
+.dump-redesign-page .dump-list-row.selected {
+  background: var(--color-accent-soft) !important;
+  border-color: var(--color-accent-line-strong) !important;
+  box-shadow: inset 3px 0 0 var(--color-accent), var(--shadow-selected) !important;
+}
+
+.dump-redesign-page .dump-node-tag,
+.dump-redesign-page .dump-node-class {
+  background: var(--color-bg-chip) !important;
+  color: var(--color-accent) !important;
+  border-color: var(--color-accent-line) !important;
+}
+
+.dump-redesign-page .dump-command-card,
+.dump-redesign-page .inspect-command {
+  background: var(--color-bg-subtle) !important;
+  border-color: var(--color-border-subtle) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.dump-redesign-page .dump-detail pre,
+.dump-redesign-page .inspector-raw {
+  background: var(--color-bg-code) !important;
+  color: var(--color-text-code) !important;
+  border-color: var(--color-border-subtle) !important;
+}

@@ -1,0 +1,35 @@
+# Python cache/runtime
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Local runtime state and generated captures
+data/runtime/
+data/tmp-scripts/
+
+# Build and release artifacts
+dist/
+build/
+*.log
+
+# Node/Tauri dependencies and build output
+node_modules/
+desktop/tauri-client/node_modules/
+desktop/tauri-client/src-tauri/target/
+desktop/tauri-client/package-lock.json
+desktop/tauri-client/pnpm-lock.yaml
+desktop/tauri-client/yarn.lock
+
+# Local environments
+.venv/
+venv/
+.env
+.env.*
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

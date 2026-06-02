@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CQClaw Client</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="icon-box" viewBox="0 0 24 24">
+        <path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z" />
+        <path d="m4 7.5 8 4.5 8-4.5M12 12v9" />
+      </symbol>
+      <symbol id="icon-refresh" viewBox="0 0 24 24">
+        <path d="M20 6v5h-5" />
+        <path d="M4 18v-5h5" />
+        <path d="M18.4 9A7 7 0 0 0 6.2 7.4L4 10" />
+        <path d="M5.6 15a7 7 0 0 0 12.2 1.6L20 14" />
+      </symbol>
+      <symbol id="icon-power" viewBox="0 0 24 24">
+        <path d="M12 3v8" />
+        <path d="M7 5.8A8 8 0 1 0 17 5.8" />
+      </symbol>
+      <symbol id="icon-browser" viewBox="0 0 24 24">
+        <rect x="4" y="5" width="16" height="14" rx="2" />
+        <path d="M4 9h16M8 7.1h.01M11 7.1h.01" />
+      </symbol>
+      <symbol id="icon-stop" viewBox="0 0 24 24">
+        <rect x="7" y="7" width="10" height="10" rx="1.5" />
+      </symbol>
+      <symbol id="icon-startup" viewBox="0 0 24 24">
+        <path d="M12 3v5" />
+        <path d="M7.8 7.8 5 5" />
+        <path d="m16.2 7.8 2.8-2.8" />
+        <path d="M5 14a7 7 0 0 1 14 0v4H5z" />
+        <path d="M9 18v2h6v-2" />
+      </symbol>
+      <symbol id="icon-device" viewBox="0 0 24 24">
+        <rect x="7" y="3" width="10" height="18" rx="2" />
+        <path d="M10 6h4M11 18h2" />
+      </symbol>
+      <symbol id="icon-log" viewBox="0 0 24 24">
+        <path d="M7 7h10M7 12h7M7 17h9" />
+        <rect x="4" y="4" width="16" height="16" rx="2" />
+      </symbol>
+      <symbol id="icon-terminal" viewBox="0 0 24 24">
+        <path d="m6 8 4 4-4 4" />
+        <path d="M12 16h6" />
+      </symbol>
+    </svg>
+
+    <main class="client-shell">
+      <aside class="side-panel">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" role="img">
+              <path d="M7 10.5 16 5l9 5.5v11L16 27l-9-5.5z" />
+              <path d="M11 13.5h10M11 18.5h6" />
+            </svg>
+          </div>
+          <div>
+            <h1>CQClaw</h1>
+            <p>Desktop Control</p>
+          </div>
+        </div>
+
+        <div class="connection-card">
+          <div class="status-pill" id="healthPill">Checking</div>
+          <p>Local Android automation service and web console launcher.</p>
+        </div>
+
+        <nav class="side-nav" aria-label="Client sections">
+          <span class="active"><svg class="ui-icon"><use href="#icon-power"></use></svg>Service</span>
+          <span><svg class="ui-icon"><use href="#icon-device"></use></svg>Devices</span>
+          <span><svg class="ui-icon"><use href="#icon-terminal"></use></svg>Automation</span>
+        </nav>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <h2>Service Overview</h2>
+            <p>Start CQClaw, open the web console, and check connected Android devices.</p>
+          </div>
+          <button id="refreshBtn" class="quiet-button" type="button"><svg class="ui-icon"><use href="#icon-refresh"></use></svg>Refresh</button>
+        </header>
+
+        <section class="summary-grid" aria-label="Status summary">
+          <article class="summary-item service">
+            <div class="card-icon"><svg class="ui-icon"><use href="#icon-power"></use></svg></div>
+            <span>Service</span>
+            <strong id="serverStatus">-</strong>
+          </article>
+          <article class="summary-item startup">
+            <div class="card-icon"><svg class="ui-icon"><use href="#icon-startup"></use></svg></div>
+            <span>Autostart</span>
+            <strong id="autostartStatus">-</strong>
+          </article>
+          <article class="summary-item devices">
+            <div class="card-icon"><svg class="ui-icon"><use href="#icon-device"></use></svg></div>
+            <span>Online Devices</span>
+            <strong id="deviceCount">-</strong>
+          </article>
+        </section>
+
+        <section class="command-bar" aria-label="Primary commands">
+          <button id="startBtn" class="primary-button" type="button"><svg class="ui-icon"><use href="#icon-power"></use></svg>Start Service</button>
+          <button id="openBtn" type="button"><svg class="ui-icon"><use href="#icon-browser"></use></svg>Open Web Console</button>
+          <button id="stopBtn" type="button"><svg class="ui-icon"><use href="#icon-stop"></use></svg>Stop</button>
+          <button id="enableAutostartBtn" type="button"><svg class="ui-icon"><use href="#icon-startup"></use></svg>Enable Autostart</button>
+          <button id="disableAutostartBtn" type="button"><svg class="ui-icon"><use href="#icon-stop"></use></svg>Disable</button>
+        </section>
+
+        <section class="details-grid">
+          <div class="detail-list">
+            <div class="field-row">
+              <span>Home</span>
+              <code id="homePath">-</code>
+            </div>
+            <div class="field-row">
+              <span>URL</span>
+              <code id="serverUrl">-</code>
+            </div>
+            <div class="field-row">
+              <span>Python</span>
+              <code id="pythonPath">-</code>
+            </div>
+          </div>
+
+          <section class="log-panel">
+            <div class="log-head">
+              <strong><svg class="ui-icon"><use href="#icon-log"></use></svg>Command Output</strong>
+              <button id="clearLogBtn" class="quiet-button" type="button">Clear</button>
+            </div>
+            <pre id="outputLog"></pre>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

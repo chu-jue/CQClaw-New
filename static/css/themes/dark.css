@@ -1,0 +1,86 @@
+:root {
+  --theme-name: dark;
+  --app-bg: #0f1117;
+  --app-bg-soft: #161922;
+  --app-surface: rgba(22, 25, 34, .92);
+  --app-surface-2: rgba(27, 31, 42, .92);
+  --app-card: rgba(20, 23, 31, .94);
+  --app-card-2: rgba(28, 32, 43, .94);
+  --app-input: #171a23;
+  --app-text: #d9deea;
+  --app-text-strong: #f4f7fb;
+  --app-muted: #8e99ad;
+  --app-border: rgba(160, 170, 190, .16);
+  --app-border-strong: rgba(122, 162, 255, .36);
+  --app-accent: #7aa2ff;
+  --app-accent-2: #9f7aea;
+  --app-primary-text: #08101f;
+  --app-danger: #ff7a90;
+  --app-warn: #f6b86a;
+  --app-shadow: 0 18px 52px rgba(0,0,0,.36);
+  --app-overlay: rgba(12,14,20,.84);
+  color-scheme: dark;
+}
+
+/* =========================================================
+   Theme component-system tokens
+   New HTML should consume /css/components/theme-system.css classes.
+   ========================================================= */
+:root,
+html[data-theme="dark"] {
+  --app-control: rgba(29, 33, 45, .94);
+  --app-control-hover: rgba(38, 43, 58, .96);
+  --app-hover: rgba(122, 162, 255, .10);
+  --app-chip: rgba(122, 162, 255, .12);
+  --app-code: rgba(12, 14, 20, .96);
+  --app-code-text: #d9deea;
+  --app-faint: #687386;
+  --app-border-hover: rgba(122, 162, 255, .32);
+  --app-accent-soft: rgba(122, 162, 255, .12);
+  --app-accent-soft-hover: rgba(122, 162, 255, .18);
+  --app-accent-line: rgba(122, 162, 255, .24);
+  --app-accent-line-strong: rgba(122, 162, 255, .42);
+  --app-success: #64d790;
+  --app-success-soft: rgba(100, 215, 144, .12);
+  --app-success-line: rgba(100, 215, 144, .28);
+  --app-warning-soft: rgba(246, 184, 106, .14);
+  --app-warning-line: rgba(246, 184, 106, .30);
+  --app-danger-strong: #ffa0ae;
+  --app-danger-soft: rgba(255, 122, 144, .14);
+  --app-danger-soft-hover: rgba(255, 122, 144, .20);
+  --app-danger-line: rgba(255, 122, 144, .30);
+  --app-danger-line-strong: rgba(255, 122, 144, .44);
+  --app-scrollbar-track: rgba(12, 14, 20, .74);
+  --app-scrollbar-thumb: rgba(122, 162, 255, .34);
+  --app-scrollbar-thumb-hover: rgba(159, 122, 234, .48);
+  --app-shadow-card: 0 10px 30px rgba(0,0,0,.22);
+  --app-shadow-control: 0 1px 0 rgba(255,255,255,.04) inset;
+  --app-shadow-control-hover: 0 10px 28px rgba(122, 162, 255, .12);
+  --app-shadow-primary: 0 10px 28px rgba(122, 162, 255, .22);
+  --app-shadow-selected: 0 14px 34px rgba(122, 162, 255, .12);
+  --app-shadow-inset: inset 0 1px 0 rgba(255,255,255,.05);
+  --app-focus-ring: 0 0 0 4px rgba(122, 162, 255, .14);
+
+  --app-bg-gradient: radial-gradient(circle at 18% -10%, rgba(122, 162, 255, .18), transparent 28%), radial-gradient(circle at 86% 0%, rgba(159, 122, 234, .14), transparent 30%), linear-gradient(180deg, #111522 0%, #0f1117 54%, #0b0d13 100%);
+  --app-panel-glass: rgba(22, 25, 34, .78);
+  --app-toolbar-glass: rgba(24, 28, 38, .76);
+  --app-log-row-hover: rgba(122, 162, 255, .09);
+  --app-log-row-selected: rgba(122, 162, 255, .16);
+  --app-log-anchor-bg: rgba(159, 122, 234, .18);
+  --app-log-error: #ff7a90;
+  --app-log-warning: #f6b86a;
+  --app-log-info: #64d790;
+  --app-log-debug: #5f8dff;
+  --app-log-verbose: #c7d0df;
+  --app-log-fatal: #ff5d7d;
+  --app-log-activity: #8fb4ff;
+  --app-log-binder: #c49bff;
+  --app-log-error-bg: rgba(255, 122, 144, .13);
+  --app-log-warning-bg: rgba(246, 184, 106, .13);
+  --app-log-info-bg: rgba(100, 215, 144, .12);
+  --app-log-debug-bg: rgba(95, 141, 255, .12);
+  --app-log-verbose-bg: rgba(199, 208, 223, .10);
+  --app-log-fatal-bg: rgba(255, 93, 125, .16);
+  --app-log-activity-bg: rgba(143, 180, 255, .12);
+  --app-log-binder-bg: rgba(196, 155, 255, .13);
+}

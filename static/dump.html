@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dump 节点解析器 - CQClaw</title>
+  <link rel="stylesheet" href="/css/app.css?v=10">
+  <script src="/js/core/theme-boot.js"></script>
+  <script src="/js/core/unified-nav.js?v=1" defer></script>
+  <script src="/js/core/side-nav.js?v=1" defer></script>
+</head>
+<body class="cq-side-nav-page dump-page dump-redesign-page">
+  <div class="dump-shell">
+    <header class="dump-topbar app-page-header">
+      <div class="dump-brand app-page-title">
+        <div class="dump-logo app-page-icon"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg></div>
+        <div>
+          <h1>Dump 节点解析器</h1>
+          <p>截图、XML、节点树、推荐命令一体化检查器</p>
+        </div>
+      </div>
+      <div class="module-hero-art dump-module-art" aria-hidden="true">
+        <img class="module-theme-art module-theme-art-light" src="/assets/workbench/dump-inspector-hero-light.png" alt="">
+        <img class="module-theme-art module-theme-art-dark" src="/assets/workbench/dump-inspector-hero-dark.png" alt="">
+      </div>
+      <div class="app-header-right app-nav" aria-label="主导航">
+                <nav class="main-tabs cq-unified-topnav" aria-label="工作区导航">
+          <a class="nav-tab" href="/"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg><span>工作台</span></a>
+          <a class="nav-tab" href="/log-insight.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg><span>日志洞察</span> <em class="topnav-hot">高频</em></a>
+          <a class="nav-tab" href="/automation.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg><span>自动化</span></a>
+          <a class="nav-tab" href="/device-manager.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg><span>设备</span></a>
+          <a class="nav-tab active" href="/dump.html" aria-current="page"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg><span>节点解析</span></a>
+          <a class="nav-tab" href="/storage-center.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg><span>资源中心</span></a>
+          <a class="nav-tab" href="/settings.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg><span>设置</span></a>
+        </nav>
+        <button id="themeToggleDump" class="btn btn-icon theme-switch-btn" data-theme-toggle type="button" aria-label="切换主题" title="切换主题"><svg class="ui-icon" aria-hidden="true"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button>
+      </div>
+    </header>
+
+    <section class="dump-control-card dump-inspector-toolbar">
+      <div class="dump-flow-hint" aria-label="Dump 操作流程">
+        <span><b>1</b>选择设备</span>
+        <span><b>2</b>刷新截图 + Dump</span>
+        <span><b>3</b>点击截图或搜索节点</span>
+        <span><b>4</b>复制推荐命令</span>
+      </div>
+      <div class="dump-control-field dump-device-field">
+        <label><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg>设备</label>
+        <select id="dumpSerial"></select>
+      </div>
+
+      <div class="dump-control-field dump-search-field">
+        <label><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#search"></use></svg>搜索 text / id / desc / class</label>
+        <input id="dumpSearch" placeholder="例如：登录、login、Button、resource-id">
+      </div>
+
+      <div class="dump-zoom-tools">
+        <span class="muted tiny">截图缩放</span>
+        <button id="dumpZoomOut">−</button>
+        <span id="dumpZoomValue" class="badge">适应宽度</span>
+        <button id="dumpZoomIn">＋</button>
+        <button id="dumpZoomReset"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#eye"></use></svg>适应宽度</button>
+      </div>
+
+      <div class="dump-primary-actions" aria-label="Dump 操作">
+        <button id="dumpRefresh" class="btn btn-primary primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新截图 + Dump</button>
+        <button id="dumpCopyXml" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#copy"></use></svg>复制 XML</button>
+      </div>
+
+      <div class="dump-inspector-options">
+        <div class="dump-view-tabs" role="tablist" aria-label="Dump 视图">
+          <button data-dump-view="tree" class="blue" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg>树</button>
+          <button data-dump-view="list" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg>列表</button>
+          <button data-dump-view="xml" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#file"></use></svg>XML</button>
+          <button data-dump-view="matrix" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#screenshot"></use></svg>矩阵</button>
+        </div>
+        <label class="dump-check dump-switch">
+          <input type="checkbox" id="dumpShowAll">
+          <span>显示全部框</span>
+        </label>
+      </div>
+
+      <span id="dumpStatus" class="dump-status muted tiny"></span>
+    </section>
+
+    <main class="dump-workbench">
+      <section class="dump-card dump-shot-card">
+        <div class="dump-card-head">
+          <div>
+            <strong><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#screenshot"></use></svg>截图检查器</strong>
+            <span id="dumpImageHint" class="muted tiny"></span>
+          </div>
+          <div class="dump-card-actions dump-shot-actions">
+            <button id="dumpZoomOutMirror" class="dump-icon-button" type="button" title="缩小" aria-label="缩小">−</button>
+            <span id="dumpZoomValueMirror" class="badge">适应宽度</span>
+            <button id="dumpZoomInMirror" class="dump-icon-button" type="button" title="放大" aria-label="放大">＋</button>
+            <span class="dump-fit-segment" aria-label="截图适配方式">
+              <button id="dumpFitMirror" type="button" title="适应宽度">宽</button>
+              <button id="dumpFitHeightMirror" type="button" title="适应高度">高</button>
+            </span>
+          </div>
+        </div>
+        <div class="dump-scroll dump-shot-scroll" id="dumpImageScroll">
+          <div id="dumpStage" class="dump-stage"></div>
+        </div>
+      </section>
+
+      <div class="dump-column-resizer" id="dumpShotResizer" role="separator" aria-orientation="vertical" aria-label="调整截图栏宽度" title="拖动调整截图栏宽度"></div>
+
+      <section class="dump-card dump-tree-card">
+        <div class="dump-card-head">
+          <div>
+            <strong id="dumpMiddleTitle"><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg>节点树</strong>
+            <span id="dumpTreeHint" class="muted tiny"></span>
+          </div>
+        </div>
+        <div class="dump-scroll dump-tree-scroll" id="dumpTree"></div>
+      </section>
+
+      <section class="dump-card dump-detail-card">
+        <div class="dump-card-head">
+          <div>
+            <strong><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#terminal"></use></svg>属性与推荐命令</strong>
+            <span class="muted tiny">点击节点查看详情</span>
+          </div>
+        </div>
+        <div class="dump-scroll dump-detail" id="dumpDetail">
+          <div class="empty dump-empty-guide">
+            <span class="ui-icon-chip"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#target"></use></svg></span>
+            <strong>等待选择节点</strong>
+            <span>点击截图中的控件，或在中间选择节点后，这里会显示属性、bounds 和可复制的 tapText / tapId / tapBounds 命令。</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/dump-inspector.js"></script>
+  <script src="/js/theme-manager.js"></script>
+</body>
+</html>

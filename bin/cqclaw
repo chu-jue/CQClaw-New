@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+QCLAW_HOME=${QCLAW_HOME:-${AAS_HOME:-$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)}}
+export QCLAW_HOME
+export AAS_HOME="$QCLAW_HOME"
+
+if [ -n "${QCLAW_PYTHON:-}" ]; then
+  QCLAW_PY="$QCLAW_PYTHON"
+elif [ -n "${AAS_PYTHON:-}" ]; then
+  QCLAW_PY="$AAS_PYTHON"
+elif [ -n "${PYTHON:-}" ]; then
+  QCLAW_PY="$PYTHON"
+elif command -v python3 >/dev/null 2>&1; then
+  QCLAW_PY=python3
+elif command -v python >/dev/null 2>&1; then
+  QCLAW_PY=python
+else
+  echo "Python was not found. Install Python 3 and try again." >&2
+  exit 127
+fi
+
+exec "$QCLAW_PY" "$QCLAW_HOME/tools/aas_cli.py" "$@"

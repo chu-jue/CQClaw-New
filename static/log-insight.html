@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>日志洞察 - CQClaw</title>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/components/icons.css?v=2">
+  <script src="/js/core/theme-boot.js"></script>
+  <link rel="stylesheet" href="/css/pages/log-workbench.css?v=18">
+  <link rel="stylesheet" href="/css/pages/topnav-unified.css?v=3">
+  <link rel="stylesheet" href="/css/pages/log-side-nav.css?v=10">
+  <link rel="stylesheet" href="/css/pages/side-nav-shell.css?v=1">
+  <link rel="stylesheet" href="/css/pages/log-theme-fix.css?v=1">
+  <script src="/js/core/unified-nav.js?v=2" defer></script>
+</head>
+<body class="log-workbench-page app-page">
+  <div class="workbench-shell">
+
+    <aside class="log-side-nav" aria-label="日志工作台导航">
+      <a class="log-side-brand" href="/" title="CQClaw 工作台">
+        <span class="brand-glyph"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#terminal"></use></svg></span>
+        <strong>CQ</strong>
+      </a>
+      <nav class="log-side-links" aria-label="主导航">
+        <a href="/" title="工作台"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg><span>工作台</span></a>
+        <a class="active" href="/log-insight.html" aria-current="page" title="日志洞察"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg><span>日志</span></a>
+        <a href="/automation.html" title="自动化"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg><span>自动化</span></a>
+        <a href="/device-manager.html" title="设备"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg><span>设备</span></a>
+        <a href="/dump.html" title="节点解析"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg><span>节点</span></a>
+        <a href="/storage-center.html" title="资源中心"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg><span>资源</span></a>
+        <a href="/settings.html" title="设置"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg><span>设置</span></a>
+      </nav>
+      <button class="log-side-theme" type="button" data-theme-toggle aria-label="切换主题" title="切换主题"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button>
+    </aside>
+    <header class="workbench-header app-toolbar">
+      <div class="workbench-title">
+        <h1 class="app-title">日志洞察</h1>
+        <p>最高频工作台：实时抓取、导入 TXT、多设备对比、Crash/ANR 定位</p>
+      </div>
+      <div class="module-hero-art log-module-art" aria-hidden="true">
+        <img class="module-theme-art module-theme-art-light" src="/assets/workbench/log-insight-hero-light.png" alt="">
+        <img class="module-theme-art module-theme-art-dark" src="/assets/workbench/log-insight-hero-dark.png" alt="">
+      </div>
+      <div class="app-header-right app-nav" aria-label="主导航">
+                <nav class="main-tabs cq-unified-topnav" aria-label="工作区导航">
+          <a class="nav-tab" href="/"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg><span>工作台</span></a>
+          <a class="nav-tab active" href="/log-insight.html" aria-current="page"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg><span>日志洞察</span> <em class="topnav-hot">高频</em></a>
+          <a class="nav-tab" href="/automation.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg><span>自动化</span></a>
+          <a class="nav-tab" href="/device-manager.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg><span>设备</span></a>
+          <a class="nav-tab" href="/dump.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg><span>节点解析</span></a>
+          <a class="nav-tab" href="/storage-center.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg><span>资源中心</span></a>
+          <a class="nav-tab" href="/settings.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg><span>设置</span></a>
+        </nav>
+        <button class="btn btn-icon theme-switch-btn" type="button" data-theme-toggle aria-label="切换主题" title="切换主题"><svg class="ui-icon" aria-hidden="true"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button>
+      </div>
+    </header>
+
+    <section class="workbench-toolbar app-toolbar" aria-label="Log 分析工具栏">
+      <div class="toolbar-group">
+        <span class="toolbar-label"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#filter"></use></svg>多维过滤</span>
+        <div class="filter-grid">
+          <input id="levelFilter" class="input is-hidden" value="V,D,I,W,E,F" aria-hidden="true">
+          <div class="level-inline-filter" aria-label="日志级别过滤">
+            <span class="level-inline-label">级别</span>
+            <div id="levelPickerPanel" class="level-pill-list"></div>
+          </div>
+          <div class="filter-field segmented-filter"><input id="packageFilterEnabled" type="checkbox" checked><span class="filter-control"><label class="filter-prefix" for="packageFilterEnabled">Package</label><input id="packageFilter" class="input" placeholder="包名 / package" title="默认普通包含；支持 A|B 或 A&B；正则请用 re:pattern 或 /pattern/i"></span></div>
+          <div class="pidtid-filter-pair" aria-label="PID 与 TID 过滤">
+            <div class="filter-field segmented-filter"><input id="pidFilterEnabled" type="checkbox" checked><span class="filter-control"><label class="filter-prefix" for="pidFilterEnabled">PID</label><input id="pidFilter" class="input" placeholder="PID" title="默认普通包含；支持 A|B 或 A&B；正则请用 re:pattern 或 /pattern/i"></span></div>
+            <div class="filter-field segmented-filter"><input id="tidFilterEnabled" type="checkbox" checked><span class="filter-control"><label class="filter-prefix" for="tidFilterEnabled">TID</label><input id="tidFilter" class="input" placeholder="TID" title="默认普通包含；支持 A|B 或 A&B；正则请用 re:pattern 或 /pattern/i"></span></div>
+          </div>
+          <div class="filter-quick-actions" aria-label="快捷过滤">
+            <button id="quickCrashBtn" class="btn btn-secondary quick-filter-btn" type="button" aria-pressed="false"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#alert"></use></svg>Crash</button>
+            <button id="quickErrorBtn" class="btn btn-secondary quick-filter-btn" type="button" aria-pressed="false"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#alert"></use></svg>Errors</button>
+            <button id="quickAnrBtn" class="btn btn-secondary quick-filter-btn" type="button" aria-pressed="false"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#activity"></use></svg>ANR</button>
+            <button id="resetFiltersBtn" class="btn" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>重置</button>
+          </div>
+          <div class="filter-field time-filter-field segmented-filter">
+            <input id="timeFilterEnabled" type="checkbox" checked>
+            <span class="filter-control time-filter-control">
+              <label class="filter-prefix" for="timeFilterEnabled">时间范围</label>
+              <span class="time-filter-inputs">
+                <input id="timeStart" class="input" placeholder="开始时间" title="支持格式：04-27 21:07:41.106、21:07:41.106、21:07:41、07:41.106、41.106；毫秒可选。">
+                <input id="timeEnd" class="input" placeholder="结束时间" title="支持格式：04-27 21:10:00.000、21:10:00.000、21:10:00、10:00.000、00.000；毫秒可选。">
+                <span class="time-format-hint">支持：04-27 21:07:41.106 / 21:07:41.106 / 21:07:41 / 07:41.106 / 41.106，毫秒可选</span>
+              </span>
+            </span>
+          </div>
+          <div class="filter-field filter-field-tag segmented-filter"><input id="tagFilterEnabled" type="checkbox" checked><span class="filter-control"><label class="filter-prefix" for="tagFilterEnabled">Tag</label><input id="tagFilter" class="input" placeholder="Tag，例如 [PASS] / wallet" title="默认普通包含；支持 A|B 或 A&B；正则请用 re:pattern 或 /pattern/i"></span></div>
+        </div>
+      </div>
+
+      <div class="toolbar-group search-toolbar-group">
+        <span class="toolbar-label"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#search"></use></svg>Message 筛选 / 高亮</span>
+        <div class="search-filter-grid">
+          <div class="filter-field filter-field-primary message-filter-include segmented-filter"><input id="keywordFilterEnabled" type="checkbox" checked><span class="filter-control"><label class="filter-prefix" for="keywordFilterEnabled">包含</label><input id="keywordFilter" class="input" placeholder="输入关键词，例如 wallet / tag&error / re:" title="默认普通包含；支持 A|B 或 A&B；正则请用 re:pattern 或 /pattern/i"></span></div>
+          <div class="filter-field filter-field-primary message-filter-exclude segmented-filter"><input id="keywordExcludeFilterEnabled" type="checkbox" checked><span class="filter-control"><label class="filter-prefix" for="keywordExcludeFilterEnabled">排除</label><input id="keywordExcludeFilter" class="input" placeholder="heartbeat / polling / re:" title="默认普通包含；支持 A|B 或 A&B；命中后排除该行；正则请用 re:pattern 或 /pattern/i"></span></div>
+          <div class="filter-field filter-field-primary message-filter-highlight segmented-filter"><input id="highlightRegexEnabled" type="checkbox" checked><span class="filter-control"><label class="filter-prefix" for="highlightRegexEnabled">高亮</label><input id="highlightRegex" class="input" placeholder="error / exception / timeout"></span></div>
+        </div>
+      </div>
+
+      <div class="toolbar-group">
+        <span class="toolbar-label"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#record"></use></svg>采集</span>
+        <div id="captureState" class="capture-state" data-kind="idle" aria-live="polite">
+          <span id="captureLiveDot" class="capture-dot" aria-hidden="true"></span>
+          <span class="capture-copy">
+            <strong id="captureStateText">未开始采集</strong>
+            <small id="captureStateMeta">选择日志源；导入文件会显示为 .log 源</small>
+          </span>
+        </div>
+        <div class="toolbar-actions">
+          <button id="startCaptureBtn" class="btn btn-primary capture-toggle-btn" type="button" aria-pressed="false"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.75c0-.9.98-1.46 1.76-1.01l9.23 5.33c.78.45.78 1.57 0 2.02l-9.23 5.33A1.17 1.17 0 0 1 8 16.41V5.75Z"/></svg><span>开始抓取</span></button>
+          <details id="advancedCapturePanel" class="advanced-capture">
+            <summary class="btn"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg>高级抓取</summary>
+            <div class="advanced-capture-body app-card">
+              <label class="advanced-capture-field">
+                <span>从时间点</span>
+                <input id="captureSinceInput" class="input" placeholder="05-13 22:10:00.000">
+              </label>
+              <div class="advanced-capture-actions">
+                <button id="appendSinceCaptureBtn" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#play"></use></svg>追加抓取</button>
+                <button id="replaceSinceCaptureBtn" class="btn btn-danger" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>替换当前</button>
+              </div>
+              <div class="advanced-capture-hint">读取设备 logcat buffer 中该时间后的日志；如果设备日志已滚动或被清空，则无法恢复。</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <main class="workbench-grid">
+      <aside class="anchor-rail app-panel" aria-label="锚点栏">
+        <section class="log-source-card app-card" aria-label="日志源">
+          <div class="toolbar-title-row">
+            <div>
+              <h2><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#file"></use></svg>日志源</h2>
+              <div class="anchor-meta">设备与导入文件</div>
+            </div>
+            <button id="refreshDevicesBtn" class="btn btn-ghost btn-compact" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新</button>
+          </div>
+          <div class="source-card-actions">
+            <button id="importLogBtn" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#import"></use></svg>导入日志</button>
+            <button id="clearImportedSourcesBtn" class="btn btn-secondary" type="button" title="移除已导入文件源和对应日志，不删除本地文件"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#trash"></use></svg>清除导入记录</button>
+          </div>
+          <select id="deviceMode" class="select is-hidden" aria-hidden="true">
+            <option value="multi" selected>多选设备</option>
+          </select>
+          <select id="deviceSelect" class="select is-hidden" multiple aria-hidden="true"></select>
+          <input id="logFileInput" class="input is-hidden" type="file" accept=".log,.txt,text/plain" multiple>
+          <div id="deviceCheckboxPanel" class="device-check-list" aria-label="选择要显示的实时设备或导入日志">
+            <div class="device-empty-state">读取设备中...</div>
+          </div>
+        </section>
+
+        <div class="panel-title-row">
+          <h2><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#anchor"></use></svg>Anchors</h2>
+          <span id="anchorCountBadge" class="badge badge-muted">0</span>
+        </div>
+        <div id="anchorGroups" class="anchor-list"></div>
+        <section class="filter-presets app-card" aria-label="常用过滤组合">
+          <div class="preset-title-row">
+            <div>
+              <h3>常用过滤</h3>
+              <div id="filterPresetMeta" class="anchor-meta">保存当前过滤组合</div>
+            </div>
+            <span id="filterPresetCount" class="badge badge-muted">0</span>
+          </div>
+          <select id="filterPresetSelect" class="select" aria-label="选择常用过滤组合">
+            <option value="">选择过滤组合</option>
+          </select>
+          <input id="filterPresetName" class="input" placeholder="例如：Crash / AndroidRuntime">
+          <div class="preset-actions">
+            <button id="applyFilterPresetBtn" class="btn btn-secondary" type="button"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg><span>套用</span></button>
+            <button id="saveFilterPresetBtn" class="btn btn-primary" type="button"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 3h11.2L20 6.8V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a1 1 0 0 1 1-1Zm2 2v5h9V5H7Zm1 11v3h8v-3H8Z"/></svg><span>保存当前</span></button>
+            <button id="deleteFilterPresetBtn" class="btn btn-ghost" type="button"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-1 6h2v9H8V9Zm6 0h2v9h-2V9Zm-9 0h14l-1 12H6L5 9Z"/></svg><span>删除</span></button>
+          </div>
+        </section>
+      </aside>
+
+      <section class="log-main">
+        <section class="log-stream-panel app-panel log-panel">
+          <div class="viewer-title-row">
+            <div>
+              <div class="log-view-title">
+                <h2><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg>日志洞察</h2>
+                <div class="log-view-tabs" role="tablist" aria-label="日志视图">
+                  <button class="btn btn-secondary active" type="button" data-log-view="logs" aria-pressed="true">日志流</button>
+                  <button class="btn btn-secondary" type="button" data-log-view="timeline" aria-pressed="false">Timeline <span id="timelineCountBadge" class="badge badge-muted">0</span></button>
+                </div>
+              </div>
+              <div id="logCountMeta" class="detail-meta">等待日志输入</div>
+            </div>
+            <div class="viewer-tools">
+              <div id="filterFindBar" class="filter-find-bar app-card">
+                <span class="filter-find-label">查找</span>
+                <select id="filterFindField" class="select filter-find-field" aria-label="查找字段">
+                  <option value="messageFind">Message</option>
+                  <option value="tagFilter">Tag</option>
+                  <option value="levelFind">Level</option>
+                  <option value="pidFilter">PID</option>
+                  <option value="tidFilter">TID</option>
+                  <option value="packageFilter">Package</option>
+                  <option value="deviceFind">Device</option>
+                  <option value="highlightRegex">Highlight</option>
+                  <option value="rawFind">Raw</option>
+                </select>
+                <input id="filterFindInput" class="input filter-find-input" placeholder="在当前结果中查找">
+                <span id="filterFindMeta" class="badge badge-muted">0/0</span>
+              <button id="filterFindPrevBtn" class="btn btn-secondary icon-only" type="button" title="向上查找，Shift+Enter" aria-label="向上查找"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#arrow-up"></use></svg></button>
+              <button id="filterFindNextBtn" class="btn btn-primary icon-only" type="button" title="向下查找，Enter" aria-label="向下查找"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#arrow-down"></use></svg></button>
+                <button id="filterFindCloseBtn" class="btn btn-ghost" type="button" title="清空查找">×</button>
+              </div>
+              <label class="badge badge-muted"><input id="autoScrollToggle" type="checkbox" checked> 自动滚动</label>
+              <span id="selectionCountBadge" class="badge badge-muted">未选择日志</span>
+              <button id="copySelectedLogsBtn" class="btn btn-secondary" type="button" disabled><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#copy"></use></svg>复制选中</button>
+              <button id="clearSelectionBtn" class="btn btn-ghost" type="button" disabled><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#trash"></use></svg>清除选择</button>
+              <button id="scrollBottomBtn" class="btn" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#arrow-down"></use></svg>回到底部</button>
+              <button id="scrollTopBtn" class="btn" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#arrow-up"></use></svg>回到顶部</button>
+              <button id="keepFilteredLogsBtn" class="btn btn-secondary" type="button" title="只保留当前筛选结果，清除内存里未命中的其它日志"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#filter"></use></svg>仅保留筛选</button>
+              <button id="clearLogsBtn" class="btn btn-danger" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#broom"></use></svg>清屏</button>
+              <button id="exportLogsBtn" class="btn" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#export"></use></svg>导出</button>
+              <span class="column-toolbar" aria-label="日志列设置">
+                <div class="column-picker" id="columnPicker">
+                  <button id="columnPickerToggle" class="btn btn-secondary column-picker-toggle" type="button" aria-haspopup="true" aria-expanded="false"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#columns"></use></svg>列显示</button>
+                  <div id="columnPickerPanel" class="column-picker-panel app-panel" hidden></div>
+                </div>
+              </span>
+            </div>
+          </div>
+
+          <section id="timelinePanel" class="timeline-panel app-panel" hidden aria-label="系统事件时间线">
+            <div class="timeline-toolbar">
+              <div>
+                <h3>系统事件时间线</h3>
+                <div id="timelineMeta" class="detail-meta">暂无系统事件</div>
+              </div>
+              <div class="timeline-controls">
+                <select id="timelineTypeFilter" class="select" aria-label="Timeline 类型过滤"></select>
+                <input id="timelineSearchInput" class="input" placeholder="搜索 title / summary / raw / package">
+              </div>
+            </div>
+            <div id="timelineList" class="timeline-list"></div>
+          </section>
+
+          <div id="contextBanner" class="context-banner">
+            <div>
+              <strong id="contextTitle">上下文模式</strong>
+              <div id="contextMeta" class="detail-meta"></div>
+            </div>
+            <div class="context-actions">
+              <button class="btn btn-secondary" type="button" data-context-preset="around50">上下50行</button>
+              <button class="btn btn-secondary" type="button" data-context-preset="around100">上下100行</button>
+              <label class="context-range-field">前 <input id="contextBeforeInput" class="input context-range-input" type="number" min="0" max="5000" step="10" value="50"></label>
+              <label class="context-range-field">后 <input id="contextAfterInput" class="input context-range-input" type="number" min="0" max="5000" step="10" value="50"></label>
+              <button id="applyContextRangeBtn" class="btn btn-primary" type="button">应用上下文</button>
+              <button id="returnAnchorBtn" class="btn" type="button">返回锚点</button>
+              <button id="exitContextBtn" class="btn btn-ghost" type="button">退出上下文</button>
+            </div>
+          </div>
+
+          <div id="logTableHead" class="log-table-head" role="row">
+            <span data-col="line">#</span>
+            <span data-col="device">Device</span>
+            <span data-col="time">Time</span>
+            <span data-col="level">Level</span>
+            <span data-col="pidtid">PID/TID</span>
+            <span data-col="package">Package</span>
+            <span data-col="tag">Tag</span>
+            <span data-col="message">Message</span>
+            <span data-col="action">Action</span>
+          </div>
+
+          <div id="dropZone" class="log-viewport drop-zone" tabindex="0" aria-label="日志流">
+            <div id="logSpacer" class="log-spacer">
+              <div id="logWindow" class="log-window"></div>
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/theme-manager.js"></script>
+  <script src="/js/log/timeline.js?v=1"></script>
+  <script src="/js/log/insight.js?v=22"></script>
+</body>
+</html>

@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CQClaw · 自动化</title>
+  <link rel="stylesheet" href="/css/app.css?v=12">
+  <script src="/js/core/theme-boot.js"></script>
+  <script src="/js/core/unified-nav.js?v=1" defer></script>
+  <script src="/js/core/side-nav.js?v=1" defer></script>
+</head>
+<body class="cq-side-nav-page workflow-page app-page automation-page">
+  <header class="app-header">
+    <div class="brand-block">
+      <div class="brand-icon">&gt;_</div>
+      <div>
+        <h1>CQClaw</h1>
+        <div class="brand-meta">
+          <span class="brand-subtitle">多设备 · 自动化 · 高效控制</span>
+          <span id="health" class="badge server-badge brand-health">本地服务</span>
+        </div>
+      </div>
+    </div>
+    <div class="app-header-right app-nav" aria-label="主导航">
+              <nav class="main-tabs cq-unified-topnav" aria-label="工作区导航">
+          <a class="nav-tab" href="/"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg><span>工作台</span></a>
+          <a class="nav-tab" href="/log-insight.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg><span>日志洞察</span> <em class="topnav-hot">高频</em></a>
+          <a class="nav-tab active" href="/automation.html" aria-current="page"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg><span>自动化</span></a>
+          <a class="nav-tab" href="/device-manager.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg><span>设备</span></a>
+          <a class="nav-tab" href="/dump.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg><span>节点解析</span></a>
+          <a class="nav-tab" href="/storage-center.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg><span>资源中心</span></a>
+          <a class="nav-tab" href="/settings.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg><span>设置</span></a>
+        </nav>
+      <button id="themeToggle" class="btn btn-icon theme-switch-btn" data-theme-toggle type="button" aria-label="切换主题" title="切换主题"><svg class="ui-icon" aria-hidden="true"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button>
+    </div>
+  </header>
+
+  <main class="layout console-layout">
+    <section class="panel device-panel">
+      <div class="panel-head">
+        <h2><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg>设备上下文</h2>
+        <span id="selectedCount" class="badge selected-badge">0 台</span>
+      </div>
+      <div class="panel-body stack">
+        <div class="automation-help-card device-help-card">
+          <strong>先选执行设备</strong>
+          <span>勾选设备后，后续动作会按选中设备执行；常用设备可保存备注和分组。</span>
+        </div>
+        <div class="device-toolbar row">
+          <button id="refreshDevices" class="grow"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新设备</button>
+          <button id="openRemoteManager" class="grow" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>设备文件</button>
+        </div>
+        <div class="device-toolbar row">
+          <button id="openAppManager" class="grow" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#app"></use></svg>App 管理</button>
+        </div>
+        <div class="device-toolbar row">
+          <button id="selectOnline" class="grow"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg>选择在线</button>
+          <button id="clearDevices" class="grow"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#trash"></use></svg>清空</button>
+        </div>
+        <div class="row">
+          <select id="groupSelect" class="grow"></select>
+          <button id="selectGroup"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#filter"></use></svg>选择分组</button>
+        </div>
+        <button id="saveDeviceMeta"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#save"></use></svg>保存设备备注</button>
+        <div id="devices" class="device-list device-matrix"></div>
+        <details class="settings-drawer">
+          <summary><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg>ADB 与目录设置</summary>
+          <div class="stack settings-content">
+            <div class="path-field">
+              <label><span>ADB 路径</span><input id="adbPath" placeholder="adb 或 /path/platform-tools/adb"></label>
+              <button id="pickAdbPath"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>选择</button>
+            </div>
+            <div class="path-field">
+              <label><span>默认输出目录</span><input id="quickOutputDir" placeholder="截图、录屏、提取文件的默认保存位置"></label>
+              <button id="pickQuickOutputDir"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>选择</button>
+            </div>
+            <div class="path-field">
+              <label><span>本机临时目录</span><input id="localTempDir" placeholder="页面脚本等临时文件位置"></label>
+              <button id="pickLocalTempDir"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>选择</button>
+            </div>
+            <div class="path-field">
+              <label><span>手机端桥接服务路径</span><input id="agentApkPath" placeholder="通常无需配置；仅在企业分发包需要自定义时填写"></label>
+              <button id="pickAgentApkPath"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>选择</button>
+            </div>
+            <div class="variable-help tiny">
+              <span>默认输出目录用于截图、录屏、提取文件等最终结果。</span>
+              <span>本机临时目录只用于页面脚本运行时的临时文件。</span>
+              <span>剪切板和文本输入由手机端桥接能力统一处理，普通用户无需理解或配置额外组件。</span>
+            </div>
+            <button id="saveSettings" class="grow"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#save"></use></svg>保存设置</button>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel action-panel">
+      <div class="panel-head">
+        <h2><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#library"></use></svg>动作库</h2>
+      </div>
+      <div class="panel-body stack">
+        <div class="automation-help-card action-help-card">
+          <strong>添加动作节点</strong>
+          <span>点击动作即可添加到流程；节点会出现在中间画布，参数在右侧编辑。</span>
+        </div>
+        <div class="action-catalog">
+          <div class="action-group">
+            <div class="action-group-title">常用操作</div>
+            <div class="action-buttons">
+              <button data-add="adb_script"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#terminal"></use></svg><span>自动化脚本</span></button>
+              <button data-add="install_apk"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#package"></use></svg><span>安装 APK</span></button>
+              <button data-add="tap_text"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#target"></use></svg><span>智能点击</span></button>
+              <button data-add="screenshot"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#screenshot"></use></svg><span>截图保存</span></button>
+              <button data-add="app_action"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#app"></use></svg><span>应用操作</span></button>
+              <button data-add="input_text"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#keyboard"></use></svg><span>输入文本</span></button>
+              <button data-add="agent_clipboard"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#clipboard"></use></svg><span>剪切板读写</span></button>
+            </div>
+          </div>
+          <div class="action-group compact-group">
+            <div class="action-group-title">文件</div>
+            <div class="action-buttons">
+              <button data-add="pull_file"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#file"></use></svg>提取文件</button>
+              <button data-add="push_file"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#file"></use></svg>保存到手机</button>
+            </div>
+          </div>
+          <div class="action-group compact-group">
+            <div class="action-group-title">采集</div>
+            <div class="action-buttons">
+              <button data-add="screen_record"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#record"></use></svg>录屏保存</button>
+            </div>
+          </div>
+          <div class="action-group compact-group">
+            <div class="action-group-title">控制</div>
+            <div class="action-buttons">
+              <button data-add="permission_grant"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#shield"></use></svg>权限授权</button>
+              <button data-add="keyevent"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#keyboard"></use></svg>按键事件</button>
+            </div>
+          </div>
+          <div class="action-group compact-group">
+            <div class="action-group-title">脚本</div>
+            <div class="action-buttons">
+              <button data-add="script"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#script"></use></svg>本机脚本</button>
+              <button data-add="inline_script"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#script"></use></svg>页面脚本</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel workflow-panel">
+      <div class="panel-head workflow-titlebar">
+        <div>
+          <h2><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg>自动化编排</h2>
+          <div class="muted tiny">点击左侧动作添加节点，选中节点后在右侧配置参数。</div>
+        </div>
+        <div class="workflow-header-actions">
+          <input id="profileName" placeholder="方案名称，例如：安装测试包并登录">
+          <button id="saveProfile" class="blue"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#save"></use></svg>保存方案</button>
+          <button id="previewRun" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#eye"></use></svg>预览执行</button>
+          <button id="runAll" class="primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#play"></use></svg>执行方案</button>
+        </div>
+      </div>
+      <div class="panel-body stack workflow-body">
+        <div class="flow-guide">
+          <div class="flow-step active"><b>1</b><span>选择设备</span></div>
+          <div class="flow-step active"><b>2</b><span>编排动作</span></div>
+          <div class="flow-step"><b>3</b><span>预览命令</span></div>
+          <div class="flow-step"><b>4</b><span>执行方案</span></div>
+        </div>
+        <div class="workflow-visual-strip module-hero-card" aria-hidden="true">
+          <img class="module-theme-art module-theme-art-light" src="/assets/workbench/workflow-automation-hero-light.png" alt="">
+          <img class="module-theme-art module-theme-art-dark" src="/assets/workbench/workflow-automation-hero-dark.png" alt="">
+          <div class="module-hero-copy">
+            <strong>Automation Flow</strong>
+            <span>设备选择、动作编排、命令预览和执行日志保持在同一个工作台内。</span>
+          </div>
+        </div>
+        <div class="row workflow-row">
+          <label class="row grow tiny"><input id="stopOnError" type="checkbox" checked style="width:auto"> 遇到错误停止后续动作</label>
+          <span id="workflowStatus" class="muted tiny"></span>
+          <button id="importWorkflow"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#import"></use></svg>导入编排</button>
+          <button id="exportWorkflow"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#export"></use></svg>导出编排</button>
+          <button id="clearSteps" class="danger"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#trash"></use></svg>清空动作</button>
+          <input id="workflowImportFile" type="file" accept=".json,application/json" hidden>
+        </div>
+        <div class="variable-bar" id="variableBar">
+          <span class="muted tiny">变量</span>
+          <button data-variable="{serial}"><code>{serial}</code><span class="muted tiny">设备序列号</span></button>
+          <button data-variable="{alias}"><code>{alias}</code><span class="muted tiny">设备名称</span></button>
+          <button data-variable="{model}"><code>{model}</code><span class="muted tiny">设备型号</span></button>
+          <button data-variable="{product}"><code>{product}</code><span class="muted tiny">产品代号</span></button>
+          <button data-variable="{date}"><code>{date}</code><span class="muted tiny">日期</span></button>
+          <button data-variable="{time}"><code>{time}</code><span class="muted tiny">时间</span></button>
+          <button data-variable="{datetime}"><code>{datetime}</code><span class="muted tiny">日期时间</span></button>
+        </div>
+        <div class="variable-help tiny">
+          <span class="muted"><span class="example-label">示例：</span></span>
+          <span>电脑保存目录：<code>/Users/me/Desktop/logs/{date}/{serial}/</code></span>
+          <span>手机路径：<code>/sdcard/Download/{alias}/</code></span>
+        </div>
+        <div id="steps" class="steps workflow-editor"></div>
+      </div>
+    </section>
+
+    <section class="panel right log-panel">
+      <div class="panel-head">
+        <h2><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg>运行记录</h2>
+        <button id="loadRuns"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新日志</button>
+      </div>
+      <div class="panel-body stack">
+        <div class="profile-section-head">
+          <strong>已保存方案</strong>
+          <span>载入后可继续编辑；列表过长时可滚动。</span>
+        </div>
+        <div id="profiles" class="profile-list"></div>
+        <div class="runbar">
+          <span class="muted tiny">执行输出</span>
+          <div class="row">
+            <button id="retryFailed" disabled><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>仅重试失败设备</button>
+            <button id="copyLog"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#copy"></use></svg>复制日志</button>
+          </div>
+        </div>
+        <div id="resultSummary"></div>
+        <div class="log-filter-bar" id="logFilters" role="toolbar" aria-label="日志分层过滤">
+          <button type="button" data-log-filter="all" class="active">完整</button>
+          <button type="button" data-log-filter="overview">概览</button>
+          <button type="button" data-log-filter="commands">命令</button>
+          <button type="button" data-log-filter="stdout">stdout</button>
+          <button type="button" data-log-filter="stderr">stderr</button>
+          <button type="button" data-log-filter="advice">建议</button>
+        </div>
+        <div class="log-output-card" aria-label="实时执行输出">
+          <div class="log-output-head">
+            <strong>实时执行输出</strong>
+            <span>执行方案后会显示每台设备的命令、stdout、stderr 与建议。</span>
+          </div>
+          <pre id="log" class="log">等待执行...</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="remoteModal" class="modal" aria-hidden="true">
+    <div class="modal-panel remote-modal-panel">
+      <div class="modal-head">
+        <h2 id="remoteTitle">手机路径浏览</h2>
+        <button id="remoteClose"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#chevron-down"></use></svg>关闭</button>
+      </div>
+      <div class="remote-tools stack">
+        <div id="remoteCrumbs" class="remote-crumbs"></div>
+        <div class="grid2">
+          <label><span>浏览设备</span><select id="remoteSerial"></select></label>
+          <label><span>当前路径</span><input id="remotePath" value="/sdcard/"></label>
+        </div>
+        <div class="grid2">
+          <label><span>搜索/过滤</span><input id="remoteSearch" placeholder="文件名、.log、.png"></label>
+          <label><span>排序</span><select id="remoteSort">
+            <option value="name">名称</option>
+            <option value="type">类型</option>
+            <option value="size">大小</option>
+            <option value="modified">修改时间</option>
+          </select></label>
+        </div>
+        <div class="row">
+          <button id="remoteUp"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#arrow-up"></use></svg>上一级</button>
+          <button id="remoteOpen" class="blue"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新</button>
+          <button id="remoteEnterSelected"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>进入</button>
+          <button id="remoteOpenFile"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#file"></use></svg>本机打开</button>
+          <button id="remoteCopySelected"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#copy"></use></svg>复制路径</button>
+          <button id="remoteUse" class="primary"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#save"></use></svg>使用当前路径</button>
+        </div>
+        <div class="row remote-shortcuts">
+          <button data-remote-shortcut="/sdcard/Download">Download</button>
+          <button data-remote-shortcut="/sdcard/DCIM">DCIM</button>
+          <button data-remote-shortcut="/sdcard/Android/data">Android/data</button>
+          <button data-remote-shortcut="/sdcard/Android/media">Android/media</button>
+          <button data-remote-shortcut="/data/local/tmp">local/tmp</button>
+        </div>
+      </div>
+      <div class="remote-table-head">
+        <span>类型</span>
+        <span>名称</span>
+        <span>大小</span>
+        <span>修改时间</span>
+        <span>权限</span>
+        <span>操作</span>
+      </div>
+      <div id="remoteEntries" class="remote-list"></div>
+      <div class="modal-foot">
+        <span id="remoteStatus" class="muted tiny"></span>
+        <button id="remoteUseFooter" class="primary">使用当前路径</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screenshotFullscreenModal" class="modal screenshot-viewer-modal" aria-hidden="true">
+    <div class="screenshot-viewer-panel">
+      <div class="screenshot-viewer-head">
+        <div>
+          <h2>截图查看器</h2>
+          <p id="screenshotViewerPath">-</p>
+        </div>
+        <div class="screenshot-viewer-actions">
+          <button id="screenshotFit">适应窗口</button>
+          <button id="screenshotActual">实际大小</button>
+          <button id="screenshotZoomOut">-</button>
+          <span id="screenshotZoomLabel">100%</span>
+          <button id="screenshotZoomIn">+</button>
+          <button id="screenshotOpenImage">新标签打开</button>
+          <button id="screenshotFullscreenClose">关闭</button>
+        </div>
+      </div>
+      <div id="screenshotViewerStage" class="screenshot-viewer-stage">
+        <img id="screenshotFullscreenImage" alt="设备截图">
+      </div>
+    </div>
+  </div>
+
+  <div id="defaultDeviceModal" class="modal" aria-hidden="true">
+    <div class="modal-panel default-device-panel">
+      <div class="modal-head">
+        <div>
+          <h2>未选择执行设备</h2>
+          <p class="device-action-subtitle">检测到有在线设备，已默认选择第一台设备。确认后将在该设备执行当前方案。</p>
+        </div>
+        <button id="defaultDeviceCancelTop">关闭</button>
+      </div>
+      <div class="default-device-body">
+        <div class="default-device-card">
+          <div class="default-device-icon">📱</div>
+          <div>
+            <div class="default-device-title" id="defaultDeviceName">-</div>
+            <div class="default-device-meta" id="defaultDeviceMeta">-</div>
+          </div>
+        </div>
+        <div class="default-device-tip">
+          你也可以关闭弹窗后，在左侧设备上下文手动勾选其他设备或多台设备。
+        </div>
+      </div>
+      <div class="modal-foot">
+        <span id="defaultDeviceStatus" class="muted tiny"></span>
+        <button id="defaultDeviceCancel">取消</button>
+        <button id="defaultDeviceConfirm" class="primary">在该设备执行</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="previewModal" class="modal" aria-hidden="true">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2>执行预览</h2>
+        <button id="previewClose">关闭</button>
+      </div>
+      <div id="previewEntries" class="preview-list"></div>
+      <div class="modal-foot">
+        <span id="previewStatus" class="muted tiny"></span>
+        <button id="previewRunNow" class="primary">执行方案</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="deviceActionModal" class="modal device-action-modal" aria-hidden="true">
+    <div class="modal-panel device-action-panel">
+      <div class="modal-head device-action-head">
+        <div>
+          <h2 id="deviceActionTitle">设备操作</h2>
+          <p class="device-action-subtitle">针对当前设备执行高频操作、快捷 Shell 和调试入口</p>
+        </div>
+        <button id="deviceActionClose">关闭</button>
+      </div>
+
+      <div class="device-action-body device-action-workbench">
+        <section class="device-action-zone device-action-device-zone">
+          <div class="device-action-section-title">① 设备选择区</div>
+          <div class="device-action-current-card">
+            <div>
+              <span class="device-action-kicker">当前设备</span>
+              <strong id="deviceActionCurrentSerial">-</strong>
+            </div>
+            <span id="deviceActionOpState" class="operation-state idle">未开始</span>
+          </div>
+          <div class="device-action-help tiny">这里显示当前弹窗绑定的设备。需要切换设备时，请回到左侧设备上下文重新进入。</div>
+        </section>
+
+        <section class="device-action-zone device-action-config-zone">
+          <div class="device-action-section-title">② 操作配置区</div>
+          <div class="device-action-subsection-title">高频操作</div>
+          <div class="device-action-grid">
+            <button id="deviceFileManager" data-device-op="手机资源管理器">📁<span>手机资源管理器</span><small>浏览 / 拉取 / 推送文件</small></button>
+            <button id="deviceAppManager" data-device-op="App 管理">📦<span>App 管理</span><small>查看应用、安装与卸载</small></button>
+            <button id="deviceTopActivity" data-device-op="顶部 Activity">🎯<span>顶部 Activity</span><small>定位当前页面入口</small></button>
+            <button id="deviceDetails" data-device-op="设备详情">📋<span>设备详情</span><small>型号、系统、分辨率</small></button>
+            <button id="deviceScreenshot" data-device-op="截图预览">📸<span>截图预览</span><small>快速查看当前画面</small></button>
+            <button id="deviceDumpAnalyze" data-device-op="Dump 节点解析" title="在新标签页打开 /dump.html">🧩<span>Dump 节点解析</span><small>新标签页分析控件树</small></button>
+            <button id="deviceCopySerial" data-device-op="复制序列号">🔢<span>复制序列号</span><small>复制当前设备 serial</small></button>
+            <button id="deviceCopyPrefix" data-device-op="复制 adb 前缀">⌨️<span>复制 adb 前缀</span><small>adb -s SERIAL</small></button>
+          </div>
+
+          <div class="device-action-subsection-title">手机剪切板</div>
+          <div class="device-clipboard-card">
+            <div class="device-clipboard-head">
+              <div>
+                <strong>读取 / 写入</strong>
+                <span>通过手机端桥接能力自动完成输入，并在结束后恢复原输入法。</span>
+              </div>
+              <div class="device-clipboard-actions">
+                <button id="deviceClipboardRead" data-device-op="读取剪切板">读取</button>
+                <button id="deviceClipboardCopy" data-device-op="复制到电脑">复制到电脑</button>
+                <button id="deviceClipboardWrite" class="primary" data-device-op="写入剪切板">写入</button>
+                <button id="deviceClipboardSync" class="primary" data-device-op="同步剪切板">开启同步</button>
+              </div>
+            </div>
+            <label class="device-clipboard-editor">
+              <span>写入内容</span>
+              <textarea id="deviceClipboardText" placeholder="输入要写入手机剪切板的文本；点击读取后也会显示手机当前剪切板内容。"></textarea>
+            </label>
+            <div class="device-clipboard-output">
+              <span>读取结果</span>
+              <pre id="deviceClipboardResult">尚未读取</pre>
+            </div>
+            <div id="deviceAgentInstallCard" class="device-agent-card">
+              <div>
+                <strong id="deviceAgentStatus">手机端服务检测中</strong>
+                <span id="deviceAgentHint">正在确认剪切板与输入增强能力是否可用。</span>
+              </div>
+              <button id="deviceAgentInstall" type="button">修复手机端服务</button>
+            </div>
+          </div>
+
+          <div class="device-action-subsection-title">快捷 Shell</div>
+          <div class="device-shell-card">
+            <label>
+              <span>Shell 命令</span>
+              <input id="deviceShellCommand" placeholder="例如：getprop ro.product.model">
+            </label>
+            <button id="deviceRunShell" class="blue" data-device-op="快捷 Shell">执行</button>
+          </div>
+        </section>
+
+        <section class="device-action-zone device-action-result-zone">
+          <div class="device-action-section-title">③ 执行结果区</div>
+          <div id="deviceActionResult" class="device-result">
+            <div class="empty">选择一个操作查看结果</div>
+          </div>
+        </section>
+      </div>
+
+      <div class="modal-foot device-action-foot">
+        <span id="deviceActionStatus" class="muted tiny"></span>
+        <button id="deviceActionCloseFooter">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="appModal" class="modal" aria-hidden="true">
+    <div class="modal-panel app-modal-panel">
+      <div class="modal-head">
+        <h2 id="appModalTitle">App 管理</h2>
+        <button id="appClose">关闭</button>
+      </div>
+      <div class="device-tools stack">
+        <div class="grid3">
+          <label><span>设备</span><select id="appSerial"></select></label>
+          <label><span>搜索中文名 / 包名 / 版本 / 权限</span><input id="appSearch" placeholder="豆包、com.example、camera、1.2.3"></label>
+          <label class="row tiny"><input id="appIncludeSystem" type="checkbox" checked style="width:auto"> 显示系统 App</label>
+        </div>
+        <div class="row">
+          <button id="appReload" class="grow">读取缓存</button>
+          <button id="appLightRefresh" class="grow blue">刷新名称/Icon</button>
+          <span id="appStatus" class="muted tiny grow"></span>
+        </div>
+      </div>
+      <div id="appEntries" class="app-list"></div>
+      <div class="modal-foot">
+        <span class="muted tiny">选择 App 会把包名填入当前动作；App 管理模式可直接复制包名。</span>
+        <button id="appCloseFooter">关闭</button>
+      </div>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/state.js"></script>
+  <script src="/js/snippets.js"></script>
+  <script src="/js/device.js"></script>
+  <script src="/js/workflow.js?v=2"></script>
+  <script src="/js/theme-manager.js"></script>
+</body>
+</html>

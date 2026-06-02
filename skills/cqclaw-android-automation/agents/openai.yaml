@@ -1,0 +1,7 @@
+interface:
+  display_name: "CQClaw Android Automation"
+  short_description: "Control Android devices through CQClaw"
+  default_prompt: "Use $cqclaw-android-automation to inspect my Android device and draft a CQClaw workflow."
+
+policy:
+  allow_implicit_invocation: true

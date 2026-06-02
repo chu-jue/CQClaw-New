@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>设备管理 - CQClaw</title>
+  <link rel="stylesheet" href="/css/app.css?v=8">
+  <link rel="stylesheet" href="/css/pages/side-nav-shell.css?v=2">
+  <link rel="stylesheet" href="/css/pages/device-manager.css?v=4">
+  <script src="/js/core/theme-boot.js"></script>
+</head>
+<body class="device-manager-page app-page cq-side-nav-page">
+  <div class="device-manager-shell">
+    <header class="device-manager-header app-toolbar">
+      <div class="device-manager-title">
+        <h1 class="app-title">设备管理</h1>
+        <p>设备状态、剪切板同步、文件与调试入口</p>
+      </div>
+      <div class="app-header-right app-nav" aria-label="主导航">
+        <nav class="main-tabs" aria-label="工作区导航">
+          <a class="nav-tab" href="/"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg>工作流</a>
+          <a class="nav-tab active" href="/device-manager.html" aria-current="page"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg>设备</a>
+          <a class="nav-tab" href="/dump.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg>Dump</a>
+          <a class="nav-tab" href="/log-insight.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg>Log</a>
+          <a class="nav-tab" href="/storage-center.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg>Storage</a>
+        </nav>
+        <button id="themeToggleDeviceManager" class="btn btn-icon theme-switch-btn" data-theme-toggle type="button" aria-label="切换主题" title="切换主题"><svg class="ui-icon" aria-hidden="true"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button>
+      </div>
+    </header>
+
+    <main class="device-manager-layout">
+      <aside class="device-sidebar app-panel" aria-label="设备列表">
+        <div class="device-sidebar-head">
+          <div>
+            <h2>设备</h2>
+            <span id="deviceCountMeta" class="device-muted">读取中...</span>
+          </div>
+          <button id="refreshDevicesBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新</button>
+        </div>
+        <input id="deviceSearchInput" class="input device-search" placeholder="搜索 serial / 型号 / 备注">
+        <div id="deviceList" class="device-list-pro" aria-live="polite"></div>
+      </aside>
+
+      <section class="device-main app-panel" aria-label="设备详情">
+        <div class="device-hero">
+          <div class="device-identity">
+            <div class="device-avatar" id="deviceAvatar">D</div>
+            <div>
+              <h2 id="activeDeviceName">请选择设备</h2>
+              <div id="activeDeviceMeta" class="device-muted">连接设备后可查看详情和执行操作。</div>
+            </div>
+          </div>
+          <div class="device-hero-art" aria-hidden="true">
+            <img class="theme-art theme-art-light" src="/assets/device-manager/device-console-hero.png" alt="">
+            <img class="theme-art theme-art-dark" src="/assets/device-manager/device-console-hero-dark.png" alt="">
+            <div class="device-hero-orbit">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="device-status-strip">
+            <span id="adbStatusBadge" class="badge badge-muted">ADB 未选择</span>
+            <span id="agentStatusBadge" class="badge badge-muted">Agent 未检测</span>
+            <span id="syncStatusBadge" class="badge badge-muted">剪切板未同步</span>
+          </div>
+        </div>
+
+        <div class="device-dashboard">
+          <section class="phone-preview-card app-card">
+            <div class="card-title-row">
+              <div>
+                <h3>屏幕预览</h3>
+                <span id="screenshotPath" class="device-muted">点击截图后显示当前屏幕</span>
+              </div>
+              <button id="captureScreenshotBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#screenshot"></use></svg>截图</button>
+            </div>
+            <div class="phone-frame">
+              <img id="screenshotImage" alt="设备截图预览">
+              <div id="screenshotEmpty" class="phone-empty phone-empty-visual">
+                <img class="theme-art theme-art-light" src="/assets/device-manager/device-console-hero.png" alt="">
+                <img class="theme-art theme-art-dark" src="/assets/device-manager/device-console-hero-dark.png" alt="">
+                <span>暂无截图</span>
+                <small>点击截图后会替换为当前设备屏幕</small>
+              </div>
+            </div>
+          </section>
+
+          <section class="device-info-card app-card">
+            <div class="card-title-row">
+              <div>
+                <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg>设备信息</h3>
+                <span id="deviceInfoMeta" class="device-muted">读取设备详情、顶部页面与手机端能力状态</span>
+              </div>
+              <button id="refreshDeviceInfoBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新详情</button>
+            </div>
+            <div id="deviceInfoGrid" class="device-info-grid"></div>
+          </section>
+        </div>
+
+        <section class="clipboard-card app-card">
+          <div class="card-title-row">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#clipboard"></use></svg>剪切板同步中心</h3>
+              <span id="clipboardMeta" class="device-muted">在手机与电脑之间读取、写入、同步剪切板内容</span>
+            </div>
+            <div class="card-actions">
+              <button id="readClipboardBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#clipboard"></use></svg>读取手机</button>
+              <button id="copyClipboardBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#copy"></use></svg>复制到电脑</button>
+              <button id="toggleClipboardSyncBtn" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>开启同步</button>
+            </div>
+          </div>
+          <div class="sync-mode-row" aria-label="剪切板同步方向">
+            <span>同步方向</span>
+            <div class="sync-mode-options">
+              <label><input type="radio" name="clipboardSyncMode" value="both" checked> 双向</label>
+              <label><input type="radio" name="clipboardSyncMode" value="computer_to_phone"> 电脑 → 手机</label>
+              <label><input type="radio" name="clipboardSyncMode" value="phone_to_computer"> 手机 → 电脑</label>
+            </div>
+          </div>
+          <div id="clipboardFlow" class="clip-flow-visual mode-both" aria-hidden="true">
+            <div class="clip-node computer">
+              <span class="clip-node-icon">⌘</span>
+              <strong>电脑</strong>
+            </div>
+            <div class="clip-flow-line">
+              <span class="clip-arrow forward"></span>
+              <span class="clip-arrow backward"></span>
+            </div>
+            <div class="clip-node phone">
+              <span class="clip-node-icon">▯</span>
+              <strong>手机</strong>
+            </div>
+          </div>
+          <div class="clipboard-grid">
+            <label>
+              <span>手机剪切板</span>
+              <textarea id="phoneClipboardText" class="textarea" readonly placeholder="读取后显示手机剪切板内容"></textarea>
+            </label>
+            <label>
+              <span>写入手机</span>
+              <textarea id="writeClipboardText" class="textarea" placeholder="输入要写入手机剪切板的内容"></textarea>
+            </label>
+          </div>
+          <div class="clipboard-actions">
+            <button id="writeClipboardBtn" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#clipboard"></use></svg>写入手机剪切板</button>
+            <button id="pasteClipboardBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#keyboard"></use></svg>写入并粘贴</button>
+            <button id="installAgentBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#package"></use></svg>安装手机端能力</button>
+          </div>
+        </section>
+
+        <section class="result-panel app-card">
+          <div class="card-title-row">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#terminal"></use></svg>执行结果</h3>
+              <span id="resultMeta" class="device-muted">等待操作</span>
+            </div>
+            <button id="clearResultBtn" class="btn btn-ghost" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#broom"></use></svg>清空</button>
+          </div>
+          <div id="resultTimeline" class="result-timeline"></div>
+        </section>
+      </section>
+
+      <aside class="action-dock app-panel" aria-label="设备操作">
+        <section class="action-feedback-card app-card" aria-live="polite">
+          <div class="action-feedback-head">
+            <span class="feedback-dot idle"></span>
+            <div>
+              <h3>操作反馈</h3>
+              <p id="actionFeedbackText">点击右侧操作后，状态会先显示在这里；详细命令输出在页面下方“执行结果”。</p>
+            </div>
+          </div>
+          <button id="scrollResultBtn" class="btn btn-ghost compact-action" type="button">
+            <svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#terminal"></use></svg>查看执行结果
+          </button>
+        </section>
+
+        <section id="topActivityInline" class="top-activity-inline app-card" hidden>
+          <div class="action-section-head">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#activity"></use></svg>当前页面</h3>
+              <p>读取顶部 Activity 后会显示在这里，可一键填入 App 操作区。</p>
+            </div>
+            <button id="topActivityInlineFillBtn" class="btn btn-ghost compact-action" type="button">
+              <svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#app"></use></svg>填入包名
+            </button>
+          </div>
+          <div id="topActivityInlineBody" class="top-activity-body"></div>
+        </section>
+
+        <section class="action-group-card app-card action-primary-card">
+          <div class="action-section-head">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#spark"></use></svg>高频任务</h3>
+              <p>围绕当前设备的最常用调试入口</p>
+            </div>
+          </div>
+          <div class="device-task-grid">
+            <button id="logInsightBtn" class="device-task-card primary" type="button">
+              <svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg>
+              <span><strong>打开日志洞察</strong><small>实时抓取、导入 TXT、过滤与定位</small></span>
+            </button>
+            <button id="dumpBtn" class="device-task-card" type="button">
+              <svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg>
+              <span><strong>节点解析当前页</strong><small>截图 overlay、UI 树和推荐命令</small></span>
+            </button>
+            <button id="topActivityBtn" class="device-task-card" type="button">
+              <svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#activity"></use></svg>
+              <span><strong>读取顶部 Activity</strong><small>定位当前包名与页面入口</small></span>
+            </button>
+            <button id="captureScreenshotBtnDock" class="device-task-card" type="button">
+              <svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#screenshot"></use></svg>
+              <span><strong>刷新截图</strong><small>同步当前屏幕到预览区</small></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="action-group-card app-card current-app-card">
+          <div class="action-section-head">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#app"></use></svg>当前 App</h3>
+              <p>先填入包名，再启动、停止或打开权限页</p>
+            </div>
+            <button id="fillTopPackageBtn" class="btn btn-ghost compact-action" type="button" title="使用顶部 Activity 的包名">
+              <svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#activity"></use></svg>填入当前
+            </button>
+          </div>
+          <input id="packageNameInput" class="input" placeholder="包名，例如 com.example.app">
+          <div class="action-grid compact-grid">
+            <button id="loadAppsBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#app"></use></svg>App 列表</button>
+            <button id="launchAppBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#play"></use></svg>启动</button>
+            <button id="stopAppBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#power"></use></svg>停止</button>
+            <button id="permissionPageBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#shield"></use></svg>权限页</button>
+          </div>
+        </section>
+
+        <section class="action-group-card app-card shell-card">
+          <div class="action-section-head">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#terminal"></use></svg>Shell 快捷执行</h3>
+              <p>执行常用 adb shell 命令，结果先显示在右上反馈区，完整输出在下方执行结果</p>
+            </div>
+          </div>
+          <div class="shell-row">
+            <input id="shellCommandInput" class="input" placeholder="getprop ro.product.model">
+            <button id="runShellBtn" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#play"></use></svg>执行</button>
+          </div>
+          <div class="quick-command-row">
+            <button class="btn btn-ghost" type="button" data-shell-shortcut="wm size">屏幕尺寸</button>
+            <button class="btn btn-ghost" type="button" data-shell-shortcut="dumpsys battery | head -20">电池</button>
+            <button class="btn btn-ghost" type="button" data-shell-shortcut="settings get secure default_input_method">输入法</button>
+          </div>
+        </section>
+
+        <section class="action-group-card app-card file-card">
+          <div class="action-section-head">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>手机文件</h3>
+              <p>快速浏览常用目录，打开或拉取文件</p>
+            </div>
+          </div>
+          <div class="file-browser-row">
+            <input id="remotePathInput" class="input" value="/sdcard/Download">
+            <button id="listRemoteBtn" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>浏览</button>
+          </div>
+          <div class="file-shortcuts">
+            <button class="btn btn-ghost" type="button" data-remote-shortcut="/sdcard/Download">Download</button>
+            <button class="btn btn-ghost" type="button" data-remote-shortcut="/sdcard/DCIM">DCIM</button>
+            <button class="btn btn-ghost" type="button" data-remote-shortcut="/sdcard/Android/data">Android/data</button>
+            <button class="btn btn-ghost" type="button" data-remote-shortcut="/data/local/tmp">local/tmp</button>
+          </div>
+        </section>
+
+        <section class="action-group-card app-card device-tools-card">
+          <div class="action-section-head">
+            <div>
+              <h3><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg>设备工具</h3>
+              <p>复制连接信息、唤醒设备和返回桌面</p>
+            </div>
+          </div>
+          <div class="action-grid compact-grid">
+            <button id="copySerialBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#copy"></use></svg>复制 serial</button>
+            <button id="copyAdbPrefixBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#terminal"></use></svg>复制 adb 前缀</button>
+            <button id="wakeDeviceBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#power"></use></svg>电源键</button>
+            <button id="homeDeviceBtn" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg>Home</button>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/theme-manager.js"></script>
+  <script src="/js/core/side-nav.js?v=2"></script>
+  <script src="/js/pages/device-manager.js?v=4"></script>
+</body>
+</html>

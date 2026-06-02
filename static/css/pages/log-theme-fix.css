@@ -1,0 +1,266 @@
+/* Log Insight theme normalization.
+   This file is loaded after log-side-nav.css and side-nav-shell.css so it can
+   neutralize older hard-coded light/dark rules on the high-frequency Log page. */
+
+.log-workbench-page {
+  --log-bg: var(--bg-app, #f6f8fb);
+  --log-surface: var(--surface-elevated, #ffffff);
+  --log-surface-2: var(--surface-muted, #f8fafc);
+  --log-surface-3: #eef4ff;
+  --log-text: var(--text-primary, #0f172a);
+  --log-muted: var(--text-secondary, #64748b);
+  --log-border: var(--border-subtle, rgba(148, 163, 184, .22));
+  --log-input-bg: rgba(255, 255, 255, .92);
+  --log-input-border: rgba(148, 163, 184, .30);
+  --log-table-bg: rgba(255, 255, 255, .82);
+  --log-row-bg: rgba(255, 255, 255, .70);
+  --log-empty-bg: rgba(255, 255, 255, .94);
+  --log-danger-bg: #fef2f2;
+  --log-danger-text: #dc2626;
+  --log-danger-border: rgba(220, 38, 38, .26);
+  background: var(--log-bg) !important;
+  color: var(--log-text) !important;
+}
+
+:root[data-theme='dark'] .log-workbench-page,
+[data-theme='dark'] .log-workbench-page {
+  --log-bg: #0f1117;
+  --log-surface: #171a23;
+  --log-surface-2: #1d2230;
+  --log-surface-3: rgba(122, 162, 255, .14);
+  --log-text: #f4f7fb;
+  --log-muted: #9aa6ba;
+  --log-border: rgba(255, 255, 255, .12);
+  --log-input-bg: #11141d;
+  --log-input-border: rgba(255, 255, 255, .18);
+  --log-table-bg: #141821;
+  --log-row-bg: #171b25;
+  --log-empty-bg: #171a23;
+  --log-danger-bg: rgba(239, 68, 68, .15);
+  --log-danger-text: #fca5a5;
+  --log-danger-border: rgba(248, 113, 113, .34);
+}
+
+.log-workbench-page .workbench-shell {
+  background: var(--log-bg) !important;
+}
+
+.log-workbench-page .log-side-nav,
+.log-workbench-page .workbench-header,
+.log-workbench-page .workbench-toolbar,
+.log-workbench-page .anchor-rail,
+.log-workbench-page .log-main-panel,
+.log-workbench-page .log-stream-panel,
+.log-workbench-page .log-source-card,
+.log-workbench-page .preset-card,
+.log-workbench-page .advanced-capture-body,
+.log-workbench-page .app-card {
+  background: color-mix(in srgb, var(--log-surface) 92%, transparent) !important;
+  color: var(--log-text) !important;
+  border-color: var(--log-border) !important;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, .08);
+}
+
+:root[data-theme='dark'] .log-workbench-page .log-side-nav,
+:root[data-theme='dark'] .log-workbench-page .workbench-header,
+:root[data-theme='dark'] .log-workbench-page .workbench-toolbar,
+:root[data-theme='dark'] .log-workbench-page .anchor-rail,
+:root[data-theme='dark'] .log-workbench-page .log-main-panel,
+:root[data-theme='dark'] .log-workbench-page .log-stream-panel,
+:root[data-theme='dark'] .log-workbench-page .log-source-card,
+:root[data-theme='dark'] .log-workbench-page .preset-card,
+:root[data-theme='dark'] .log-workbench-page .advanced-capture-body,
+:root[data-theme='dark'] .log-workbench-page .app-card,
+[data-theme='dark'] .log-workbench-page .log-side-nav,
+[data-theme='dark'] .log-workbench-page .workbench-header,
+[data-theme='dark'] .log-workbench-page .workbench-toolbar,
+[data-theme='dark'] .log-workbench-page .anchor-rail,
+[data-theme='dark'] .log-workbench-page .log-main-panel,
+[data-theme='dark'] .log-workbench-page .log-stream-panel,
+[data-theme='dark'] .log-workbench-page .log-source-card,
+[data-theme='dark'] .log-workbench-page .preset-card,
+[data-theme='dark'] .log-workbench-page .advanced-capture-body,
+[data-theme='dark'] .log-workbench-page .app-card {
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .28) !important;
+}
+
+.log-workbench-page .workbench-title h1,
+.log-workbench-page .toolbar-title-row h2,
+.log-workbench-page .panel-title-row h2,
+.log-workbench-page .log-view-title h2,
+.log-workbench-page strong,
+.log-workbench-page .filter-prefix,
+.log-workbench-page .toolbar-label {
+  color: var(--log-text) !important;
+}
+
+.log-workbench-page .workbench-title p,
+.log-workbench-page .detail-meta,
+.log-workbench-page .muted,
+.log-workbench-page small,
+.log-workbench-page .capture-copy small,
+.log-workbench-page .filter-field .input::placeholder {
+  color: var(--log-muted) !important;
+}
+
+.log-workbench-page .filter-control,
+.log-workbench-page .segmented-filter,
+.log-workbench-page .level-inline-filter,
+.log-workbench-page .capture-state,
+.log-workbench-page .select,
+.log-workbench-page .input,
+.log-workbench-page input,
+.log-workbench-page textarea,
+.log-workbench-page select,
+.log-workbench-page .filter-find-bar,
+.log-workbench-page .filter-find-input,
+.log-workbench-page .time-filter-inputs,
+.log-workbench-page .level-pill button,
+.log-workbench-page .btn,
+.log-workbench-page .badge {
+  background: var(--log-input-bg) !important;
+  color: var(--log-text) !important;
+  border-color: var(--log-input-border) !important;
+}
+
+.log-workbench-page .filter-control {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--log-input-border) 58%, transparent) !important;
+}
+
+.log-workbench-page .filter-control:focus-within,
+.log-workbench-page .input:focus,
+.log-workbench-page input:focus,
+.log-workbench-page select:focus {
+  border-color: color-mix(in srgb, var(--color-primary, #2563eb) 55%, var(--log-input-border)) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary, #2563eb) 14%, transparent) !important;
+  outline: none !important;
+}
+
+.log-workbench-page .btn-primary,
+.log-workbench-page .capture-toggle-btn {
+  background: var(--color-primary, #2563eb) !important;
+  border-color: var(--color-primary, #2563eb) !important;
+  color: #fff !important;
+}
+
+.log-workbench-page .btn-danger,
+.log-workbench-page #deleteFilterPresetBtn {
+  background: var(--log-danger-bg) !important;
+  color: var(--log-danger-text) !important;
+  border-color: var(--log-danger-border) !important;
+}
+
+.log-workbench-page #deleteFilterPresetBtn:hover {
+  background: color-mix(in srgb, var(--log-danger-bg) 78%, var(--log-danger-text) 22%) !important;
+}
+
+.log-workbench-page .log-table-head,
+.log-workbench-page .log-viewport,
+.log-workbench-page .log-window,
+.log-workbench-page .log-row {
+  background: var(--log-table-bg) !important;
+  color: var(--log-text) !important;
+  border-color: var(--log-border) !important;
+}
+
+.log-workbench-page .log-table-head .col {
+  color: var(--log-muted) !important;
+  background: color-mix(in srgb, var(--log-surface-2) 78%, transparent) !important;
+}
+
+.log-workbench-page .log-row:not(.level-e):not(.level-w):not(.level-i):not(.level-d):not(.level-v):not(.level-f) {
+  background: var(--log-row-bg) !important;
+}
+
+:root[data-theme='dark'] .log-workbench-page .level-d,
+[data-theme='dark'] .log-workbench-page .level-d { background: rgba(96, 165, 250, .10) !important; }
+:root[data-theme='dark'] .log-workbench-page .level-i,
+[data-theme='dark'] .log-workbench-page .level-i { background: rgba(52, 211, 153, .10) !important; }
+:root[data-theme='dark'] .log-workbench-page .level-w,
+[data-theme='dark'] .log-workbench-page .level-w { background: rgba(251, 191, 36, .13) !important; }
+:root[data-theme='dark'] .log-workbench-page .level-e,
+:root[data-theme='dark'] .log-workbench-page .level-f,
+[data-theme='dark'] .log-workbench-page .level-e,
+[data-theme='dark'] .log-workbench-page .level-f { background: rgba(248, 113, 113, .13) !important; }
+
+.log-workbench-page .log-empty-state {
+  background: transparent !important;
+}
+
+.log-workbench-page .log-empty-card {
+  background: var(--log-empty-bg) !important;
+  color: var(--log-text) !important;
+  border: 1px solid var(--log-border) !important;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .10) !important;
+}
+
+:root[data-theme='dark'] .log-workbench-page .log-empty-card,
+[data-theme='dark'] .log-workbench-page .log-empty-card {
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .34) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy strong {
+  color: var(--log-text) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-copy span {
+  color: var(--log-muted) !important;
+}
+
+.log-workbench-page .log-empty-card .empty-visual-media {
+  background: var(--log-surface-2) !important;
+  border-color: var(--log-border) !important;
+}
+
+.log-workbench-page .log-empty-card img {
+  border-radius: 16px;
+}
+
+:root[data-theme='dark'] .log-workbench-page .log-empty-card img.module-theme-art-light,
+[data-theme='dark'] .log-workbench-page .log-empty-card img.module-theme-art-light {
+  display: none !important;
+}
+
+:root[data-theme='dark'] .log-workbench-page .log-empty-card img.module-theme-art-dark,
+[data-theme='dark'] .log-workbench-page .log-empty-card img.module-theme-art-dark {
+  display: block !important;
+}
+
+:root:not([data-theme='dark']) .log-workbench-page .log-empty-card img.module-theme-art-dark,
+[data-theme='light'] .log-workbench-page .log-empty-card img.module-theme-art-dark {
+  display: none !important;
+}
+
+:root:not([data-theme='dark']) .log-workbench-page .log-empty-card img.module-theme-art-light,
+[data-theme='light'] .log-workbench-page .log-empty-card img.module-theme-art-light {
+  display: block !important;
+}
+
+.log-workbench-page .log-side-links a,
+.log-workbench-page .log-side-theme {
+  color: var(--log-muted) !important;
+}
+
+.log-workbench-page .log-side-links a:hover,
+.log-workbench-page .log-side-theme:hover,
+.log-workbench-page .log-side-links a.active {
+  color: var(--color-primary, #2563eb) !important;
+  background: color-mix(in srgb, var(--color-primary, #2563eb) 14%, transparent) !important;
+  border-color: color-mix(in srgb, var(--color-primary, #2563eb) 24%, transparent) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .log-workbench-page {
+    --log-bg: #0f1117;
+    --log-surface: #171a23;
+    --log-surface-2: #1d2230;
+    --log-text: #f4f7fb;
+    --log-muted: #9aa6ba;
+    --log-border: rgba(255, 255, 255, .12);
+    --log-input-bg: #11141d;
+    --log-input-border: rgba(255, 255, 255, .18);
+    --log-table-bg: #141821;
+    --log-row-bg: #171b25;
+    --log-empty-bg: #171a23;
+  }
+}

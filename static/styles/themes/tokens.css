@@ -1,0 +1,57 @@
+:root {
+  --bg-page: #eef4fb;
+  --bg-page-glow-a: rgba(91, 141, 239, .18);
+  --bg-page-glow-b: rgba(189, 213, 255, .28);
+  --bg-panel: rgba(255, 255, 255, .74);
+  --bg-panel-strong: rgba(255, 255, 255, .88);
+  --bg-card: rgba(255, 255, 255, .72);
+  --bg-card-hover: rgba(247, 250, 255, .92);
+  --bg-field: rgba(255, 255, 255, .82);
+  --bg-soft: rgba(241, 246, 253, .76);
+  --bg-selected: rgba(37, 99, 235, .10);
+  --bg-transparent: transparent;
+
+  --border: rgba(151, 167, 193, .34);
+  --border-soft: rgba(151, 167, 193, .20);
+  --border-strong: rgba(91, 126, 190, .40);
+
+  --text-primary: #142033;
+  --text-secondary: #526179;
+  --text-muted: #8490a6;
+  --text-inverse: #ffffff;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, .10);
+
+  --danger: #dc2626;
+  --warning: #d97706;
+  --success: #059669;
+
+  --shadow-card: 0 16px 42px rgba(37, 54, 92, .10);
+  --shadow-panel: 0 24px 70px rgba(37, 54, 92, .12);
+  --shadow-toolbar: 0 10px 34px rgba(37, 54, 92, .10);
+
+  --radius-panel: 20px;
+  --radius-card: 16px;
+  --radius-control: 12px;
+  --control-height: 40px;
+
+  --log-error: #dc2626;
+  --log-warning: #d97706;
+  --log-info: #2563eb;
+  --log-debug: #64748b;
+  --log-verbose: #7c3aed;
+  --log-fatal: #be123c;
+
+  --log-error-bg: rgba(220, 38, 38, .08);
+  --log-warning-bg: rgba(217, 119, 6, .10);
+  --log-info-bg: rgba(37, 99, 235, .07);
+  --log-debug-bg: rgba(100, 116, 139, .08);
+  --log-success-bg: rgba(5, 150, 105, .08);
+
+  --chip-bg: rgba(255, 255, 255, .68);
+  --chip-active-bg: rgba(37, 99, 235, .10);
+  --glass-blur: 22px;
+  --transition: 160ms ease;
+}

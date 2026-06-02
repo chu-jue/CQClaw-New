@@ -1,0 +1,7 @@
+# Base runtime dependencies for CQClaw.
+# OCR is intentionally optional because EasyOCR pulls large packages such as
+# torch, torchvision, opencv-python-headless, numpy, and pillow.
+# Install OCR only when needed:
+#   aas install-ocr
+# or:
+#   python -m pip install -r requirements-ocr.txt
