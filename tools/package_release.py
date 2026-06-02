@@ -29,6 +29,9 @@ EXCLUDE_DIRS = {
     ".venv",
     "__pycache__",
     ".pytest_cache",
+    "gen",
+    "node_modules",
+    "target",
     "dist",
     "build",
 }

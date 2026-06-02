@@ -47,9 +47,13 @@ if (-not (Test-Path $TauriExe)) {
   Push-Location $TauriDir
   try {
     if (-not (Test-Path "node_modules")) {
-      npm install
+      if (Test-Path "package-lock.json") {
+        npm ci
+      } else {
+        npm install
+      }
       if ($LASTEXITCODE -ne 0) {
-        throw "npm install failed with exit code $LASTEXITCODE"
+        throw "Node dependency install failed with exit code $LASTEXITCODE"
       }
     }
     npm run build

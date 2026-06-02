@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Py compile
+        run: |
+          python -m py_compile \
+            server.py \
+            backend/__init__.py \
+            backend/app_assets.py \
+            backend/legacy_core.py \
+            tools/aas_cli.py \
+            tools/cqclaw_updater.py \
+            tools/package_release.py \
+            tools/generate_release_manifest.py \
+            desktop/cqclaw_client.py
+
+      - name: Package smoke
+        run: python tools/package_release.py --windows-zip --macos-zip
+
+  frontend-checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: desktop/tauri-client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install node dependencies
+        run: npm ci
+
+      - name: Check Tauri config
+        run: npx tauri --version
+
+      - name: Check Rust metadata
+        run: cargo metadata --locked --manifest-path src-tauri/Cargo.toml --no-deps

@@ -1,6 +1,6 @@
 [package]
 name = "cqclaw-client"
-version = "2.0.12"
+version = "1.0.0"
 description = "CQClaw desktop client"
 authors = ["CQClaw"]
 edition = "2021"

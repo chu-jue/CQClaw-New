@@ -1,0 +1,106 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows-installer:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+
+      - name: Install Tauri client deps
+        working-directory: desktop/tauri-client
+        run: npm ci
+
+      - name: Build Windows installer
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File packaging/windows/build-inno.ps1
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: cqclaw-windows-installer
+          path: dist/*.exe
+
+  build-macos-package:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Tauri client deps
+        working-directory: desktop/tauri-client
+        run: npm ci
+
+      - name: Build macOS package
+        run: tools/package_release.py --macos-zip
+
+      - name: Upload macOS package
+        uses: actions/upload-artifact@v4
+        with:
+          name: cqclaw-macos-package
+          path: dist/*.zip
+
+  publish-release:
+    needs: [build-windows-installer, build-macos-package]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Generate manifests
+        run: python3 tools/generate_release_manifest.py --dist dist
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: CQClaw ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            dist/**/*.exe
+            dist/**/*.zip
+            dist/**/*.json
