@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tauri dev",
-    "build": "tauri build"
+    "build": "tauri build",
+    "build:web": "node tools/copy-frontend.mjs"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.6.2"

@@ -19,6 +19,7 @@ node_modules/
 desktop/tauri-client/node_modules/
 desktop/tauri-client/src-tauri/target/
 desktop/tauri-client/src-tauri/gen/
+desktop/tauri-client/app/
 desktop/tauri-client/pnpm-lock.yaml
 desktop/tauri-client/yarn.lock
 

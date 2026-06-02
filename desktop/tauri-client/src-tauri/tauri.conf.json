@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "identifier": "com.cqclaw.client",
   "build": {
-    "frontendDist": "../",
+    "frontendDist": "../app",
     "devUrl": null,
-    "beforeDevCommand": "",
-    "beforeBuildCommand": ""
+    "beforeDevCommand": "npm run build:web",
+    "beforeBuildCommand": "npm run build:web"
   },
   "app": {
     "withGlobalTauri": true,
