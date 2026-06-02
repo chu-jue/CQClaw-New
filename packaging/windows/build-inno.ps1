@@ -38,6 +38,14 @@ function Find-InnoCompiler {
 
 $Compiler = Find-InnoCompiler -Explicit $InnoCompiler
 $Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+$VersionFile = Join-Path $Root "version.txt"
+$AppVersion = "dev"
+if (Test-Path $VersionFile) {
+  $Value = (Get-Content -Path $VersionFile -TotalCount 1).Trim()
+  if ($Value) {
+    $AppVersion = $Value
+  }
+}
 $TauriDir = Join-Path $Root "desktop\tauri-client"
 $TauriExe = Join-Path $TauriDir "src-tauri\target\release\cqclaw-client.exe"
 New-Item -ItemType Directory -Force -Path (Join-Path $Root "dist") | Out-Null
@@ -72,7 +80,8 @@ if (-not (Test-Path $TauriExe)) {
 Write-Host "Inno compiler: $Compiler"
 Write-Host "Tauri executable: $TauriExe"
 Write-Host "Inno script: $Script"
-& $Compiler $Script
+Write-Host "App version: $AppVersion"
+& $Compiler "/DAppVersion=$AppVersion" $Script
 if ($LASTEXITCODE -ne 0) {
   throw "Inno Setup failed with exit code $LASTEXITCODE"
 }

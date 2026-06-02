@@ -1,5 +1,7 @@
 #define AppName "CQClaw"
-#define AppVersion "2.0.12"
+#ifndef AppVersion
+#define AppVersion "dev"
+#endif
 #define AppPublisher "CQClaw"
 #define SourceRoot "..\.."
 

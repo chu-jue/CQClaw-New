@@ -31,12 +31,14 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def build_assets(dist: Path) -> list[dict[str, object]]:
+def build_assets(dist: Path, output_name: str) -> list[dict[str, object]]:
     assets: list[dict[str, object]] = []
     for path in sorted(dist.rglob("*")):
         if not path.is_file():
             continue
         relative = path.relative_to(dist).as_posix()
+        if relative == output_name:
+            continue
         assets.append(
             {
                 "name": relative,
@@ -63,7 +65,7 @@ def main() -> int:
         "version": version,
         "tag": tag,
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "assets": build_assets(dist),
+        "assets": build_assets(dist, args.output),
     }
 
     output = dist / args.output
