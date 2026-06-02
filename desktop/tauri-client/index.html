@@ -48,6 +48,21 @@
         <path d="m6 8 4 4-4 4" />
         <path d="M12 16h6" />
       </symbol>
+      <symbol id="icon-link" viewBox="0 0 24 24">
+        <path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1" />
+        <path d="M14 11a5 5 0 0 0-7.1-.1l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1" />
+      </symbol>
+      <symbol id="icon-port" viewBox="0 0 24 24">
+        <path d="M6 8h12M6 16h12" />
+        <path d="M9 5v6M15 13v6" />
+        <circle cx="9" cy="14" r="2" />
+        <circle cx="15" cy="8" r="2" />
+      </symbol>
+      <symbol id="icon-connection" viewBox="0 0 24 24">
+        <path d="M5 12a7 7 0 0 1 14 0" />
+        <path d="M8.5 15.5a3.5 3.5 0 0 1 7 0" />
+        <path d="M12 19h.01" />
+      </symbol>
     </svg>
 
     <main class="client-shell">
@@ -67,21 +82,15 @@
 
         <div class="connection-card">
           <div class="status-pill" id="healthPill">Checking</div>
-          <p>Local Android automation service and web console launcher.</p>
+          <p>Local service launcher, web console entry, and connected Android device monitor.</p>
         </div>
-
-        <nav class="side-nav" aria-label="Client sections">
-          <span class="active"><svg class="ui-icon"><use href="#icon-power"></use></svg>Service</span>
-          <span><svg class="ui-icon"><use href="#icon-device"></use></svg>Devices</span>
-          <span><svg class="ui-icon"><use href="#icon-terminal"></use></svg>Automation</span>
-        </nav>
       </aside>
 
       <section class="workspace">
         <header class="topbar">
           <div>
-            <h2>Service Overview</h2>
-            <p>Start CQClaw, open the web console, and check connected Android devices.</p>
+            <h2>CQClaw Status</h2>
+            <p>Manage the local service, startup setting, and web console entry.</p>
           </div>
           <button id="refreshBtn" class="quiet-button" type="button"><svg class="ui-icon"><use href="#icon-refresh"></use></svg>Refresh</button>
         </header>
@@ -91,6 +100,16 @@
             <div class="card-icon"><svg class="ui-icon"><use href="#icon-power"></use></svg></div>
             <span>Service</span>
             <strong id="serverStatus">-</strong>
+          </article>
+          <article class="summary-item port">
+            <div class="card-icon"><svg class="ui-icon"><use href="#icon-port"></use></svg></div>
+            <span>Port</span>
+            <strong id="portStatus">-</strong>
+          </article>
+          <article class="summary-item connection">
+            <div class="card-icon"><svg class="ui-icon"><use href="#icon-connection"></use></svg></div>
+            <span>Connection</span>
+            <strong id="connectionStatus">-</strong>
           </article>
           <article class="summary-item startup">
             <div class="card-icon"><svg class="ui-icon"><use href="#icon-startup"></use></svg></div>
@@ -105,15 +124,15 @@
         </section>
 
         <section class="command-bar" aria-label="Primary commands">
-          <button id="startBtn" class="primary-button" type="button"><svg class="ui-icon"><use href="#icon-power"></use></svg>Start Service</button>
-          <button id="openBtn" type="button"><svg class="ui-icon"><use href="#icon-browser"></use></svg>Open Web Console</button>
+          <button id="startBtn" class="primary-button" type="button"><svg class="ui-icon"><use href="#icon-power"></use></svg>Start</button>
           <button id="stopBtn" type="button"><svg class="ui-icon"><use href="#icon-stop"></use></svg>Stop</button>
-          <button id="enableAutostartBtn" type="button"><svg class="ui-icon"><use href="#icon-startup"></use></svg>Enable Autostart</button>
-          <button id="disableAutostartBtn" type="button"><svg class="ui-icon"><use href="#icon-stop"></use></svg>Disable</button>
+          <button id="openBtn" type="button"><svg class="ui-icon"><use href="#icon-browser"></use></svg>Open Web</button>
+          <button id="autostartBtn" type="button"><svg class="ui-icon"><use href="#icon-startup"></use></svg><span id="autostartButtonText">Enable Autostart</span></button>
         </section>
 
         <section class="details-grid">
           <div class="detail-list">
+            <div class="panel-title"><svg class="ui-icon"><use href="#icon-link"></use></svg>Runtime</div>
             <div class="field-row">
               <span>Home</span>
               <code id="homePath">-</code>
@@ -121,6 +140,10 @@
             <div class="field-row">
               <span>URL</span>
               <code id="serverUrl">-</code>
+            </div>
+            <div class="field-row">
+              <span>Port</span>
+              <code id="portDetail">-</code>
             </div>
             <div class="field-row">
               <span>Python</span>

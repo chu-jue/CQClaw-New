@@ -438,14 +438,18 @@ def disable_autostart() -> dict:
 
 
 def enable_autostart_from_args(root: Path, args: argparse.Namespace) -> bool:
-    result = install_autostart(
-        root,
-        choose_python(root, getattr(args, "python", None)),
-        args.host,
-        int(args.port),
-        args.open_path,
-        bool(getattr(args, "open_at_login", False)),
-    )
+    try:
+        result = install_autostart(
+            root,
+            choose_python(root, getattr(args, "python", None)),
+            args.host,
+            int(args.port),
+            args.open_path,
+            bool(getattr(args, "open_at_login", False)),
+        )
+    except OSError as exc:
+        print(f"autostart: failed: {exc}", file=sys.stderr)
+        return False
     if result.get("ok"):
         print(f"autostart: enabled ({result.get('target')})")
         return True

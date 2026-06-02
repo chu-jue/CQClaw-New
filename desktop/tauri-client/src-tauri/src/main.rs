@@ -1,8 +1,16 @@
+#![cfg_attr(windows, windows_subsystem = "windows")]
+
 use serde::Serialize;
 use std::env;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
+use tauri::menu::{Menu, MenuItemBuilder};
+use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
+use tauri::{Manager, WindowEvent};
+
+static EXIT_STOP_REQUESTED: AtomicBool = AtomicBool::new(false);
 
 #[derive(Serialize)]
 struct CommandOutput {
@@ -15,6 +23,30 @@ struct CommandOutput {
 struct ClientInfo {
     home: String,
     python: String,
+}
+
+#[derive(Serialize)]
+struct OpenUrlResult {
+    url: String,
+}
+
+const TRAY_SHOW_ID: &str = "show";
+const TRAY_EXIT_ID: &str = "exit";
+
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+#[cfg(windows)]
+fn hidden_command(program: &str) -> Command {
+    let mut command = Command::new(program);
+    use std::os::windows::process::CommandExt;
+    command.creation_flags(CREATE_NO_WINDOW);
+    command
+}
+
+#[cfg(not(windows))]
+fn hidden_command(program: &str) -> Command {
+    Command::new(program)
 }
 
 fn project_root() -> Result<PathBuf, String> {
@@ -48,7 +80,7 @@ fn project_root() -> Result<PathBuf, String> {
 }
 
 fn command_exists(command: &str) -> bool {
-    Command::new(command)
+    hidden_command(command)
         .arg("--version")
         .output()
         .map(|output| output.status.success())
@@ -88,6 +120,89 @@ fn python_args<'a>(python: &str, cli: &'a Path, args: &'a [String]) -> Vec<Strin
     command_args
 }
 
+fn run_cli_for_exit(args: &[&str]) -> Result<CommandOutput, String> {
+    let root = project_root()?;
+    let cli = root.join("tools").join("aas_cli.py");
+    if !cli.exists() {
+        return Err(format!("CLI not found: {}", cli.display()));
+    }
+
+    let python = python_executable();
+    let command_args = python_args(
+        &python,
+        &cli,
+        &args.iter().map(|arg| arg.to_string()).collect::<Vec<_>>(),
+    );
+    let output = hidden_command(&python)
+        .args(command_args)
+        .current_dir(&root)
+        .env("QCLAW_HOME", &root)
+        .env("AAS_HOME", &root)
+        .env("TK_SILENCE_DEPRECATION", "1")
+        .output()
+        .map_err(|err| format!("Failed to run CQClaw CLI: {err}"))?;
+
+    Ok(CommandOutput {
+        code: output.status.code().unwrap_or(1),
+        stdout: String::from_utf8_lossy(&output.stdout).to_string(),
+        stderr: String::from_utf8_lossy(&output.stderr).to_string(),
+    })
+}
+
+fn stop_cqclaw_before_exit() {
+    if EXIT_STOP_REQUESTED
+        .compare_exchange(false, true, Ordering::SeqCst, Ordering::SeqCst)
+        .is_ok()
+    {
+        let _ = run_cli_for_exit(&["stop"]);
+    }
+}
+
+fn show_main_window(app: &tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.show();
+        let _ = window.set_focus();
+    }
+}
+
+fn setup_tray(app: &mut tauri::App) -> tauri::Result<()> {
+    let show_item = MenuItemBuilder::with_id(TRAY_SHOW_ID, "Show CQClaw").build(app)?;
+    let exit_item = MenuItemBuilder::with_id(TRAY_EXIT_ID, "Exit").build(app)?;
+    let menu = Menu::with_items(app, &[&show_item, &exit_item])?;
+
+    let mut tray = TrayIconBuilder::with_id("cqclaw")
+        .tooltip("CQClaw")
+        .menu(&menu)
+        .show_menu_on_left_click(false)
+        .on_menu_event(|app, event| match event.id().0.as_str() {
+            TRAY_SHOW_ID => show_main_window(app),
+            TRAY_EXIT_ID => {
+                stop_cqclaw_before_exit();
+                app.exit(0);
+            }
+            _ => {}
+        })
+        .on_tray_icon_event(|tray, event| match event {
+            TrayIconEvent::Click {
+                button: MouseButton::Left,
+                button_state: MouseButtonState::Up,
+                ..
+            }
+            | TrayIconEvent::DoubleClick {
+                button: MouseButton::Left,
+                ..
+            } => show_main_window(tray.app_handle()),
+            _ => {}
+        });
+
+    if let Some(icon) = app.default_window_icon().cloned() {
+        tray = tray.icon(icon);
+    }
+
+    tray.build(app)?;
+    Ok(())
+}
+
 #[tauri::command]
 fn client_info() -> Result<ClientInfo, String> {
     Ok(ClientInfo {
@@ -106,7 +221,7 @@ fn run_cqclaw(args: Vec<String>, timeout_secs: Option<u64>) -> Result<CommandOut
 
     let python = python_executable();
     let command_args = python_args(&python, &cli, &args);
-    let mut child = Command::new(&python)
+    let mut child = hidden_command(&python)
         .args(command_args)
         .current_dir(&root)
         .env("QCLAW_HOME", &root)
@@ -143,9 +258,50 @@ fn run_cqclaw(args: Vec<String>, timeout_secs: Option<u64>) -> Result<CommandOut
     })
 }
 
+#[tauri::command]
+fn open_url(url: String) -> Result<OpenUrlResult, String> {
+    let trimmed = url.trim();
+    if !(trimmed.starts_with("http://") || trimmed.starts_with("https://")) {
+        return Err(format!("Unsupported URL: {trimmed}"));
+    }
+
+    let status = if cfg!(target_os = "windows") {
+        hidden_command("cmd")
+            .args(["/C", "start", "", trimmed])
+            .status()
+    } else if cfg!(target_os = "macos") {
+        hidden_command("open").arg(trimmed).status()
+    } else {
+        hidden_command("xdg-open").arg(trimmed).status()
+    }
+    .map_err(|err| format!("Failed to open URL: {err}"))?;
+
+    if !status.success() {
+        return Err(format!("Open URL command failed: {status}"));
+    }
+    Ok(OpenUrlResult {
+        url: trimmed.to_string(),
+    })
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![client_info, run_cqclaw])
-        .run(tauri::generate_context!())
-        .expect("error while running CQClaw client");
+        .setup(|app| {
+            setup_tray(app)?;
+            Ok(())
+        })
+        .on_window_event(|window, event| {
+            if let WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                let _ = window.hide();
+            }
+        })
+        .invoke_handler(tauri::generate_handler![client_info, run_cqclaw, open_url])
+        .build(tauri::generate_context!())
+        .expect("error while building CQClaw client")
+        .run(|_app, event| {
+            if matches!(event, tauri::RunEvent::ExitRequested { .. }) {
+                stop_cqclaw_before_exit();
+            }
+        });
 }
