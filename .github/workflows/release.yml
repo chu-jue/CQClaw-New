@@ -46,16 +46,11 @@ jobs:
           name: cqclaw-windows-installer
           path: dist/*.exe
 
-  build-macos-package:
+  build-macos-dmg:
     runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -69,17 +64,27 @@ jobs:
         working-directory: desktop/tauri-client
         run: npm ci
 
-      - name: Build macOS package
-        run: tools/package_release.py --macos-zip
+      - name: Build Tauri macOS app
+        working-directory: desktop/tauri-client
+        run: npm run build
 
-      - name: Upload macOS package
+      - name: Stage .app and .dmg
+        run: |
+          mkdir -p dist
+          cp -R desktop/tauri-client/src-tauri/target/release/bundle/macos/*.app dist/ 2>/dev/null || true
+          cp -R desktop/tauri-client/src-tauri/target/release/bundle/dmg/*.dmg dist/ 2>/dev/null || true
+          ls -la dist/
+
+      - name: Upload macOS dmg
         uses: actions/upload-artifact@v4
         with:
-          name: cqclaw-macos-package
-          path: dist/*.zip
+          name: cqclaw-macos-dmg
+          path: |
+            dist/*.dmg
+            dist/*.app
 
   publish-release:
-    needs: [build-windows-installer, build-macos-package]
+    needs: [build-windows-installer, build-macos-dmg]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -103,4 +108,5 @@ jobs:
           files: |
             dist/**/*.exe
             dist/**/*.zip
+            dist/**/*.dmg
             dist/**/*.json
