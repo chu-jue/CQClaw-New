@@ -46,7 +46,7 @@ jobs:
           name: cqclaw-windows-installer
           path: dist/*.exe
 
-  build-macos-dmg:
+  build-macos-app:
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -66,25 +66,29 @@ jobs:
 
       - name: Build Tauri macOS app
         working-directory: desktop/tauri-client
-        run: npm run build
+        run: npm run build:app
 
-      - name: Stage .app and .dmg
+      - name: Zip macOS app
         run: |
+          set -euo pipefail
+          VERSION="$(cat version.txt)"
+          APP_PATH="$(find desktop/tauri-client/src-tauri/target/release/bundle/macos -maxdepth 1 -name '*.app' -print -quit)"
+          if [ -z "$APP_PATH" ]; then
+            echo "No macOS .app bundle was produced" >&2
+            exit 1
+          fi
           mkdir -p dist
-          cp -R desktop/tauri-client/src-tauri/target/release/bundle/macos/*.app dist/ 2>/dev/null || true
-          cp -R desktop/tauri-client/src-tauri/target/release/bundle/dmg/*.dmg dist/ 2>/dev/null || true
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "dist/CQClaw-${VERSION}-macos-app.zip"
           ls -la dist/
 
-      - name: Upload macOS dmg
+      - name: Upload macOS app
         uses: actions/upload-artifact@v4
         with:
-          name: cqclaw-macos-dmg
-          path: |
-            dist/*.dmg
-            dist/*.app
+          name: cqclaw-macos-app
+          path: dist/*.zip
 
   publish-release:
-    needs: [build-windows-installer, build-macos-dmg]
+    needs: [build-windows-installer, build-macos-app]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
