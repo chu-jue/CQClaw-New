@@ -1,6 +1,6 @@
 # CQClaw Workflow Schema
 
-Use `bin/cqclaw agent workflow schema` for the current full schema. This file
+Use `cqclaw agent workflow schema` for the current full schema. This file
 keeps the compact rules needed to draft workflows.
 
 ## Root

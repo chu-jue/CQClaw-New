@@ -6,31 +6,42 @@ description: Use when controlling Android devices through CQClaw: list devices, 
 # CQClaw Android Automation
 
 Use CQClaw's agent CLI as the stable automation surface. Prefer it over raw
-`adb` because it returns machine-readable JSON and reuses CQClaw's server,
-settings, dump parser, workflow executor, and output paths.
+`adb` because it returns machine-readable JSON and reuses the installed CQClaw
+client/server, settings, dump parser, workflow executor, and output paths.
 
-## Project Root
+## Runtime
 
-Default root:
-`/Users/chujue/Documents/Codex/cqclaq-2.0.12`
+This skill is designed for end users who have installed the CQClaw client. Do
+not assume they have the source checkout.
 
-Run commands from that root unless the user gives another checkout. Use
-`bin/cqclaw`, not a globally installed command, when working in this project.
+Resolve the CLI in this order:
+
+1. Use `cqclaw` when it is on `PATH`.
+2. Use `$CQCLAW_CLI` when the user configured an explicit executable.
+3. Use `$QCLAW_HOME/bin/cqclaw` or `$AAS_HOME/bin/cqclaw` when either home is
+   configured.
+4. Use common install locations only as a fallback:
+   - macOS: `$HOME/Applications/CQClaw/bin/cqclaw`
+   - Windows: `%LOCALAPPDATA%\CQClaw\bin\cqclaw.cmd`
+
+If none exists, tell the user to install/open CQClaw and make sure the `cqclaw`
+command is available in a new terminal. Do not use a hard-coded developer
+machine path.
 
 ## Core Workflow
 
 1. Ensure the local API is available:
-   `bin/cqclaw agent ensure`
+   `cqclaw agent ensure`
 2. List online devices:
-   `bin/cqclaw agent devices --online`
+   `cqclaw agent devices --online`
 3. If more than one online device is returned, ask the user which serial to use.
 4. Inspect before acting:
-   `bin/cqclaw agent inspect --serial SERIAL`
+   `cqclaw agent inspect --serial SERIAL`
 5. For screen-specific tasks, use dump queries:
-   `bin/cqclaw agent dump --serial SERIAL --query "Login"`
+   `cqclaw agent dump --serial SERIAL --query "Login"`
 6. For automation plans, create workflow JSON, preview it, then run it:
-   `bin/cqclaw agent workflow preview --file flow.json --devices SERIAL`
-   `bin/cqclaw agent workflow run --file flow.json --devices SERIAL`
+   `cqclaw agent workflow preview --file flow.json --devices SERIAL`
+   `cqclaw agent workflow run --file flow.json --devices SERIAL`
 7. After execution, verify with `dump`, `screenshot`, `top-activity`, or `shell`
    and report returned evidence paths.
 
@@ -52,4 +63,4 @@ Run commands from that root unless the user gives another checkout. Use
 
 - For exact commands and examples, read `references/cli.md`.
 - Before drafting workflow JSON, read `references/workflow-schema.md` or run
-  `bin/cqclaw agent workflow schema`.
+  `cqclaw agent workflow schema`.

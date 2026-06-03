@@ -1,15 +1,38 @@
 # CQClaw Agent CLI
 
-All commands are run from:
-`/Users/chujue/Documents/Codex/cqclaq-2.0.12`
+The skill should work after a user installs the CQClaw client. Do not assume a
+source checkout or a developer path.
+
+Use `cqclaw` in examples. If the command is not on `PATH`, resolve it with:
+
+```bash
+if command -v cqclaw >/dev/null 2>&1; then
+  CQCLAW_CMD="$(command -v cqclaw)"
+elif [ -n "${CQCLAW_CLI:-}" ] && [ -x "$CQCLAW_CLI" ]; then
+  CQCLAW_CMD="$CQCLAW_CLI"
+elif [ -n "${QCLAW_HOME:-}" ] && [ -x "$QCLAW_HOME/bin/cqclaw" ]; then
+  CQCLAW_CMD="$QCLAW_HOME/bin/cqclaw"
+elif [ -n "${AAS_HOME:-}" ] && [ -x "$AAS_HOME/bin/cqclaw" ]; then
+  CQCLAW_CMD="$AAS_HOME/bin/cqclaw"
+elif [ -x "$HOME/Applications/CQClaw/bin/cqclaw" ]; then
+  CQCLAW_CMD="$HOME/Applications/CQClaw/bin/cqclaw"
+elif [ -n "${LOCALAPPDATA:-}" ] && [ -f "$LOCALAPPDATA/CQClaw/bin/cqclaw.cmd" ]; then
+  CQCLAW_CMD="$LOCALAPPDATA/CQClaw/bin/cqclaw.cmd"
+else
+  echo "CQClaw CLI not found. Install/open CQClaw, then restart the terminal." >&2
+  exit 127
+fi
+```
+
+Use `"$CQCLAW_CMD"` in scripts when command discovery is needed.
 
 The agent CLI prints JSON by default.
 
 ## Service
 
 ```bash
-bin/cqclaw agent ensure
-bin/cqclaw agent call GET /api/health
+cqclaw agent ensure
+cqclaw agent call GET /api/health
 ```
 
 If the API is already running on the recorded runtime port, commands reuse it.
@@ -17,8 +40,8 @@ If the API is already running on the recorded runtime port, commands reuse it.
 ## Devices
 
 ```bash
-bin/cqclaw agent devices --online
-bin/cqclaw agent devices --include-process-packages
+cqclaw agent devices --online
+cqclaw agent devices --include-process-packages
 ```
 
 Use the returned `data.devices[].serial`.
@@ -26,13 +49,13 @@ Use the returned `data.devices[].serial`.
 ## Observe
 
 ```bash
-bin/cqclaw agent inspect --serial SERIAL
-bin/cqclaw agent top-activity --serial SERIAL
-bin/cqclaw agent screenshot --serial SERIAL
-bin/cqclaw agent dump --serial SERIAL
-bin/cqclaw agent dump --serial SERIAL --query "Login"
-bin/cqclaw agent dump --serial SERIAL --query "OK" --clickable-only
-bin/cqclaw agent dump --serial SERIAL --format nodes --limit 80
+cqclaw agent inspect --serial SERIAL
+cqclaw agent top-activity --serial SERIAL
+cqclaw agent screenshot --serial SERIAL
+cqclaw agent dump --serial SERIAL
+cqclaw agent dump --serial SERIAL --query "Login"
+cqclaw agent dump --serial SERIAL --query "OK" --clickable-only
+cqclaw agent dump --serial SERIAL --format nodes --limit 80
 ```
 
 `dump` returns:
@@ -51,12 +74,12 @@ dump.
 ## Act
 
 ```bash
-bin/cqclaw agent shell --serial SERIAL -- getprop ro.product.model
-bin/cqclaw agent shell --serial SERIAL -- input keyevent BACK
-bin/cqclaw agent shell --serial SERIAL -- input tap 540 1534
-bin/cqclaw agent clipboard read --serial SERIAL
-bin/cqclaw agent clipboard write --serial SERIAL --text "hello"
-bin/cqclaw agent apps --serial SERIAL --no-include-system --quick
+cqclaw agent shell --serial SERIAL -- getprop ro.product.model
+cqclaw agent shell --serial SERIAL -- input keyevent BACK
+cqclaw agent shell --serial SERIAL -- input tap 540 1534
+cqclaw agent clipboard read --serial SERIAL
+cqclaw agent clipboard write --serial SERIAL --text "hello"
+cqclaw agent apps --serial SERIAL --no-include-system --quick
 ```
 
 Prefer workflow actions for multi-step tasks.
@@ -64,9 +87,9 @@ Prefer workflow actions for multi-step tasks.
 ## Workflow
 
 ```bash
-bin/cqclaw agent workflow schema
-bin/cqclaw agent workflow preview --file flow.json --devices SERIAL
-bin/cqclaw agent workflow run --file flow.json --devices SERIAL
+cqclaw agent workflow schema
+cqclaw agent workflow preview --file flow.json --devices SERIAL
+cqclaw agent workflow run --file flow.json --devices SERIAL
 ```
 
 Example:
@@ -107,5 +130,5 @@ Example:
 Use this only when a high-level command is missing:
 
 ```bash
-bin/cqclaw agent call POST /api/device/shell --data '{"serial":"SERIAL","command":"id"}'
+cqclaw agent call POST /api/device/shell --data '{"serial":"SERIAL","command":"id"}'
 ```
