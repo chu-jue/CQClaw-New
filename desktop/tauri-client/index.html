@@ -1,9 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CQClaw Client</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:," />
+  <title>CQClaw 客户端</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -63,6 +64,35 @@
         <path d="M8.5 15.5a3.5 3.5 0 0 1 7 0" />
         <path d="M12 19h.01" />
       </symbol>
+      <symbol id="icon-folder" viewBox="0 0 24 24">
+        <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l2 2h5.5A2.5 2.5 0 0 1 20 9.5v7A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" />
+      </symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 8v5l3 2" />
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+      <symbol id="icon-alert" viewBox="0 0 24 24">
+        <path d="M12 3 21 19H3z" />
+        <path d="M12 9v4M12 17h.01" />
+      </symbol>
+      <symbol id="icon-dump" viewBox="0 0 24 24">
+        <path d="M12 3 4 7l8 4 8-4z" />
+        <path d="m4 12 8 4 8-4" />
+        <path d="m4 17 8 4 8-4" />
+      </symbol>
+      <symbol id="icon-workflow" viewBox="0 0 24 24">
+        <circle cx="6" cy="6" r="2.5" />
+        <circle cx="18" cy="6" r="2.5" />
+        <circle cx="12" cy="18" r="2.5" />
+        <path d="M8.4 7.4 11 10l2.6-2.6M12 10v5.5" />
+      </symbol>
+      <symbol id="icon-arrow-up-right" viewBox="0 0 24 24">
+        <path d="M7 17 17 7" />
+        <path d="M9 7h8v8" />
+      </symbol>
     </svg>
 
     <main class="client-shell">
@@ -76,87 +106,227 @@
           </div>
           <div>
             <h1>CQClaw</h1>
-            <p>Desktop Control</p>
+            <p data-i18n="brand.subtitle">桌面控制台</p>
           </div>
         </div>
 
-        <div class="connection-card">
-          <div class="status-pill" id="healthPill">Checking</div>
-          <p>Local service launcher, web console entry, and connected Android device monitor.</p>
+        <div class="side-status">
+          <div class="status-pill" id="healthPill">检查中</div>
+          <strong id="sideHeadline">本地控制中心</strong>
+          <p id="sideDescription">关闭窗口后，CQClaw 会继续在托盘运行。</p>
         </div>
+
+        <dl class="side-facts">
+          <div>
+            <dt data-i18n="side.version">版本</dt>
+            <dd>v1.0.6</dd>
+          </div>
+          <div>
+            <dt data-i18n="side.windowClose">关闭窗口</dt>
+            <dd data-i18n="side.windowCloseValue">隐藏到托盘</dd>
+          </div>
+          <div>
+            <dt data-i18n="side.exitAction">退出动作</dt>
+            <dd data-i18n="side.exitActionValue">停止服务</dd>
+          </div>
+        </dl>
       </aside>
 
       <section class="workspace">
         <header class="topbar">
           <div>
-            <h2>CQClaw Status</h2>
-            <p>Manage the local service, startup setting, and web console entry.</p>
+            <h2 data-i18n="top.title">CQClaw 控制中心</h2>
+            <p data-i18n="top.subtitle">查看本地自动化服务、Web 控制台、开机启动和 Android 设备状态。</p>
           </div>
-          <button id="refreshBtn" class="quiet-button" type="button"><svg class="ui-icon"><use href="#icon-refresh"></use></svg>Refresh</button>
+          <div class="topbar-actions">
+            <div class="language-switch" role="group" aria-label="语言切换" data-i18n-aria="language.aria">
+              <button id="langZhBtn" class="lang-button is-active" type="button">中文</button>
+              <button id="langEnBtn" class="lang-button" type="button">EN</button>
+            </div>
+            <div class="theme-switch" role="group" aria-label="主题切换" data-i18n-aria="theme.aria">
+              <button id="themeSystemBtn" class="theme-button is-active" type="button" data-theme-mode="system" data-i18n="theme.system">系统</button>
+              <button id="themeLightBtn" class="theme-button" type="button" data-theme-mode="light" data-i18n="theme.light">浅色</button>
+              <button id="themeDarkBtn" class="theme-button" type="button" data-theme-mode="dark" data-i18n="theme.dark">深色</button>
+            </div>
+            <button id="refreshBtn" class="quiet-button" type="button">
+              <svg class="ui-icon"><use href="#icon-refresh"></use></svg>
+              <span data-i18n="action.refresh">刷新</span>
+            </button>
+          </div>
         </header>
 
-        <section class="summary-grid" aria-label="Status summary">
-          <article class="summary-item service">
-            <div class="card-icon"><svg class="ui-icon"><use href="#icon-power"></use></svg></div>
-            <span>Service</span>
+        <section class="hero-panel" id="serviceHero" data-state="checking">
+          <div class="hero-main">
+            <div class="hero-status-line">
+              <span class="hero-dot" aria-hidden="true"></span>
+              <span id="serviceStateLabel">检查服务中</span>
+            </div>
+            <h3 id="serviceTitle">正在准备 CQClaw 状态</h3>
+            <p id="serviceSubtitle">正在收集服务、Web、开机启动和设备信息。</p>
+          </div>
+          <div class="hero-actions" aria-label="主要服务命令" data-i18n-aria="hero.actionsAria">
+            <div class="service-control-group" aria-label="服务启停" data-i18n-aria="serviceControls.aria">
+              <button id="startBtn" class="primary-button" type="button">
+                <svg class="ui-icon"><use href="#icon-power"></use></svg>
+                <span data-i18n="action.start">启动服务</span>
+              </button>
+              <button id="stopBtn" class="danger-button" type="button">
+                <svg class="ui-icon"><use href="#icon-stop"></use></svg>
+                <span data-i18n="action.stop">停止服务</span>
+              </button>
+            </div>
+            <button id="openBtn" class="open-web-button" type="button" data-open-path="/index.html">
+              <svg class="ui-icon"><use href="#icon-browser"></use></svg>
+              <span data-i18n="action.openWeb">打开 Web</span>
+            </button>
+            <div class="startup-switch-group">
+              <label class="autostart-switch-card" for="autostartToggle">
+                <span class="switch-copy">
+                  <span data-i18n="autostart.serviceLabel">服务开机启动</span>
+                  <strong id="autostartButtonText">检测中</strong>
+                </span>
+                <input id="autostartToggle" type="checkbox" role="switch" />
+                <span class="switch-track" aria-hidden="true"></span>
+              </label>
+              <label class="autostart-switch-card" for="clientAutostartToggle">
+                <span class="switch-copy">
+                  <span data-i18n="autostart.clientLabel">客户端开机启动</span>
+                  <strong id="clientAutostartButtonText">检测中</strong>
+                </span>
+                <input id="clientAutostartToggle" type="checkbox" role="switch" />
+                <span class="switch-track" aria-hidden="true"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="launch-grid" aria-label="功能入口" data-i18n-aria="launch.aria">
+          <button class="launch-card" type="button" data-open-path="/index.html">
+            <span class="launch-icon"><svg class="ui-icon"><use href="#icon-browser"></use></svg></span>
+            <span>
+              <strong data-i18n="launch.web.title">Web 控制台</strong>
+              <small data-i18n="launch.web.desc">打开主工作台</small>
+            </span>
+            <svg class="ui-icon launch-arrow"><use href="#icon-arrow-up-right"></use></svg>
+          </button>
+          <button class="launch-card" type="button" data-open-path="/dump.html">
+            <span class="launch-icon"><svg class="ui-icon"><use href="#icon-dump"></use></svg></span>
+            <span>
+              <strong data-i18n="launch.dump.title">Dump 分析</strong>
+              <small data-i18n="launch.dump.desc">截图和节点解析</small>
+            </span>
+            <svg class="ui-icon launch-arrow"><use href="#icon-arrow-up-right"></use></svg>
+          </button>
+          <button class="launch-card" type="button" data-open-path="/log-insight.html">
+            <span class="launch-icon"><svg class="ui-icon"><use href="#icon-log"></use></svg></span>
+            <span>
+              <strong data-i18n="launch.logs.title">日志洞察</strong>
+              <small data-i18n="launch.logs.desc">查看运行日志</small>
+            </span>
+            <svg class="ui-icon launch-arrow"><use href="#icon-arrow-up-right"></use></svg>
+          </button>
+          <button class="launch-card" type="button" data-open-path="/automation.html">
+            <span class="launch-icon"><svg class="ui-icon"><use href="#icon-workflow"></use></svg></span>
+            <span>
+              <strong data-i18n="launch.automation.title">自动化流程</strong>
+              <small data-i18n="launch.automation.desc">编排和运行任务</small>
+            </span>
+            <svg class="ui-icon launch-arrow"><use href="#icon-arrow-up-right"></use></svg>
+          </button>
+          <button class="launch-card" type="button" data-open-path="/device-manager.html">
+            <span class="launch-icon"><svg class="ui-icon"><use href="#icon-device"></use></svg></span>
+            <span>
+              <strong data-i18n="launch.devices.title">设备管理</strong>
+              <small data-i18n="launch.devices.desc">多设备和文件操作</small>
+            </span>
+            <svg class="ui-icon launch-arrow"><use href="#icon-arrow-up-right"></use></svg>
+          </button>
+        </section>
+
+        <section class="metric-grid" aria-label="服务指标" data-i18n-aria="metrics.aria">
+          <article class="metric-card" data-tone="service">
+            <div class="metric-icon"><svg class="ui-icon"><use href="#icon-power"></use></svg></div>
+            <span data-i18n="metric.service">服务</span>
             <strong id="serverStatus">-</strong>
           </article>
-          <article class="summary-item port">
-            <div class="card-icon"><svg class="ui-icon"><use href="#icon-port"></use></svg></div>
-            <span>Port</span>
+          <article class="metric-card" data-tone="port">
+            <div class="metric-icon"><svg class="ui-icon"><use href="#icon-port"></use></svg></div>
+            <span data-i18n="metric.port">端口</span>
             <strong id="portStatus">-</strong>
           </article>
-          <article class="summary-item connection">
-            <div class="card-icon"><svg class="ui-icon"><use href="#icon-connection"></use></svg></div>
-            <span>Connection</span>
+          <article class="metric-card" data-tone="connection">
+            <div class="metric-icon"><svg class="ui-icon"><use href="#icon-connection"></use></svg></div>
+            <span>Web</span>
             <strong id="connectionStatus">-</strong>
           </article>
-          <article class="summary-item startup">
-            <div class="card-icon"><svg class="ui-icon"><use href="#icon-startup"></use></svg></div>
-            <span>Autostart</span>
+          <article class="metric-card" data-tone="startup">
+            <div class="metric-icon"><svg class="ui-icon"><use href="#icon-startup"></use></svg></div>
+            <span data-i18n="metric.autostart">服务启动</span>
             <strong id="autostartStatus">-</strong>
           </article>
-          <article class="summary-item devices">
-            <div class="card-icon"><svg class="ui-icon"><use href="#icon-device"></use></svg></div>
-            <span>Online Devices</span>
+          <article class="metric-card" data-tone="devices">
+            <div class="metric-icon"><svg class="ui-icon"><use href="#icon-device"></use></svg></div>
+            <span data-i18n="metric.devices">设备</span>
             <strong id="deviceCount">-</strong>
           </article>
         </section>
 
-        <section class="command-bar" aria-label="Primary commands">
-          <button id="startBtn" class="primary-button" type="button"><svg class="ui-icon"><use href="#icon-power"></use></svg>Start</button>
-          <button id="stopBtn" type="button"><svg class="ui-icon"><use href="#icon-stop"></use></svg>Stop</button>
-          <button id="openBtn" type="button"><svg class="ui-icon"><use href="#icon-browser"></use></svg>Open Web</button>
-          <button id="autostartBtn" type="button"><svg class="ui-icon"><use href="#icon-startup"></use></svg><span id="autostartButtonText">Enable Autostart</span></button>
-        </section>
+        <section class="content-grid">
+          <section class="panel devices-panel">
+            <div class="panel-head">
+              <strong><svg class="ui-icon"><use href="#icon-device"></use></svg><span data-i18n="panel.devices">Android 设备</span></strong>
+              <span class="panel-note" id="deviceSummary">等待刷新</span>
+            </div>
+            <div class="device-list" id="deviceList"></div>
+          </section>
 
-        <section class="details-grid">
-          <div class="detail-list">
-            <div class="panel-title"><svg class="ui-icon"><use href="#icon-link"></use></svg>Runtime</div>
-            <div class="field-row">
-              <span>Home</span>
-              <code id="homePath">-</code>
+          <section class="panel environment-panel">
+            <div class="panel-head">
+              <strong><svg class="ui-icon"><use href="#icon-folder"></use></svg><span data-i18n="panel.environment">运行环境</span></strong>
+              <span class="panel-note" id="lastRefresh">未刷新</span>
             </div>
-            <div class="field-row">
-              <span>URL</span>
-              <code id="serverUrl">-</code>
+            <div class="env-grid">
+              <div class="info-row">
+                <span data-i18n="env.home">项目目录</span>
+                <code id="homePath">-</code>
+              </div>
+              <div class="info-row">
+                <span data-i18n="env.webUrl">Web 地址</span>
+                <code id="serverUrl">-</code>
+              </div>
+              <div class="info-row">
+                <span data-i18n="env.port">服务端口</span>
+                <code id="portDetail">-</code>
+              </div>
+              <div class="info-row">
+                <span data-i18n="env.pid">进程 PID</span>
+                <code id="pidDetail">-</code>
+              </div>
+              <div class="info-row">
+                <span>Python</span>
+                <code id="pythonPath">-</code>
+              </div>
+              <div class="info-row">
+                <span data-i18n="env.autostartTarget">启动项</span>
+                <code id="autostartTarget">-</code>
+              </div>
+              <div class="info-row">
+                <span data-i18n="env.log">日志</span>
+                <code id="logPath">-</code>
+              </div>
             </div>
-            <div class="field-row">
-              <span>Port</span>
-              <code id="portDetail">-</code>
-            </div>
-            <div class="field-row">
-              <span>Python</span>
-              <code id="pythonPath">-</code>
-            </div>
-          </div>
+          </section>
 
-          <section class="log-panel">
-            <div class="log-head">
-              <strong><svg class="ui-icon"><use href="#icon-log"></use></svg>Command Output</strong>
-              <button id="clearLogBtn" class="quiet-button" type="button">Clear</button>
+          <section class="panel activity-panel">
+            <div class="panel-head">
+              <strong><svg class="ui-icon"><use href="#icon-clock"></use></svg><span data-i18n="panel.activity">最近活动</span></strong>
+              <button id="clearLogBtn" class="quiet-button" type="button" data-i18n="action.clear">清空</button>
             </div>
-            <pre id="outputLog"></pre>
+            <ul class="activity-list" id="activityList"></ul>
+            <details class="raw-output">
+              <summary data-i18n="activity.commandOutput">命令输出</summary>
+              <pre id="outputLog"></pre>
+            </details>
           </section>
         </section>
       </section>

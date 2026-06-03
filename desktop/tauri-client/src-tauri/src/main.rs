@@ -2,6 +2,8 @@
 
 use serde::Serialize;
 use std::env;
+use std::fs;
+use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -30,8 +32,19 @@ struct OpenUrlResult {
     url: String,
 }
 
+#[derive(Serialize)]
+struct ClientAutostartStatus {
+    enabled: bool,
+    target: String,
+    command: String,
+}
+
 const TRAY_SHOW_ID: &str = "show";
 const TRAY_EXIT_ID: &str = "exit";
+const CLIENT_AUTOSTART_LABEL: &str = "com.cqclaw.client";
+#[cfg(windows)]
+const CLIENT_AUTOSTART_RUN_VALUE: &str = "CQClawClient";
+const CLIENT_HIDDEN_ARG: &str = "--hidden";
 
 #[cfg(windows)]
 const CREATE_NO_WINDOW: u32 = 0x08000000;
@@ -165,6 +178,205 @@ fn show_main_window(app: &tauri::AppHandle) {
     }
 }
 
+fn start_hidden_requested() -> bool {
+    env::args().any(|arg| arg == CLIENT_HIDDEN_ARG)
+        || env::var("CQCLAW_CLIENT_START_HIDDEN")
+            .map(|value| value == "1" || value.eq_ignore_ascii_case("true"))
+            .unwrap_or(false)
+}
+
+fn hide_main_window(app: &tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.hide();
+    }
+}
+
+fn client_autostart_command() -> Result<Vec<String>, String> {
+    let exe = env::current_exe().map_err(|err| err.to_string())?;
+    Ok(vec![
+        exe.to_string_lossy().to_string(),
+        CLIENT_HIDDEN_ARG.to_string(),
+    ])
+}
+
+fn command_line(command: &[String]) -> String {
+    command
+        .iter()
+        .map(|part| {
+            if part.contains(' ') {
+                format!("\"{}\"", part.replace('"', "\\\""))
+            } else {
+                part.clone()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+#[cfg(target_os = "macos")]
+fn client_autostart_target() -> Result<PathBuf, String> {
+    let home = env::var("HOME").map_err(|_| "HOME is not set".to_string())?;
+    Ok(PathBuf::from(home)
+        .join("Library")
+        .join("LaunchAgents")
+        .join(format!("{CLIENT_AUTOSTART_LABEL}.plist")))
+}
+
+#[cfg(target_os = "macos")]
+fn xml_escape(value: &str) -> String {
+    value
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+        .replace('\'', "&apos;")
+}
+
+#[cfg(target_os = "macos")]
+fn client_autostart_status_impl() -> Result<ClientAutostartStatus, String> {
+    let target = client_autostart_target()?;
+    let command = client_autostart_command()?;
+    Ok(ClientAutostartStatus {
+        enabled: target.exists(),
+        target: target.to_string_lossy().to_string(),
+        command: command_line(&command),
+    })
+}
+
+#[cfg(target_os = "macos")]
+fn set_client_autostart_impl(enabled: bool) -> Result<ClientAutostartStatus, String> {
+    let target = client_autostart_target()?;
+    let command = client_autostart_command()?;
+    if enabled {
+        if let Some(parent) = target.parent() {
+            fs::create_dir_all(parent).map_err(|err| err.to_string())?;
+        }
+        let args = command
+            .iter()
+            .map(|arg| format!("    <string>{}</string>", xml_escape(arg)))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let plist = format!(
+            r#"<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>{}</string>
+  <key>ProgramArguments</key>
+  <array>
+{}
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <false/>
+</dict>
+</plist>
+"#,
+            CLIENT_AUTOSTART_LABEL, args
+        );
+        fs::write(&target, plist).map_err(|err| err.to_string())?;
+    } else if let Err(err) = fs::remove_file(&target) {
+        if err.kind() != ErrorKind::NotFound {
+            return Err(err.to_string());
+        }
+    }
+    Ok(ClientAutostartStatus {
+        enabled,
+        target: target.to_string_lossy().to_string(),
+        command: command_line(&command),
+    })
+}
+
+#[cfg(windows)]
+fn client_autostart_target() -> String {
+    r"HKCU\Software\Microsoft\Windows\CurrentVersion\Run".to_string()
+}
+
+#[cfg(windows)]
+fn client_autostart_status_impl() -> Result<ClientAutostartStatus, String> {
+    let output = hidden_command("reg")
+        .args([
+            "query",
+            &client_autostart_target(),
+            "/v",
+            CLIENT_AUTOSTART_RUN_VALUE,
+        ])
+        .output()
+        .map_err(|err| err.to_string())?;
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+    let command = stdout
+        .lines()
+        .find(|line| line.contains(CLIENT_AUTOSTART_RUN_VALUE))
+        .and_then(|line| line.split("REG_SZ").nth(1))
+        .map(str::trim)
+        .unwrap_or("")
+        .to_string();
+    Ok(ClientAutostartStatus {
+        enabled: output.status.success() && !command.is_empty(),
+        target: format!(
+            "{}\\{}",
+            client_autostart_target(),
+            CLIENT_AUTOSTART_RUN_VALUE
+        ),
+        command,
+    })
+}
+
+#[cfg(windows)]
+fn set_client_autostart_impl(enabled: bool) -> Result<ClientAutostartStatus, String> {
+    let command = command_line(&client_autostart_command()?);
+    let status = if enabled {
+        hidden_command("reg")
+            .args([
+                "add",
+                &client_autostart_target(),
+                "/v",
+                CLIENT_AUTOSTART_RUN_VALUE,
+                "/t",
+                "REG_SZ",
+                "/d",
+                &command,
+                "/f",
+            ])
+            .status()
+    } else {
+        hidden_command("reg")
+            .args([
+                "delete",
+                &client_autostart_target(),
+                "/v",
+                CLIENT_AUTOSTART_RUN_VALUE,
+                "/f",
+            ])
+            .status()
+    }
+    .map_err(|err| err.to_string())?;
+    if enabled && !status.success() {
+        return Err(format!("Failed to update Windows Run entry: {status}"));
+    }
+    Ok(ClientAutostartStatus {
+        enabled,
+        target: format!(
+            "{}\\{}",
+            client_autostart_target(),
+            CLIENT_AUTOSTART_RUN_VALUE
+        ),
+        command,
+    })
+}
+
+#[cfg(not(any(target_os = "macos", windows)))]
+fn client_autostart_status_impl() -> Result<ClientAutostartStatus, String> {
+    Err("Client autostart is only supported on macOS and Windows".to_string())
+}
+
+#[cfg(not(any(target_os = "macos", windows)))]
+fn set_client_autostart_impl(_enabled: bool) -> Result<ClientAutostartStatus, String> {
+    Err("Client autostart is only supported on macOS and Windows".to_string())
+}
+
 fn setup_tray(app: &mut tauri::App) -> tauri::Result<()> {
     let show_item = MenuItemBuilder::with_id(TRAY_SHOW_ID, "Show CQClaw").build(app)?;
     let exit_item = MenuItemBuilder::with_id(TRAY_EXIT_ID, "Exit").build(app)?;
@@ -284,10 +496,23 @@ fn open_url(url: String) -> Result<OpenUrlResult, String> {
     })
 }
 
+#[tauri::command]
+fn client_autostart_status() -> Result<ClientAutostartStatus, String> {
+    client_autostart_status_impl()
+}
+
+#[tauri::command]
+fn client_autostart_set(enabled: bool) -> Result<ClientAutostartStatus, String> {
+    set_client_autostart_impl(enabled)
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
             setup_tray(app)?;
+            if start_hidden_requested() {
+                hide_main_window(app.handle());
+            }
             Ok(())
         })
         .on_window_event(|window, event| {
@@ -296,7 +521,13 @@ fn main() {
                 let _ = window.hide();
             }
         })
-        .invoke_handler(tauri::generate_handler![client_info, run_cqclaw, open_url])
+        .invoke_handler(tauri::generate_handler![
+            client_info,
+            run_cqclaw,
+            open_url,
+            client_autostart_status,
+            client_autostart_set
+        ])
         .build(tauri::generate_context!())
         .expect("error while building CQClaw client")
         .run(|_app, event| {
