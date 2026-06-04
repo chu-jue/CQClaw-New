@@ -2716,6 +2716,43 @@ body.log-workbench-page {
   border-color: var(--log-fatal) !important;
 }
 
+/* Make level color readable across the whole log row, not just the badge. */
+.log-workbench-page .log-row[data-level="V"] {
+  background: linear-gradient(90deg, var(--log-verbose-bg), color-mix(in srgb, var(--log-verbose-bg) 42%, var(--color-bg-card))) !important;
+  box-shadow: inset 4px 0 0 var(--log-verbose) !important;
+}
+
+.log-workbench-page .log-row[data-level="D"] {
+  background: linear-gradient(90deg, var(--log-debug-bg), color-mix(in srgb, var(--log-debug-bg) 42%, var(--color-bg-card))) !important;
+  box-shadow: inset 4px 0 0 var(--log-debug) !important;
+}
+
+.log-workbench-page .log-row[data-level="I"] {
+  background: linear-gradient(90deg, var(--log-info-bg), color-mix(in srgb, var(--log-info-bg) 42%, var(--color-bg-card))) !important;
+  box-shadow: inset 4px 0 0 var(--log-info) !important;
+}
+
+.log-workbench-page .log-row[data-level="W"] {
+  background: linear-gradient(90deg, var(--log-warning-bg), color-mix(in srgb, var(--log-warning-bg) 46%, var(--color-bg-card))) !important;
+  box-shadow: inset 4px 0 0 var(--log-warning) !important;
+}
+
+.log-workbench-page .log-row[data-level="E"] {
+  background: linear-gradient(90deg, var(--log-error-bg), color-mix(in srgb, var(--log-error-bg) 52%, var(--color-bg-card))) !important;
+  box-shadow: inset 4px 0 0 var(--log-error) !important;
+}
+
+.log-workbench-page .log-row[data-level="F"] {
+  background: linear-gradient(90deg, var(--log-fatal-bg), color-mix(in srgb, var(--log-fatal-bg) 54%, var(--color-bg-card))) !important;
+  box-shadow: inset 4px 0 0 var(--log-fatal) !important;
+}
+
+.log-workbench-page .log-row.selected[data-level] {
+  border-color: var(--color-accent-line-strong) !important;
+  outline: 1px solid var(--color-accent-line-strong) !important;
+  outline-offset: -1px !important;
+}
+
 @media (max-width: 1320px) {
   .log-workbench-page .workbench-toolbar {
     grid-template-columns: minmax(420px, 1.15fr) minmax(320px, .85fr);

@@ -88,8 +88,15 @@ Prefer workflow actions for multi-step tasks.
 
 ```bash
 cqclaw agent workflow schema
+cqclaw agent workflow list
+cqclaw agent workflow show --name "Open app and capture result"
 cqclaw agent workflow preview --file flow.json --devices SERIAL
 cqclaw agent workflow run --file flow.json --devices SERIAL
+cqclaw agent workflow save --file flow.json --name "Open app and capture result" --source learned
+cqclaw agent workflow preview --profile "Open app and capture result" --devices SERIAL
+cqclaw agent workflow run --profile "Open app and capture result" --devices SERIAL
+cqclaw agent workflow report --name "Open app and capture result"
+cqclaw agent workflow delete --name "Open app and capture result" --yes
 ```
 
 Example:
@@ -124,6 +131,11 @@ Example:
   ]
 }
 ```
+
+After a workflow is verified, use `workflow save` to add it to the Web
+Automation page's saved profiles. `workflow run --profile` replays it without
+the original JSON file and updates its success/failure counters, verification
+status, evidence paths, and latest learning report.
 
 ## Raw API Fallback
 

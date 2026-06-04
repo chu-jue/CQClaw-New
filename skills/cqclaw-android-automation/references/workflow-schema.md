@@ -178,3 +178,9 @@ For a natural-language automation request:
 4. If preview is valid, run workflow.
 5. Verify result with dump/screenshot/top-activity.
 6. If a visible step fails, dump again and revise selectors.
+7. Once the run is verified, save it for reuse:
+   `cqclaw agent workflow save --file flow.json --name "Workflow name" --source learned`
+8. On the next request, replay the saved profile without regenerating JSON:
+   `cqclaw agent workflow run --profile "Workflow name" --devices SERIAL`
+9. Read its latest verification evidence:
+   `cqclaw agent workflow report --name "Workflow name"`

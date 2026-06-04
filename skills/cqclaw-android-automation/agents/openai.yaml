@@ -1,7 +1,7 @@
 interface:
   display_name: "CQClaw Android Automation"
-  short_description: "Control Android devices through CQClaw"
-  default_prompt: "Use $cqclaw-android-automation to inspect my Android device and draft a CQClaw workflow."
+  short_description: "Learn and replay verified Android workflows"
+  default_prompt: "Use $cqclaw-android-automation to inspect my Android device, complete the requested task, verify the result with evidence, save a reusable workflow, and replay an existing matching profile when available."
 
 policy:
   allow_implicit_invocation: true

@@ -171,6 +171,48 @@ button:disabled {
   opacity: 0.52;
 }
 
+button.is-busy,
+.autostart-switch-card.is-busy {
+  position: relative;
+}
+
+button.is-busy {
+  gap: 8px;
+  cursor: progress;
+  opacity: .88;
+}
+
+button.is-busy::after,
+.autostart-switch-card.is-busy::after {
+  content: "";
+  width: 13px;
+  height: 13px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  animation: cq-client-spin .72s linear infinite;
+}
+
+.autostart-switch-card.is-busy::after {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: var(--accent);
+}
+
+.is-command-busy .primary-button:not(.is-busy),
+.is-command-busy .danger-button:not(.is-busy),
+.is-command-busy .quiet-button:not(.is-busy),
+.is-command-busy .open-web-button:not(.is-busy),
+.is-command-busy .launcher-card:not(.is-busy),
+.is-command-busy .autostart-switch-card:not(.is-busy) {
+  opacity: .66;
+}
+
+@keyframes cq-client-spin {
+  to { transform: rotate(360deg); }
+}
+
 code,
 pre {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
@@ -968,8 +1010,9 @@ button,
   display: grid;
   grid-template-columns: 112px minmax(0, 1fr);
   gap: 12px;
-  align-items: center;
-  min-height: 40px;
+  align-items: start;
+  min-height: 44px;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border-soft);
 }
 
@@ -980,11 +1023,14 @@ button,
 }
 
 .info-row code {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
   color: var(--text);
   font-size: 12px;
+  line-height: 1.42;
 }
 
 .activity-panel {

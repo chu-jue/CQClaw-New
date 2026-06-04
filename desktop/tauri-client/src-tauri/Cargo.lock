@@ -392,7 +392,7 @@ dependencies = [
 
 [[package]]
 name = "cqclaw-client"
-version = "1.0.6"
+version = "1.0.8"
 dependencies = [
  "serde",
  "tauri",

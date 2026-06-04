@@ -136,24 +136,37 @@
         $("profiles").innerHTML = `<div class="empty">还没有保存的方案</div>`;
         return;
       }
-      $("profiles").innerHTML = state.profiles.map((profile, index) => `
+      $("profiles").innerHTML = state.profiles.map((profile, index) => {
+        const steps = Array.isArray(profile.steps) ? profile.steps : [];
+        const sourceLabel = profile.source === "skill" || profile.source === "learned" ? "Agent 学习" : profile.source;
+        const source = sourceLabel ? ` · ${sourceLabel}` : "";
+        const verification = profile.verified ? " · 已验证" : (profile.verificationStatus === "failed" ? " · 验证失败" : " · 待验证");
+        const runStats = profile.successCount || profile.failureCount
+          ? ` · 成功 ${Number(profile.successCount || 0)} / 失败 ${Number(profile.failureCount || 0)}`
+          : "";
+        const updated = profile.updatedAt || profile.createdAt || "";
+        const meta = `${steps.length} 个动作${source}${verification}${runStats}${updated ? ` · ${updated}` : ""}`;
+        return `
         <div class="profile saved-profile-card">
           <div class="profile-main">
             <strong title="${attr(profile.name || "未命名方案")}">${escapeHtml(profile.name || "未命名方案")}</strong>
-            <div class="muted tiny">${profile.steps.length} 个动作</div>
+            <div class="muted tiny" title="${attr(meta)}">${escapeHtml(meta)}</div>
           </div>
           <div class="profile-actions">
             <button data-load-profile="${index}" title="载入方案">${iconLabel("import", "载入")}</button>
             <button class="danger" data-delete-profile="${index}" title="删除方案">${iconLabel("trash", "删除")}</button>
           </div>
         </div>
-      `).join("");
+      `; }).join("");
       document.querySelectorAll("[data-load-profile]").forEach(btn => {
         btn.addEventListener("click", () => {
           const profile = state.profiles[Number(btn.dataset.loadProfile)];
-          state.steps = structuredClone(profile.steps);
+          if (!profile) return;
+          state.steps = structuredClone(Array.isArray(profile.steps) ? profile.steps : []);
           $("profileName").value = profile.name || "";
+          $("stopOnError").checked = typeof profile.stopOnError === "boolean" ? profile.stopOnError : true;
           renderSteps();
+          setWorkflowStatus(`已载入方案：${profile.name || "未命名方案"}`);
         });
       });
       document.querySelectorAll("[data-delete-profile]").forEach(btn => {
@@ -3487,11 +3500,38 @@ ${result?.stderr || ""}`;
       syncAllStepFields();
       const name = $("profileName").value.trim() || `方案 ${new Date().toLocaleString()}`;
       const existing = state.profiles.findIndex(item => item.name === name);
-      const profile = { name, steps: structuredClone(state.steps) };
+      const now = new Date().toLocaleString();
+      const previous = existing >= 0 ? state.profiles[existing] : {};
+      const nextSteps = structuredClone(state.steps);
+      const behaviorChanged = existing >= 0 && (
+        JSON.stringify(previous.steps || []) !== JSON.stringify(nextSteps)
+        || Boolean(previous.stopOnError ?? true) !== $("stopOnError").checked
+      );
+      const profile = {
+        ...previous,
+        type: "cqclaw-profile",
+        version: 1,
+        name,
+        stopOnError: $("stopOnError").checked,
+        steps: nextSteps,
+        source: previous.source || "web",
+        createdAt: previous.createdAt || now,
+        updatedAt: now,
+        verified: behaviorChanged ? false : Boolean(previous.verified),
+        verificationStatus: behaviorChanged ? "pending" : (previous.verificationStatus || (previous.verified ? "verified" : "pending")),
+        successCount: Number(previous.successCount || 0),
+        failureCount: Number(previous.failureCount || 0)
+      };
+      if (behaviorChanged) {
+        delete profile.lastVerifiedAt;
+        delete profile.lastEvidence;
+        delete profile.lastLearningReport;
+      }
       if (existing >= 0) state.profiles[existing] = profile;
       else state.profiles.push(profile);
       await saveProfiles();
       renderProfiles();
+      setWorkflowStatus(`已保存方案：${name}`);
     });
     $("runAll").addEventListener("click", runAll);
     $("previewRun").addEventListener("click", previewCurrentRun);

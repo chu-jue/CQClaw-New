@@ -112,6 +112,7 @@ const messages = {
     "activity.refreshed.title": "状态已刷新",
     "activity.refreshed.detail": "{count} 台设备，服务{tone}",
     "activity.refreshFailed.title": "刷新失败",
+    "activity.commandRunning.title": "正在处理",
     "activity.commandDone.title": "命令已完成",
     "activity.commandFailed.title": "命令失败",
     "last.refreshed": "刷新于 {time}",
@@ -233,6 +234,7 @@ const messages = {
     "activity.refreshed.title": "Status refreshed",
     "activity.refreshed.detail": "{count} device(s), {tone} service",
     "activity.refreshFailed.title": "Refresh failed",
+    "activity.commandRunning.title": "Working",
     "activity.commandDone.title": "Command completed",
     "activity.commandFailed.title": "Command failed",
     "last.refreshed": "Refreshed {time}",
@@ -398,8 +400,18 @@ function setText(element, value) {
   element.textContent = value || "-";
 }
 
-function setBusy(value) {
+function setBusy(value, activeControl = null) {
   state.busy = value;
+  document.body.classList.toggle("is-command-busy", value);
+  document.querySelectorAll(".is-busy[aria-busy]").forEach((element) => {
+    element.classList.remove("is-busy");
+    element.removeAttribute("aria-busy");
+  });
+  const activeShell = activeControl?.closest?.(".autostart-switch-card") || activeControl;
+  if (value && activeShell) {
+    activeShell.classList.add("is-busy");
+    activeShell.setAttribute("aria-busy", "true");
+  }
   elements.buttons.forEach((button) => {
     if (!["clearLogBtn", "langZhBtn", "langEnBtn", "themeSystemBtn", "themeLightBtn", "themeDarkBtn"].includes(button.id)) button.disabled = value;
   });
@@ -681,29 +693,38 @@ function featureUrl(path) {
   return new URL(path || "/index.html", origin).toString();
 }
 
-async function openWebConsole(path = "") {
+async function openWebConsole(path = "", activeControl = null) {
+  setBusy(true, activeControl);
+  appendActivity("activity.commandRunning.title", path ? featureUrl(path) || path : t("action.openWeb"), "neutral");
   if (!state.service.url) {
-    await refresh();
+    await refresh(activeControl);
+    setBusy(true, activeControl);
   }
-  const targetUrl = path ? featureUrl(path) : state.service.url;
-  if (!targetUrl) {
-    appendActivity("activity.openSkipped.title", { key: "activity.openSkipped.detail" }, "warn");
-    appendLog(path ? t("log.featureUrlMissing") : t("log.webUrlMissing"));
-    return;
+  try {
+    const targetUrl = path ? featureUrl(path) : state.service.url;
+    if (!targetUrl) {
+      appendActivity("activity.openSkipped.title", { key: "activity.openSkipped.detail" }, "warn");
+      appendLog(path ? t("log.featureUrlMissing") : t("log.webUrlMissing"));
+      return;
+    }
+    if (!isTauri) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+      appendActivity(path ? "activity.openedPath.title" : "activity.opened.title", targetUrl, "ok");
+      appendLog(`Opened ${targetUrl}`);
+      return;
+    }
+    const result = await invoke("open_url", { url: targetUrl });
+    appendActivity(path ? "activity.openedPath.title" : "activity.opened.title", result.url, "ok");
+    appendLog(`Opened ${result.url}`);
+  } finally {
+    setBusy(false);
+    applyButtonState();
   }
-  if (!isTauri) {
-    window.open(targetUrl, "_blank", "noopener,noreferrer");
-    appendActivity(path ? "activity.openedPath.title" : "activity.opened.title", targetUrl, "ok");
-    appendLog(`Opened ${targetUrl}`);
-    return;
-  }
-  const result = await invoke("open_url", { url: targetUrl });
-  appendActivity(path ? "activity.openedPath.title" : "activity.opened.title", result.url, "ok");
-  appendLog(`Opened ${result.url}`);
 }
 
-async function refresh() {
-  setBusy(true);
+async function refresh(activeControl = null) {
+  setBusy(true, activeControl);
+  if (activeControl) appendActivity("activity.commandRunning.title", t("action.refresh"), "neutral");
   try {
     const [status, autostart, clientAutostart, devices, info] = await Promise.all([
       runCli(["status"], { allowFailure: true, timeoutSecs: 8 }),
@@ -747,8 +768,10 @@ async function refresh() {
 }
 
 async function runAndRefresh(args, options = {}) {
-  setBusy(true);
   const command = `cqclaw ${args.join(" ")}`;
+  setBusy(true, options.activeControl || null);
+  appendActivity("activity.commandRunning.title", command, "neutral");
+  appendLog(`Running ${command}`);
   try {
     await runCli(args, options);
     appendActivity("activity.commandDone.title", command, "ok");
@@ -762,7 +785,8 @@ async function runAndRefresh(args, options = {}) {
 }
 
 async function setClientAutostart(enabled) {
-  setBusy(true);
+  setBusy(true, elements.clientAutostartToggle);
+  appendActivity("activity.commandRunning.title", enabled ? t("action.enableAutostart") : t("action.disableAutostart"), "neutral");
   try {
     const result = await invoke("client_autostart_set", { enabled });
     state.clientAutostart = {
@@ -781,17 +805,17 @@ async function setClientAutostart(enabled) {
   }
 }
 
-elements.refreshBtn.addEventListener("click", refresh);
-elements.startBtn.addEventListener("click", () => runAndRefresh(["start", "--no-open"], { timeoutSecs: 20 }));
-elements.stopBtn.addEventListener("click", () => runAndRefresh(["stop"], { timeoutSecs: 20 }));
-elements.openBtn.addEventListener("click", () => openWebConsole(elements.openBtn.dataset.openPath || "").catch((error) => appendActivity("activity.openFailed.title", String(error), "error")));
+elements.refreshBtn.addEventListener("click", () => refresh(elements.refreshBtn));
+elements.startBtn.addEventListener("click", () => runAndRefresh(["start", "--no-open"], { timeoutSecs: 20, activeControl: elements.startBtn }));
+elements.stopBtn.addEventListener("click", () => runAndRefresh(["stop"], { timeoutSecs: 20, activeControl: elements.stopBtn }));
+elements.openBtn.addEventListener("click", () => openWebConsole(elements.openBtn.dataset.openPath || "", elements.openBtn).catch((error) => appendActivity("activity.openFailed.title", String(error), "error")));
 elements.launchButtons.forEach((button) => {
   if (button.id === "openBtn") return;
-  button.addEventListener("click", () => openWebConsole(button.dataset.openPath || "").catch((error) => appendActivity("activity.openFailed.title", String(error), "error")));
+  button.addEventListener("click", () => openWebConsole(button.dataset.openPath || "", button).catch((error) => appendActivity("activity.openFailed.title", String(error), "error")));
 });
 elements.autostartToggle.addEventListener("change", () => {
   const args = elements.autostartToggle.checked ? ["autostart", "enable", "--no-open"] : ["autostart", "disable"];
-  runAndRefresh(args, { timeoutSecs: 20 });
+  runAndRefresh(args, { timeoutSecs: 20, activeControl: elements.autostartToggle });
 });
 elements.clientAutostartToggle.addEventListener("change", () => {
   setClientAutostart(elements.clientAutostartToggle.checked);

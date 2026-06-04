@@ -7,12 +7,11 @@
   <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/components/icons.css?v=2">
   <script src="/js/core/theme-boot.js"></script>
-  <link rel="stylesheet" href="/css/pages/log-workbench.css?v=8">
+  <link rel="stylesheet" href="/css/pages/log-workbench.css?v=9">
   <link rel="stylesheet" href="/css/components/theme-system.css">
   <link rel="stylesheet" href="/css/pages/topnav-unified.css?v=3">
   <link rel="stylesheet" href="/css/pages/side-nav-shell.css?v=1">
-  <link rel="stylesheet" href="/css/pages/storage-center-modern.css?v=1">
-  <script src="/js/core/unified-nav.js?v=2" defer></script>
+  <link rel="stylesheet" href="/css/pages/storage-center-modern.css?v=2">
   <script src="/js/core/side-nav.js?v=1" defer></script>
 </head>
 <body class="cq-side-nav-page storage-center-page app-page">
@@ -25,18 +24,6 @@
       <div class="module-hero-art storage-module-art" aria-hidden="true">
         <img class="module-theme-art module-theme-art-light" src="/assets/workbench/storage-center-hero-light.png" alt="">
         <img class="module-theme-art module-theme-art-dark" src="/assets/workbench/storage-center-hero-dark.png" alt="">
-      </div>
-      <div class="app-header-right app-nav" aria-label="主导航">
-                <nav class="main-tabs cq-unified-topnav" aria-label="工作区导航">
-          <a class="nav-tab" href="/"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#home"></use></svg><span>工作台</span></a>
-          <a class="nav-tab" href="/log-insight.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#log"></use></svg><span>日志洞察</span> <em class="topnav-hot">高频</em></a>
-          <a class="nav-tab" href="/automation.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#workflow"></use></svg><span>自动化</span></a>
-          <a class="nav-tab" href="/device-manager.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#device"></use></svg><span>设备</span></a>
-          <a class="nav-tab" href="/dump.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#dump"></use></svg><span>节点解析</span></a>
-          <a class="nav-tab active" href="/storage-center.html" aria-current="page"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg><span>资源中心</span></a>
-          <a class="nav-tab" href="/settings.html"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#settings"></use></svg><span>设置</span></a>
-        </nav>
-        <button class="btn btn-icon theme-switch-btn" type="button" data-theme-toggle aria-label="切换主题" title="切换主题"><svg class="ui-icon" aria-hidden="true"><use href="/assets/icons/cqclaw-ui-icons.svg#moon"></use></svg></button>
       </div>
     </header>
 
@@ -61,7 +48,7 @@
           <div class="storage-panel-head">
             <div>
               <h2 id="storageCategoryTitle"><svg class="ui-icon panel-title-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#storage"></use></svg>缓存类型</h2>
-              <p>点击卡片先预览，确认后再清理；正在使用或受保护的文件会自动跳过。</p>
+              <p>点击卡片可直接打开目录，也可以先预览再清理；正在使用或受保护的文件会自动跳过。</p>
             </div>
           </div>
           <div id="storageRows" class="storage-grid storage-category-grid"></div>
@@ -97,6 +84,6 @@
 
   <script src="/js/api.js"></script>
   <script src="/js/theme-manager.js"></script>
-  <script src="/js/pages/storage-center.js?v=1"></script>
+  <script src="/js/pages/storage-center.js?v=2"></script>
 </body>
 </html>

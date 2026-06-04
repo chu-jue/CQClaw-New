@@ -39,6 +39,7 @@ RUNTIME_DIR = Path("data") / "runtime"
 STATE_NAME = "cqclaw.json"
 PID_NAME = "cqclaw.pid"
 LOG_NAME = "cqclaw.log"
+PROFILES_NAME = "profiles.json"
 LEGACY_STATE_NAME = "aas.json"
 LEGACY_PID_NAME = "aas.pid"
 LEGACY_LOG_NAME = "aas.log"
@@ -107,6 +108,10 @@ def enterprise_source_path(root: Path) -> Path:
 
 def enterprise_source_text_path(root: Path) -> Path:
     return root / "data" / ENTERPRISE_SOURCE_TEXT_NAME
+
+
+def profiles_path(root: Path) -> Path:
+    return root / "data" / PROFILES_NAME
 
 
 def python_config_path(root: Path) -> Path:
@@ -788,7 +793,7 @@ def tail_lines(path: Path, count: int) -> str:
 AGENT_WORKFLOW_SCHEMA: dict[str, Any] = {
     "type": "cqclaw-workflow",
     "version": 1,
-    "description": "CQClaw workflow JSON accepted by `cqclaw agent workflow preview|run`.",
+    "description": "CQClaw workflow JSON accepted by `cqclaw agent workflow preview|run|save`; saved profiles can be replayed by name.",
     "root": {
         "name": "string workflow name",
         "stopOnError": "boolean, default true",
@@ -1136,19 +1141,201 @@ def read_workflow_file(path_text: str) -> dict[str, Any]:
     return data
 
 
-def workflow_payload_from_args(args: argparse.Namespace) -> dict[str, Any]:
-    workflow = read_workflow_file(args.file)
+def read_profiles(root: Path) -> List[dict[str, Any]]:
+    path = profiles_path(root)
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return []
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"profiles file is not readable: {exc}") from exc
+    if not isinstance(data, list):
+        raise ValueError("profiles file must contain an array")
+    return [item for item in data if isinstance(item, dict)]
+
+
+def write_profiles(root: Path, profiles: List[dict[str, Any]]) -> None:
+    path = profiles_path(root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(profiles, ensure_ascii=False, indent=2) + "\n"
+    tmp = path.with_name(f".{path.name}.{int(time.time() * 1000)}.tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def find_profile(profiles: List[dict[str, Any]], name: str) -> tuple[int, dict[str, Any]]:
+    profile_name = str(name or "").strip()
+    for index, profile in enumerate(profiles):
+        if str(profile.get("name") or "").strip() == profile_name:
+            return index, profile
+    raise ValueError(f"workflow profile not found: {profile_name}")
+
+
+def workflow_source_from_args(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any]]:
+    profile_name = str(getattr(args, "profile", "") or "").strip()
+    if profile_name:
+        profiles = read_profiles(project_root())
+        index, profile = find_profile(profiles, profile_name)
+        return dict(profile), {"kind": "profile", "name": profile_name, "index": index}
+    file_text = str(getattr(args, "file", "") or "").strip()
+    if file_text:
+        path = Path(file_text).expanduser()
+        return read_workflow_file(file_text), {"kind": "file", "path": str(path)}
+    raise ValueError("provide either --file or --profile")
+
+
+def workflow_payload_and_source_from_args(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any]]:
+    workflow, source = workflow_source_from_args(args)
     devices = parse_csv_values(args.devices) if args.devices else workflow.get("devices", [])
     if isinstance(devices, str):
         devices = parse_csv_values(devices)
-    return {
-        "type": workflow.get("type") or "cqclaw-workflow",
+    fallback_name = source.get("name") or Path(str(source.get("path") or "workflow")).stem
+    payload = {
+        "type": "cqclaw-workflow",
         "version": workflow.get("version") or 1,
-        "name": workflow.get("name") or Path(args.file).stem,
+        "name": workflow.get("name") or fallback_name,
         "stopOnError": bool(workflow.get("stopOnError", True)),
         "devices": devices,
         "steps": workflow.get("steps") or [],
     }
+    if not isinstance(payload["steps"], list):
+        raise ValueError("workflow must include a steps array")
+    return payload, source
+
+
+def workflow_payload_from_args(args: argparse.Namespace) -> dict[str, Any]:
+    payload, _source = workflow_payload_and_source_from_args(args)
+    return payload
+
+
+def workflow_profile_from_args(args: argparse.Namespace) -> dict[str, Any]:
+    payload = workflow_payload_from_args(args)
+    name = str(getattr(args, "name", "") or payload.get("name") or Path(args.file).stem).strip()
+    if not name:
+        raise ValueError("workflow profile name is empty")
+    steps = payload.get("steps") or []
+    if not isinstance(steps, list) or not steps:
+        raise ValueError("workflow must include at least one step before saving")
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+    profile = {
+        "type": "cqclaw-profile",
+        "version": 1,
+        "name": name,
+        "stopOnError": bool(payload.get("stopOnError", True)),
+        "steps": steps,
+        "source": str(getattr(args, "source", "") or "skill").strip() or "skill",
+        "sourceFile": str(Path(args.file).expanduser()),
+        "createdAt": now,
+        "updatedAt": now,
+        "verified": False,
+        "verificationStatus": "pending",
+        "successCount": 0,
+        "failureCount": 0,
+    }
+    devices = payload.get("devices") or []
+    if devices:
+        profile["devices"] = devices
+    return profile
+
+
+def profile_count(profile: dict[str, Any], key: str) -> int:
+    try:
+        return max(0, int(profile.get(key) or 0))
+    except (TypeError, ValueError):
+        return 0
+
+
+def profile_summary(profile: dict[str, Any]) -> dict[str, Any]:
+    steps = profile.get("steps") if isinstance(profile.get("steps"), list) else []
+    return {
+        "name": profile.get("name") or "",
+        "source": profile.get("source") or "",
+        "stepCount": len(steps),
+        "devices": profile.get("devices") or [],
+        "verified": bool(profile.get("verified")),
+        "verificationStatus": profile.get("verificationStatus") or ("verified" if profile.get("verified") else "pending"),
+        "successCount": profile_count(profile, "successCount"),
+        "failureCount": profile_count(profile, "failureCount"),
+        "lastRunAt": profile.get("lastRunAt") or "",
+        "lastVerifiedAt": profile.get("lastVerifiedAt") or "",
+        "updatedAt": profile.get("updatedAt") or profile.get("createdAt") or "",
+    }
+
+
+def collect_evidence_paths(value: Any, limit: int = 50) -> List[str]:
+    paths: List[str] = []
+
+    def visit(item: Any, key: str = "") -> None:
+        if len(paths) >= limit:
+            return
+        if isinstance(item, dict):
+            for child_key, child_value in item.items():
+                visit(child_value, str(child_key))
+            return
+        if isinstance(item, list):
+            for child in item:
+                visit(child, key)
+            return
+        if isinstance(item, str) and key.lower().endswith("path"):
+            text = item.strip()
+            if text and text not in paths:
+                paths.append(text)
+
+    visit(value)
+    return paths
+
+
+def build_learning_report(
+    payload: dict[str, Any],
+    result: dict[str, Any],
+    source: dict[str, Any],
+    attempts: int = 1,
+) -> dict[str, Any]:
+    result_steps = result.get("steps") if isinstance(result.get("steps"), list) else []
+    failed_steps = sum(1 for step in result_steps if isinstance(step, dict) and not step.get("ok"))
+    source_steps = payload.get("steps") if isinstance(payload.get("steps"), list) else []
+    return {
+        "goal": payload.get("name") or "",
+        "source": source.get("kind") or "",
+        "savedProfile": source.get("name") or "",
+        "runId": result.get("id") or "",
+        "attempts": max(1, attempts),
+        "stepCount": len(source_steps),
+        "completedStepCount": len(result_steps),
+        "failedStepCount": failed_steps,
+        "verified": bool(result.get("ok")),
+        "evidence": collect_evidence_paths(result),
+        "generatedAt": time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+
+
+def update_profile_after_run(
+    root: Path,
+    source: dict[str, Any],
+    result: dict[str, Any],
+    report: dict[str, Any],
+) -> Optional[dict[str, Any]]:
+    if source.get("kind") != "profile":
+        return None
+    profiles = read_profiles(root)
+    index, profile = find_profile(profiles, str(source.get("name") or ""))
+    updated = dict(profile)
+    ok = bool(result.get("ok"))
+    now = str(result.get("finishedAt") or time.strftime("%Y-%m-%d %H:%M:%S"))
+    updated["lastRunAt"] = now
+    updated["lastRunId"] = result.get("id") or ""
+    updated["updatedAt"] = now
+    updated["verified"] = ok
+    updated["verificationStatus"] = "verified" if ok else "failed"
+    updated["successCount"] = profile_count(profile, "successCount") + (1 if ok else 0)
+    updated["failureCount"] = profile_count(profile, "failureCount") + (0 if ok else 1)
+    if ok:
+        updated["lastVerifiedAt"] = now
+    updated["lastEvidence"] = report.get("evidence") or []
+    updated["lastLearningReport"] = report
+    profiles[index] = updated
+    write_profiles(root, profiles)
+    return updated
 
 
 def bool_xml_attr(value: str) -> bool:
@@ -1378,7 +1565,7 @@ def cmd_agent_workflow_schema(args: argparse.Namespace) -> int:
 
 def cmd_agent_workflow_preview(args: argparse.Namespace) -> int:
     try:
-        payload = workflow_payload_from_args(args)
+        payload, source = workflow_payload_and_source_from_args(args)
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         return agent_error("workflow preview", str(exc), 3)
     base_url, info, code = agent_prepare(args, "workflow preview", ensure=True)
@@ -1386,12 +1573,15 @@ def cmd_agent_workflow_preview(args: argparse.Namespace) -> int:
         return agent_error("workflow preview", (info or {}).get("error") or "service unavailable", code or 1, data=info or {})
     result, _status = agent_request(base_url, "/api/preview", "POST", payload, timeout=args.timeout)
     ok = bool(result.get("ok"))
-    return agent_json_print(agent_payload("workflow preview", result, ok=ok, serverUrl=base_url, workflow=payload.get("name")), 0 if ok else 3)
+    return agent_json_print(
+        agent_payload("workflow preview", result, ok=ok, serverUrl=base_url, workflow=payload.get("name"), source=source),
+        0 if ok else 3,
+    )
 
 
 def cmd_agent_workflow_run(args: argparse.Namespace) -> int:
     try:
-        payload = workflow_payload_from_args(args)
+        payload, source = workflow_payload_and_source_from_args(args)
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         return agent_error("workflow run", str(exc), 3)
     base_url, info, code = agent_prepare(args, "workflow run", ensure=True)
@@ -1399,7 +1589,132 @@ def cmd_agent_workflow_run(args: argparse.Namespace) -> int:
         return agent_error("workflow run", (info or {}).get("error") or "service unavailable", code or 1, data=info or {})
     result, _status = agent_request(base_url, "/api/run", "POST", payload, timeout=args.timeout)
     ok = bool(result.get("ok"))
-    return agent_json_print(agent_payload("workflow run", result, ok=ok, serverUrl=base_url, workflow=payload.get("name")), 0 if ok else 4)
+    attempts = 1
+    if source.get("kind") == "profile":
+        try:
+            _index, existing_profile = find_profile(read_profiles(project_root()), str(source.get("name") or ""))
+            attempts += profile_count(existing_profile, "successCount") + profile_count(existing_profile, "failureCount")
+        except (OSError, ValueError):
+            pass
+    report = build_learning_report(payload, result, source, attempts=attempts)
+    result["learningReport"] = report
+    if source.get("kind") == "profile":
+        try:
+            updated = update_profile_after_run(project_root(), source, result, report)
+            if updated:
+                result["profile"] = profile_summary(updated)
+        except (OSError, ValueError) as exc:
+            result["profileUpdateError"] = str(exc)
+    return agent_json_print(
+        agent_payload("workflow run", result, ok=ok, serverUrl=base_url, workflow=payload.get("name"), source=source),
+        0 if ok else 4,
+    )
+
+
+def cmd_agent_workflow_save(args: argparse.Namespace) -> int:
+    try:
+        profile = workflow_profile_from_args(args)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        return agent_error("workflow save", str(exc), 3)
+    root = project_root()
+    base_url, info, code = agent_prepare(args, "workflow save", ensure=True)
+    if code or not base_url:
+        return agent_error("workflow save", (info or {}).get("error") or "service unavailable", code or 1, data=info or {})
+    try:
+        profiles = read_profiles(root)
+        existing = next((index for index, item in enumerate(profiles) if item.get("name") == profile["name"]), -1)
+        replaced = existing >= 0
+        if replaced and not bool(getattr(args, "replace", True)):
+            return agent_error("workflow save", f"profile already exists: {profile['name']}", 3, data={"profilesPath": str(profiles_path(root))})
+        if replaced:
+            previous = profiles[existing]
+            behavior_changed = any(
+                previous.get(key) != profile.get(key)
+                for key in ("steps", "devices", "stopOnError")
+            )
+            profile = {**previous, **profile}
+            profile["createdAt"] = previous.get("createdAt") or profile["createdAt"]
+            profile["verified"] = False if behavior_changed else bool(previous.get("verified"))
+            profile["verificationStatus"] = "pending" if behavior_changed else (
+                previous.get("verificationStatus") or ("verified" if previous.get("verified") else "pending")
+            )
+            profile["successCount"] = profile_count(previous, "successCount")
+            profile["failureCount"] = profile_count(previous, "failureCount")
+            if behavior_changed:
+                profile.pop("lastLearningReport", None)
+                profile.pop("lastEvidence", None)
+                profile.pop("lastVerifiedAt", None)
+            profiles[existing] = profile
+            index = existing
+        else:
+            profiles.append(profile)
+            index = len(profiles) - 1
+        write_profiles(root, profiles)
+    except (OSError, ValueError) as exc:
+        return agent_error("workflow save", str(exc), 3)
+    result = {
+        "ok": True,
+        "profile": profile,
+        "index": index,
+        "replaced": replaced,
+        "profilesPath": str(profiles_path(root)),
+        "automationUrl": urllib.parse.urljoin(base_url, "/automation.html"),
+    }
+    return agent_json_print(agent_payload("workflow save", result, ok=True, serverUrl=base_url, workflow=profile.get("name")), 0)
+
+
+def cmd_agent_workflow_list(args: argparse.Namespace) -> int:
+    try:
+        profiles = read_profiles(project_root())
+    except (OSError, ValueError) as exc:
+        return agent_error("workflow list", str(exc), 3)
+    result = {
+        "profiles": [profile_summary(profile) for profile in profiles],
+        "count": len(profiles),
+        "profilesPath": str(profiles_path(project_root())),
+    }
+    return agent_json_print(agent_payload("workflow list", result, ok=True), 0)
+
+
+def cmd_agent_workflow_show(args: argparse.Namespace) -> int:
+    try:
+        index, profile = find_profile(read_profiles(project_root()), args.name)
+    except (OSError, ValueError) as exc:
+        return agent_error("workflow show", str(exc), 3)
+    result = {"profile": profile, "index": index, "profilesPath": str(profiles_path(project_root()))}
+    return agent_json_print(agent_payload("workflow show", result, ok=True, workflow=profile.get("name")), 0)
+
+
+def cmd_agent_workflow_report(args: argparse.Namespace) -> int:
+    try:
+        _index, profile = find_profile(read_profiles(project_root()), args.name)
+    except (OSError, ValueError) as exc:
+        return agent_error("workflow report", str(exc), 3)
+    result = {
+        "profile": profile_summary(profile),
+        "learningReport": profile.get("lastLearningReport") or {},
+        "evidence": profile.get("lastEvidence") or [],
+    }
+    return agent_json_print(agent_payload("workflow report", result, ok=True, workflow=profile.get("name")), 0)
+
+
+def cmd_agent_workflow_delete(args: argparse.Namespace) -> int:
+    if not args.yes:
+        return agent_error("workflow delete", "workflow deletion requires --yes", 3)
+    root = project_root()
+    try:
+        profiles = read_profiles(root)
+        index, profile = find_profile(profiles, args.name)
+        profiles.pop(index)
+        write_profiles(root, profiles)
+    except (OSError, ValueError) as exc:
+        return agent_error("workflow delete", str(exc), 3)
+    result = {
+        "deleted": profile_summary(profile),
+        "remaining": len(profiles),
+        "profilesPath": str(profiles_path(root)),
+    }
+    return agent_json_print(agent_payload("workflow delete", result, ok=True, workflow=profile.get("name")), 0)
 
 
 def cmd_agent_call(args: argparse.Namespace) -> int:
@@ -2291,7 +2606,7 @@ def build_parser() -> argparse.ArgumentParser:
     agent_clipboard.add_argument("--text", default="")
     agent_clipboard.set_defaults(func=cmd_agent_clipboard)
 
-    agent_workflow = agent_sub.add_parser("workflow", help="create, preview, or run CQClaw workflow JSON")
+    agent_workflow = agent_sub.add_parser("workflow", help="create, learn, inspect, and replay CQClaw workflows")
     workflow_sub = agent_workflow.add_subparsers(dest="workflow_action", required=True)
 
     workflow_schema = workflow_sub.add_parser("schema", help="print workflow schema and step templates")
@@ -2300,15 +2615,48 @@ def build_parser() -> argparse.ArgumentParser:
 
     workflow_preview = workflow_sub.add_parser("preview", help="preview workflow commands without executing them")
     add_agent_options(workflow_preview)
-    workflow_preview.add_argument("--file", required=True)
+    workflow_preview_source = workflow_preview.add_mutually_exclusive_group(required=True)
+    workflow_preview_source.add_argument("--file", help="workflow JSON file")
+    workflow_preview_source.add_argument("--profile", help="saved workflow profile name")
     workflow_preview.add_argument("--devices", default="", help="comma-separated serial list; overrides workflow devices")
     workflow_preview.set_defaults(func=cmd_agent_workflow_preview)
 
-    workflow_run = workflow_sub.add_parser("run", help="execute workflow JSON")
+    workflow_run = workflow_sub.add_parser("run", help="execute a workflow file or replay a saved profile")
     add_agent_options(workflow_run)
-    workflow_run.add_argument("--file", required=True)
+    workflow_run_source = workflow_run.add_mutually_exclusive_group(required=True)
+    workflow_run_source.add_argument("--file", help="workflow JSON file")
+    workflow_run_source.add_argument("--profile", help="saved workflow profile name")
     workflow_run.add_argument("--devices", default="", help="comma-separated serial list; overrides workflow devices")
     workflow_run.set_defaults(func=cmd_agent_workflow_run)
+
+    workflow_save = workflow_sub.add_parser("save", help="save workflow JSON into the Automation page saved profiles")
+    add_agent_options(workflow_save)
+    workflow_save.add_argument("--file", required=True)
+    workflow_save.add_argument("--name", default="", help="saved profile name; defaults to workflow name")
+    workflow_save.add_argument("--devices", default="", help="optional comma-separated serial list to remember with the profile")
+    workflow_save.add_argument("--source", default="skill", help="profile source label, e.g. skill or learned")
+    workflow_save.add_argument("--replace", action=argparse.BooleanOptionalAction, default=True, help="replace an existing profile with the same name")
+    workflow_save.set_defaults(func=cmd_agent_workflow_save)
+
+    workflow_list = workflow_sub.add_parser("list", help="list saved workflow profiles and verification status")
+    add_agent_options(workflow_list)
+    workflow_list.set_defaults(func=cmd_agent_workflow_list)
+
+    workflow_show = workflow_sub.add_parser("show", help="show a saved workflow profile")
+    add_agent_options(workflow_show)
+    workflow_show.add_argument("--name", required=True, help="saved profile name")
+    workflow_show.set_defaults(func=cmd_agent_workflow_show)
+
+    workflow_report = workflow_sub.add_parser("report", help="show the latest learning and verification report")
+    add_agent_options(workflow_report)
+    workflow_report.add_argument("--name", required=True, help="saved profile name")
+    workflow_report.set_defaults(func=cmd_agent_workflow_report)
+
+    workflow_delete = workflow_sub.add_parser("delete", help="delete a saved workflow profile")
+    add_agent_options(workflow_delete)
+    workflow_delete.add_argument("--name", required=True, help="saved profile name")
+    workflow_delete.add_argument("--yes", action="store_true", help="confirm deletion")
+    workflow_delete.set_defaults(func=cmd_agent_workflow_delete)
 
     agent_call = agent_sub.add_parser("call", help="call a CQClaw HTTP API endpoint directly")
     add_agent_options(agent_call)

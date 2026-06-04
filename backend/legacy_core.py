@@ -340,6 +340,19 @@ def enterprise_source_from_pointer_file():
         return ""
 
 
+def write_enterprise_source_pointer(source):
+    source = str(source or "").strip()
+    ENTERPRISE_SOURCE_TEXT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    if not source:
+        try:
+            ENTERPRISE_SOURCE_TEXT_FILE.unlink()
+        except FileNotFoundError:
+            pass
+        return ""
+    ENTERPRISE_SOURCE_TEXT_FILE.write_text(source + "\n", encoding="utf-8")
+    return source
+
+
 def read_enterprise_source_config(source):
     source = str(source or "").strip()
     if not source:
@@ -1242,6 +1255,31 @@ def storage_file_entry(path, stat):
     }
 
 
+def storage_root_entries(category):
+    entries = []
+    seen = set()
+    for root in storage_categories().get(category, []):
+        path = Path(root).expanduser()
+        try:
+            resolved = path.resolve()
+        except OSError:
+            resolved = path.absolute()
+        path_text = str(resolved)
+        if path_text in seen:
+            continue
+        seen.add(path_text)
+        entries.append({
+            "path": path_text,
+            "exists": resolved.exists(),
+            "safe": is_safe_storage_root(resolved),
+        })
+    return entries
+
+
+def safe_storage_roots(category):
+    return [Path(item["path"]) for item in storage_root_entries(category) if item.get("safe")]
+
+
 def storage_stats():
     result = []
     for key, meta in STORAGE_CATEGORY_META.items():
@@ -1255,6 +1293,7 @@ def storage_stats():
             "totalSize": total_size,
             "totalSizeText": format_file_size(total_size),
             "lastModified": last_modified,
+            "roots": storage_root_entries(key),
         })
     return {"ok": True, "categories": result}
 
@@ -1285,6 +1324,49 @@ def storage_preview(payload):
         "totalSize": total_size,
         "totalSizeText": format_file_size(total_size),
         "truncated": len(entries) >= limit,
+    }
+
+
+def storage_open(payload):
+    category = str(payload.get("category") or "").strip()
+    if category not in STORAGE_CATEGORY_META:
+        return {"ok": False, "error": "未知资源类型"}
+    roots = safe_storage_roots(category)
+    if not roots:
+        return {"ok": False, "error": "没有可打开的安全目录"}
+
+    requested = str(payload.get("path") or "").strip()
+    if requested:
+        try:
+            target = Path(requested).expanduser().resolve()
+        except OSError:
+            return {"ok": False, "error": "路径不可访问"}
+        allowed = False
+        for root in roots:
+            try:
+                resolved_root = root.resolve()
+            except OSError:
+                resolved_root = root.absolute()
+            if target == resolved_root or resolved_root in target.parents:
+                allowed = True
+                break
+        if not allowed:
+            return {"ok": False, "error": "路径不属于当前资源类型"}
+    else:
+        target = next((root for root in roots if root.exists()), roots[0])
+
+    if target.is_file():
+        target = target.parent
+    try:
+        target.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
+    result = open_local_path(target)
+    return {
+        "ok": bool(result.get("ok")),
+        "path": str(target),
+        "stderr": result.get("stderr", ""),
+        "result": result,
     }
 
 
@@ -6752,8 +6834,10 @@ class ApiHandler(SimpleHTTPRequestHandler):
             return
         if parsed.path == "/api/settings":
             enterprise = enterprise_config()
+            current_settings = settings()
+            current_settings["enterpriseSourcePath"] = enterprise_source_from_pointer_file()
             self.send_json({
-                "settings": settings(),
+                "settings": current_settings,
                 "enterprise": enterprise,
                 "effectiveAgentApkPath": configured_agent_apk_path(),
                 "effectiveAgentServerJarPath": configured_agent_server_jar_path(),
@@ -6833,11 +6917,16 @@ class ApiHandler(SimpleHTTPRequestHandler):
             if parsed.path == "/api/settings":
                 next_settings = settings()
                 allowed = {"adbPath", "quickOutputDir", "localTempDir", "agentApkPath", "agentServerJarPath", "deviceAliases", "deviceGroups"}
-                next_settings.update({key: value for key, value in payload.get("settings", {}).items() if key in allowed})
+                incoming_settings = payload.get("settings", {})
+                next_settings.update({key: value for key, value in incoming_settings.items() if key in allowed})
+                if "enterpriseSourcePath" in incoming_settings:
+                    write_enterprise_source_pointer(incoming_settings.get("enterpriseSourcePath"))
                 write_json(SETTINGS_FILE, next_settings)
+                current_settings = settings()
+                current_settings["enterpriseSourcePath"] = enterprise_source_from_pointer_file()
                 self.send_json({
                     "ok": True,
-                    "settings": settings(),
+                    "settings": current_settings,
                     "enterprise": enterprise_config(),
                     "effectiveAgentApkPath": configured_agent_apk_path(),
                     "effectiveAgentServerJarPath": configured_agent_server_jar_path(),
@@ -6888,6 +6977,10 @@ class ApiHandler(SimpleHTTPRequestHandler):
                 return
             if parsed.path == "/api/storage/preview":
                 self.send_json(storage_preview(payload))
+                return
+            if parsed.path == "/api/storage/open":
+                result = storage_open(payload)
+                self.send_json(result, 200 if result.get("ok") else 400)
                 return
             if parsed.path == "/api/storage/clean":
                 result = storage_clean(payload)

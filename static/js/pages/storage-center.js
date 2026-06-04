@@ -143,8 +143,11 @@ function renderStorageRows(categories) {
     const meta = categoryMeta(item.key);
     const percent = Math.max(3, Math.round((Number(item.totalSize || 0) / maxSize) * 100));
     const isActive = item.key === currentStorageCategory;
+    const safeRoots = (item.roots || []).filter((root) => root.safe);
+    const primaryRoot = safeRoots.find((root) => root.exists) || safeRoots[0] || null;
+    const rootLabel = primaryRoot ? primaryRoot.path : "暂无可打开目录";
     return `
-    <article class="storage-row storage-category-card ${isActive ? "is-active" : ""}" data-storage-tone="${storageEscape(meta.tone)}">
+    <article class="storage-row storage-category-card ${isActive ? "is-active" : ""}" data-storage-tone="${storageEscape(meta.tone)}" data-storage-category="${storageEscape(item.key)}" tabindex="0" role="button" aria-label="打开${storageEscape(item.label)}目录">
       <div class="storage-card-top">
         <span class="storage-card-icon">${storageIcon(meta.icon)}</span>
         <span class="badge badge-muted">${item.count} 个</span>
@@ -155,9 +158,11 @@ function renderStorageRows(categories) {
       </div>
       <div class="storage-card-meter" aria-hidden="true"><i style="--storage-meter:${percent}%"></i></div>
       <p>${storageEscape(meta.hint)}</p>
+      <span class="storage-root-path" title="${storageEscape(rootLabel)}">${storageEscape(rootLabel)}</span>
       <div class="storage-card-footer">
         <span class="storage-meta">${storageEscape(item.lastModified || "暂无修改记录")}</span>
         <span class="storage-actions">
+          <button class="btn btn-secondary" type="button" data-open-category="${storageEscape(item.key)}">${storageIcon("folder-open")}打开</button>
           <button class="btn btn-secondary" type="button" data-preview-category="${storageEscape(item.key)}">${storageIcon("eye")}预览</button>
           <button class="btn btn-danger" type="button" data-clean-category="${storageEscape(item.key)}">${storageIcon("trash")}清理</button>
         </span>
@@ -246,6 +251,20 @@ async function cleanStorage(payload) {
   }
 }
 
+async function openStorageCategory(category) {
+  if (!category) return;
+  setStorageStatus(`正在打开 ${categoryLabel(category)}...`);
+  try {
+    const data = await api("/api/storage/open", {
+      method: "POST",
+      body: JSON.stringify({ category }),
+    });
+    setStorageStatus(data.ok ? `已打开目录：${data.path}` : `打开失败：${data.error || data.stderr || "未知错误"}`);
+  } catch (error) {
+    setStorageStatus(`打开失败：${error.message}`);
+  }
+}
+
 function bindStorageEvents() {
   storageById("refreshStorageBtn").addEventListener("click", loadStorageStats);
   storageById("previewCategoryBtn").addEventListener("click", () => {
@@ -256,13 +275,31 @@ function bindStorageEvents() {
   document.addEventListener("click", (event) => {
     const preview = event.target.closest("[data-preview-category]");
     const clean = event.target.closest("[data-clean-category]");
+    const open = event.target.closest("[data-open-category]");
+    const card = event.target.closest("[data-storage-category]");
     if (preview) {
       storageById("previewCategory").value = preview.dataset.previewCategory;
       previewStorage(preview.dataset.previewCategory, storageById("olderThanDays").value);
+      return;
     }
     if (clean) {
       cleanStorage(previewPayload(clean.dataset.cleanCategory, storageById("olderThanDays").value));
+      return;
     }
+    if (open) {
+      openStorageCategory(open.dataset.openCategory);
+      return;
+    }
+    if (card) {
+      openStorageCategory(card.dataset.storageCategory);
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (!["Enter", " "].includes(event.key)) return;
+    const card = event.target.closest("[data-storage-category]");
+    if (!card || event.target.closest("button, input, select, textarea")) return;
+    event.preventDefault();
+    openStorageCategory(card.dataset.storageCategory);
   });
 }
 

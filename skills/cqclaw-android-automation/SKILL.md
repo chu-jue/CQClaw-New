@@ -1,6 +1,6 @@
 ---
 name: cqclaw-android-automation
-description: Use when controlling Android devices through CQClaw: list devices, inspect the current screen, parse UI dump nodes, run shell commands, capture screenshots, inspect foreground activity, manage clipboard, or create/preview/run CQClaw workflow automation from a user goal.
+description: "Use when controlling Android devices through CQClaw: inspect screens, act on UI, run shell commands, capture evidence, learn a reusable workflow from a user goal, or replay and diagnose a saved CQClaw automation profile."
 ---
 
 # CQClaw Android Automation
@@ -28,6 +28,13 @@ If none exists, tell the user to install/open CQClaw and make sure the `cqclaw`
 command is available in a new terminal. Do not use a hard-coded developer
 machine path.
 
+## Modes
+
+- **Learn**: Observe the device, draft a workflow, preview it, run it, repair
+  selectors when needed, verify the result, and save the verified workflow.
+- **Replay**: Find a saved profile, preview it against the current device, run
+  it by name, and report its latest verification evidence.
+
 ## Core Workflow
 
 1. Ensure the local API is available:
@@ -39,11 +46,19 @@ machine path.
    `cqclaw agent inspect --serial SERIAL`
 5. For screen-specific tasks, use dump queries:
    `cqclaw agent dump --serial SERIAL --query "Login"`
-6. For automation plans, create workflow JSON, preview it, then run it:
+6. Before drafting a duplicate workflow, inspect saved profiles:
+   `cqclaw agent workflow list`
+7. For a new automation goal, create workflow JSON, preview it, run it, verify
+   it, then save it into the CQClaw Automation page for future reuse:
    `cqclaw agent workflow preview --file flow.json --devices SERIAL`
    `cqclaw agent workflow run --file flow.json --devices SERIAL`
-7. After execution, verify with `dump`, `screenshot`, `top-activity`, or `shell`
-   and report returned evidence paths.
+   `cqclaw agent workflow save --file flow.json --name "Reusable workflow" --source learned`
+8. For a saved automation, preview and replay it directly by name:
+   `cqclaw agent workflow preview --profile "Reusable workflow" --devices SERIAL`
+   `cqclaw agent workflow run --profile "Reusable workflow" --devices SERIAL`
+   `cqclaw agent workflow report --name "Reusable workflow"`
+9. After execution, verify with `dump`, `screenshot`, `top-activity`, or `shell`
+   and report the learning report, verification status, and evidence paths.
 
 ## Rules
 
@@ -51,11 +66,18 @@ machine path.
 - Do not invent a device serial. Use `devices --online` first.
 - Prefer `workflow preview` before `workflow run` unless the user asks for a
   one-shot command or the action is clearly harmless.
+- Repair a failed learned workflow from a fresh inspect/dump result. Limit
+  automatic repair attempts to 3, then explain the blocker instead of looping.
 - For visible UI actions, prefer `tap_text`, `adb_script` DSL calls, or dump
   matches over hard-coded coordinates. Use coordinates only when the dump result
   provides them for the current screen.
 - Keep workflow files small and task-local. Include `name`, `stopOnError`, and
   `steps`.
+- When the user wants a reusable automation or asks to learn a task, save the
+  verified workflow with `workflow save` so it appears in the Web Automation
+  page's saved profiles and can be loaded/executed next time.
+- Prefer replaying an existing matching profile over generating a duplicate.
+  Use `workflow show` before modifying a saved profile.
 - Do not put secrets such as passwords in committed workflow files. For one-off
   runs, use temporary files or ask the user for the secret at execution time.
 
