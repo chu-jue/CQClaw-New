@@ -6,14 +6,14 @@ source checkout or a developer path.
 Use `cqclaw` in examples. If the command is not on `PATH`, resolve it with:
 
 ```bash
-if command -v cqclaw >/dev/null 2>&1; then
-  CQCLAW_CMD="$(command -v cqclaw)"
-elif [ -n "${CQCLAW_CLI:-}" ] && [ -x "$CQCLAW_CLI" ]; then
+if [ -n "${CQCLAW_CLI:-}" ] && [ -x "$CQCLAW_CLI" ]; then
   CQCLAW_CMD="$CQCLAW_CLI"
 elif [ -n "${QCLAW_HOME:-}" ] && [ -x "$QCLAW_HOME/bin/cqclaw" ]; then
   CQCLAW_CMD="$QCLAW_HOME/bin/cqclaw"
 elif [ -n "${AAS_HOME:-}" ] && [ -x "$AAS_HOME/bin/cqclaw" ]; then
   CQCLAW_CMD="$AAS_HOME/bin/cqclaw"
+elif command -v cqclaw >/dev/null 2>&1; then
+  CQCLAW_CMD="$(command -v cqclaw)"
 elif [ -x "$HOME/Applications/CQClaw/bin/cqclaw" ]; then
   CQCLAW_CMD="$HOME/Applications/CQClaw/bin/cqclaw"
 elif [ -n "${LOCALAPPDATA:-}" ] && [ -f "$LOCALAPPDATA/CQClaw/bin/cqclaw.cmd" ]; then
@@ -26,11 +26,53 @@ fi
 
 Use `"$CQCLAW_CMD"` in scripts when command discovery is needed.
 
+PowerShell:
+
+```powershell
+if ($env:CQCLAW_CLI -and (Test-Path $env:CQCLAW_CLI)) {
+  $CQCLAW_CMD = $env:CQCLAW_CLI
+} elseif ($env:QCLAW_HOME -and (Test-Path (Join-Path $env:QCLAW_HOME "bin\cqclaw.cmd"))) {
+  $CQCLAW_CMD = Join-Path $env:QCLAW_HOME "bin\cqclaw.cmd"
+} elseif ($env:AAS_HOME -and (Test-Path (Join-Path $env:AAS_HOME "bin\cqclaw.cmd"))) {
+  $CQCLAW_CMD = Join-Path $env:AAS_HOME "bin\cqclaw.cmd"
+} elseif (Get-Command cqclaw -ErrorAction SilentlyContinue) {
+  $CQCLAW_CMD = (Get-Command cqclaw).Source
+} elseif ($env:LOCALAPPDATA -and (Test-Path (Join-Path $env:LOCALAPPDATA "CQClaw\bin\cqclaw.cmd"))) {
+  $CQCLAW_CMD = Join-Path $env:LOCALAPPDATA "CQClaw\bin\cqclaw.cmd"
+} else {
+  throw "CQClaw CLI not found. Install/open CQClaw, then restart the terminal."
+}
+```
+
 The agent CLI prints JSON by default.
+
+## Installation Paths
+
+After resolving the executable, always ask CQClaw for this user's installation
+and data paths:
+
+```bash
+"$CQCLAW_CMD" agent locate
+```
+
+The returned JSON includes:
+
+- `data.home`: authoritative CQClaw installation root
+- `data.homeSource`: whether the root came from `QCLAW_HOME`, `AAS_HOME`, or
+  the CLI program directory
+- `data.cliPath`: resolved CLI executable
+- `data.programPath`: installed CQClaw CLI program file
+- `data.environment`: relevant environment variable values
+- `data.paths`: data, runtime, profiles, settings, and server paths
+
+Use these returned values instead of paths copied from examples, source
+checkouts, previous sessions, or another user's computer. Do not recursively
+search the user's whole disk for CQClaw.
 
 ## Service
 
 ```bash
+cqclaw agent locate
 cqclaw agent ensure
 cqclaw agent call GET /api/health
 ```

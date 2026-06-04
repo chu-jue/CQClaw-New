@@ -161,12 +161,16 @@ Useful DSL calls include:
 ```json
 {
   "kind": "push_file",
-  "localPath": "/path/to/file",
+  "localPath": "USER_SELECTED_LOCAL_FILE",
   "remotePath": "/sdcard/Download/",
   "continueOnError": true,
   "timeout": 180
 }
 ```
+
+`localPath` and `destDir` belong to the current user's computer. Use a path
+provided or selected by that user. Do not copy a local path from this reference,
+another machine, or a previous conversation.
 
 ## Planning Pattern
 

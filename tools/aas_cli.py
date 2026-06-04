@@ -1448,7 +1448,44 @@ def cmd_agent_ensure(args: argparse.Namespace) -> int:
         return agent_error("ensure", (info or {}).get("error") or "failed to start service", code or 1, data=info or {})
     health, status = agent_request(base_url, "/api/health", timeout=args.timeout)
     ok = status and 200 <= status < 300 and bool(health.get("ok"))
-    return agent_json_print(agent_payload("ensure", {"service": info, "health": health}, ok=ok, serverUrl=base_url), 0 if ok else 1)
+    return agent_json_print(
+        agent_payload("ensure", {"runtime": agent_runtime_context(), "service": info, "health": health}, ok=ok, serverUrl=base_url),
+        0 if ok else 1,
+    )
+
+
+def agent_runtime_context() -> dict[str, Any]:
+    root = project_root()
+    explicit_cli = str(os.environ.get("CQCLAW_CLI") or "").strip()
+    cli_path = explicit_cli or shutil.which(CLI_NAME) or str(Path(sys.argv[0]).expanduser().resolve())
+    if os.environ.get("QCLAW_HOME"):
+        home_source = "QCLAW_HOME"
+    elif os.environ.get("AAS_HOME"):
+        home_source = "AAS_HOME"
+    else:
+        home_source = "CLI program directory"
+    return {
+        "home": str(root),
+        "homeSource": home_source,
+        "cliPath": str(Path(cli_path).expanduser()),
+        "programPath": str(Path(__file__).resolve()),
+        "environment": {
+            "QCLAW_HOME": os.environ.get("QCLAW_HOME") or "",
+            "AAS_HOME": os.environ.get("AAS_HOME") or "",
+            "CQCLAW_CLI": explicit_cli,
+        },
+        "paths": {
+            "data": str(root / "data"),
+            "runtime": str(runtime_dir(root)),
+            "profiles": str(profiles_path(root)),
+            "settings": str(root / "data" / "settings.json"),
+            "server": str(root / "server.py"),
+        },
+    }
+
+
+def cmd_agent_locate(args: argparse.Namespace) -> int:
+    return agent_json_print(agent_payload("locate", agent_runtime_context(), ok=True), 0)
 
 
 def cmd_agent_devices(args: argparse.Namespace) -> int:
@@ -2542,6 +2579,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     agent = sub.add_parser("agent", help="machine-readable Android automation commands for AI agents")
     agent_sub = agent.add_subparsers(dest="agent_command", required=True)
+
+    agent_locate = agent_sub.add_parser("locate", help="locate the installed CQClaw CLI, home, and data paths")
+    agent_locate.set_defaults(func=cmd_agent_locate)
 
     agent_ensure = agent_sub.add_parser("ensure", help="ensure the local CQClaw API is running and return health JSON")
     add_agent_options(agent_ensure)

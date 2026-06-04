@@ -189,6 +189,7 @@ http://127.0.0.1:8765/
 ### 观察设备
 
 ```bash
+cqclaw agent locate
 cqclaw agent ensure
 cqclaw agent devices --online
 cqclaw agent inspect --serial SERIAL

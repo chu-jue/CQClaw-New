@@ -14,19 +14,29 @@ client/server, settings, dump parser, workflow executor, and output paths.
 This skill is designed for end users who have installed the CQClaw client. Do
 not assume they have the source checkout.
 
-Resolve the CLI in this order:
+Resolve the CLI and installation root before doing anything else:
 
-1. Use `cqclaw` when it is on `PATH`.
-2. Use `$CQCLAW_CLI` when the user configured an explicit executable.
-3. Use `$QCLAW_HOME/bin/cqclaw` or `$AAS_HOME/bin/cqclaw` when either home is
+1. Use `$CQCLAW_CLI` when the user configured an explicit executable.
+2. Use `$QCLAW_HOME/bin/cqclaw` or `$AAS_HOME/bin/cqclaw` when either home is
    configured.
+3. Use `cqclaw` when it is on `PATH`.
 4. Use common install locations only as a fallback:
    - macOS: `$HOME/Applications/CQClaw/bin/cqclaw`
    - Windows: `%LOCALAPPDATA%\CQClaw\bin\cqclaw.cmd`
+5. Run `cqclaw agent locate` through the resolved executable. Treat its
+   `data.home` as the authoritative installation root and its `data.paths` as
+   the authoritative locations for CQClaw data, profiles, settings, runtime,
+   and server files.
 
 If none exists, tell the user to install/open CQClaw and make sure the `cqclaw`
 command is available in a new terminal. Do not use a hard-coded developer
-machine path.
+machine path. Do not reuse a path seen in this skill, an example, a previous
+conversation, or another user's computer.
+
+When a CQClaw file is needed, resolve it relative to the `home` or named path
+returned by `agent locate`. When a workflow needs an unrelated user file such
+as an APK or upload, use the path supplied by the user or ask them to select it;
+do not assume it lives inside CQClaw.
 
 ## Modes
 
@@ -37,32 +47,37 @@ machine path.
 
 ## Core Workflow
 
-1. Ensure the local API is available:
+1. Locate this user's CQClaw installation:
+   `cqclaw agent locate`
+2. Ensure the local API is available:
    `cqclaw agent ensure`
-2. List online devices:
+3. List online devices:
    `cqclaw agent devices --online`
-3. If more than one online device is returned, ask the user which serial to use.
-4. Inspect before acting:
+4. If more than one online device is returned, ask the user which serial to use.
+5. Inspect before acting:
    `cqclaw agent inspect --serial SERIAL`
-5. For screen-specific tasks, use dump queries:
+6. For screen-specific tasks, use dump queries:
    `cqclaw agent dump --serial SERIAL --query "Login"`
-6. Before drafting a duplicate workflow, inspect saved profiles:
+7. Before drafting a duplicate workflow, inspect saved profiles:
    `cqclaw agent workflow list`
-7. For a new automation goal, create workflow JSON, preview it, run it, verify
+8. For a new automation goal, create workflow JSON, preview it, run it, verify
    it, then save it into the CQClaw Automation page for future reuse:
    `cqclaw agent workflow preview --file flow.json --devices SERIAL`
    `cqclaw agent workflow run --file flow.json --devices SERIAL`
    `cqclaw agent workflow save --file flow.json --name "Reusable workflow" --source learned`
-8. For a saved automation, preview and replay it directly by name:
+9. For a saved automation, preview and replay it directly by name:
    `cqclaw agent workflow preview --profile "Reusable workflow" --devices SERIAL`
    `cqclaw agent workflow run --profile "Reusable workflow" --devices SERIAL`
    `cqclaw agent workflow report --name "Reusable workflow"`
-9. After execution, verify with `dump`, `screenshot`, `top-activity`, or `shell`
+10. After execution, verify with `dump`, `screenshot`, `top-activity`, or `shell`
    and report the learning report, verification status, and evidence paths.
 
 ## Rules
 
 - Treat every CLI response as JSON and check `ok`.
+- Use `agent locate` instead of guessing CQClaw paths or searching an entire
+  disk. Re-run it if the CLI is updated, moved, or invoked from another user
+  account.
 - Do not invent a device serial. Use `devices --online` first.
 - Prefer `workflow preview` before `workflow run` unless the user asks for a
   one-shot command or the action is clearly harmless.
