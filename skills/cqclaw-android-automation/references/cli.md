@@ -1,25 +1,34 @@
 # CQClaw Agent CLI
 
-The skill should work after a user installs the CQClaw client. Do not assume a
-source checkout or a developer path.
+This skill requires a compatible CQClaw client and CLI to already be installed.
+Do not assume a source checkout or a developer path, and do not fall back to
+raw `adb` when the CLI is unavailable.
 
-Use `cqclaw` in examples. If the command is not on `PATH`, resolve it with:
+First run:
 
 ```bash
-if [ -n "${CQCLAW_CLI:-}" ] && [ -x "$CQCLAW_CLI" ]; then
+cqclaw agent locate
+```
+
+Continue only when this returns valid JSON with `ok: true`. If it succeeds, use
+`cqclaw` directly in all remaining commands. If the command is not on `PATH`,
+resolve an installed CLI with:
+
+```bash
+if command -v cqclaw >/dev/null 2>&1; then
+  CQCLAW_CMD="$(command -v cqclaw)"
+elif [ -n "${CQCLAW_CLI:-}" ] && [ -x "$CQCLAW_CLI" ]; then
   CQCLAW_CMD="$CQCLAW_CLI"
 elif [ -n "${QCLAW_HOME:-}" ] && [ -x "$QCLAW_HOME/bin/cqclaw" ]; then
   CQCLAW_CMD="$QCLAW_HOME/bin/cqclaw"
 elif [ -n "${AAS_HOME:-}" ] && [ -x "$AAS_HOME/bin/cqclaw" ]; then
   CQCLAW_CMD="$AAS_HOME/bin/cqclaw"
-elif command -v cqclaw >/dev/null 2>&1; then
-  CQCLAW_CMD="$(command -v cqclaw)"
 elif [ -x "$HOME/Applications/CQClaw/bin/cqclaw" ]; then
   CQCLAW_CMD="$HOME/Applications/CQClaw/bin/cqclaw"
 elif [ -n "${LOCALAPPDATA:-}" ] && [ -f "$LOCALAPPDATA/CQClaw/bin/cqclaw.cmd" ]; then
   CQCLAW_CMD="$LOCALAPPDATA/CQClaw/bin/cqclaw.cmd"
 else
-  echo "CQClaw CLI not found. Install/open CQClaw, then restart the terminal." >&2
+  echo "This skill requires a compatible CQClaw CLI. Install/update/open CQClaw, make 'cqclaw agent locate' succeed in a new terminal, then retry." >&2
   exit 127
 fi
 ```
@@ -29,22 +38,27 @@ Use `"$CQCLAW_CMD"` in scripts when command discovery is needed.
 PowerShell:
 
 ```powershell
-if ($env:CQCLAW_CLI -and (Test-Path $env:CQCLAW_CLI)) {
+if (Get-Command cqclaw -ErrorAction SilentlyContinue) {
+  $CQCLAW_CMD = (Get-Command cqclaw).Source
+} elseif ($env:CQCLAW_CLI -and (Test-Path $env:CQCLAW_CLI)) {
   $CQCLAW_CMD = $env:CQCLAW_CLI
 } elseif ($env:QCLAW_HOME -and (Test-Path (Join-Path $env:QCLAW_HOME "bin\cqclaw.cmd"))) {
   $CQCLAW_CMD = Join-Path $env:QCLAW_HOME "bin\cqclaw.cmd"
 } elseif ($env:AAS_HOME -and (Test-Path (Join-Path $env:AAS_HOME "bin\cqclaw.cmd"))) {
   $CQCLAW_CMD = Join-Path $env:AAS_HOME "bin\cqclaw.cmd"
-} elseif (Get-Command cqclaw -ErrorAction SilentlyContinue) {
-  $CQCLAW_CMD = (Get-Command cqclaw).Source
 } elseif ($env:LOCALAPPDATA -and (Test-Path (Join-Path $env:LOCALAPPDATA "CQClaw\bin\cqclaw.cmd"))) {
   $CQCLAW_CMD = Join-Path $env:LOCALAPPDATA "CQClaw\bin\cqclaw.cmd"
 } else {
-  throw "CQClaw CLI not found. Install/open CQClaw, then restart the terminal."
+  throw "This skill requires a compatible CQClaw CLI. Install/update/open CQClaw, make 'cqclaw agent locate' succeed in a new terminal, then retry."
 }
 ```
 
-The agent CLI prints JSON by default.
+After resolving a CLI path, run `agent locate` through it and require valid JSON
+with `ok: true`. A `cqclaw` executable that does not support the `agent`
+subcommand is an old or incompatible CLI. If no compatible installed CLI can
+make `agent locate` succeed, stop and tell the user to install or update CQClaw.
+Do not continue with raw `adb`, a guessed source checkout, or a path copied from
+another computer. The agent CLI prints JSON by default.
 
 ## Installation Paths
 

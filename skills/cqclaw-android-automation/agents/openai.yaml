@@ -1,7 +1,7 @@
 interface:
   display_name: "CQClaw Android Automation"
   short_description: "Learn and replay verified Android workflows"
-  default_prompt: "Use $cqclaw-android-automation to inspect my Android device, complete the requested task, verify the result with evidence, save a reusable workflow, and replay an existing matching profile when available."
+  default_prompt: "Use $cqclaw-android-automation to first require `cqclaw agent locate` to return valid JSON with `ok: true`, then inspect my Android device, complete the requested task, verify the result with evidence, and save or replay a reusable workflow. If the CLI is unavailable or incompatible, stop and tell me to install or update CQClaw."
 
 policy:
   allow_implicit_invocation: true

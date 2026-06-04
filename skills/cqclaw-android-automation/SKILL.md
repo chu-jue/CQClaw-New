@@ -1,6 +1,6 @@
 ---
 name: cqclaw-android-automation
-description: "Use when controlling Android devices through CQClaw: inspect screens, act on UI, run shell commands, capture evidence, learn a reusable workflow from a user goal, or replay and diagnose a saved CQClaw automation profile."
+description: "Use when controlling Android devices through CQClaw: inspect screens, act on UI, run shell commands, capture evidence, learn a reusable workflow from a user goal, or replay and diagnose a saved CQClaw automation profile. Requires a compatible CQClaw CLI to already be installed; if `cqclaw agent locate` cannot succeed, stop and tell the user to install or update CQClaw and make the CLI available."
 ---
 
 # CQClaw Android Automation
@@ -9,29 +9,36 @@ Use CQClaw's agent CLI as the stable automation surface. Prefer it over raw
 `adb` because it returns machine-readable JSON and reuses the installed CQClaw
 client/server, settings, dump parser, workflow executor, and output paths.
 
-## Runtime
+## Prerequisite
 
-This skill is designed for end users who have installed the CQClaw client. Do
-not assume they have the source checkout.
+This skill requires the CQClaw client and CLI to already be installed on the
+current user's computer. Do not assume they have the source checkout, and do not
+fall back to raw `adb` when the CQClaw CLI is unavailable.
 
-Resolve the CLI and installation root before doing anything else:
+Before doing anything else, run `cqclaw agent locate` directly. Continue only
+when it returns valid JSON with `ok: true`; then use `cqclaw` directly for the
+remaining commands. A `cqclaw` executable that does not support the `agent`
+subcommand is not compatible with this skill.
+
+If `cqclaw` is not available on `PATH`, resolve only an installed CLI:
 
 1. Use `$CQCLAW_CLI` when the user configured an explicit executable.
 2. Use `$QCLAW_HOME/bin/cqclaw` or `$AAS_HOME/bin/cqclaw` when either home is
    configured.
-3. Use `cqclaw` when it is on `PATH`.
-4. Use common install locations only as a fallback:
+3. Use common install locations only as a fallback:
    - macOS: `$HOME/Applications/CQClaw/bin/cqclaw`
    - Windows: `%LOCALAPPDATA%\CQClaw\bin\cqclaw.cmd`
-5. Run `cqclaw agent locate` through the resolved executable. Treat its
+4. Run `agent locate` through the resolved executable. Treat its
    `data.home` as the authoritative installation root and its `data.paths` as
    the authoritative locations for CQClaw data, profiles, settings, runtime,
    and server files.
 
-If none exists, tell the user to install/open CQClaw and make sure the `cqclaw`
-command is available in a new terminal. Do not use a hard-coded developer
-machine path. Do not reuse a path seen in this skill, an example, a previous
-conversation, or another user's computer.
+If no compatible installed CLI can make `agent locate` succeed, stop the task
+and tell the user that this skill requires the CQClaw CLI. Ask them to install,
+update, or open CQClaw, make sure `cqclaw agent locate` succeeds in a new
+terminal, and then retry. Do not use a hard-coded developer machine path. Do
+not reuse a path seen in this skill, an example, a previous conversation, or
+another user's computer.
 
 When a CQClaw file is needed, resolve it relative to the `home` or named path
 returned by `agent locate`. When a workflow needs an unrelated user file such
@@ -75,6 +82,9 @@ do not assume it lives inside CQClaw.
 ## Rules
 
 - Treat every CLI response as JSON and check `ok`.
+- Stop and notify the user when `cqclaw agent locate` is unavailable, returns
+  invalid output, or reports `ok: false`. This skill must not continue through
+  raw `adb` or a guessed source checkout.
 - Use `agent locate` instead of guessing CQClaw paths or searching an entire
   disk. Re-run it if the CLI is updated, moved, or invoked from another user
   account.
