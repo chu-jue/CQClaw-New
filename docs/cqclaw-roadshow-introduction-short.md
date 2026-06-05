@@ -53,6 +53,18 @@ Skill 会引导 Agent：
 
 ## 重点功能模块
 
+### 应用截图
+
+| 自动化编排 | 日志洞察 |
+| --- | --- |
+| ![CQClaw 自动化编排](../static/assets/workbench/workflow-automation-hero-light.png) | ![CQClaw 日志洞察](../static/assets/workbench/log-insight-hero-light.png) |
+| 面向用户和 Agent 的统一流程编辑器，支持预览、执行、保存与复用。 | 支持实时 Logcat、导入日志、过滤、高亮和关键 Android 日志 Timeline。 |
+
+| 节点解析 | 资源中心 |
+| --- | --- |
+| ![CQClaw 节点解析](../static/assets/workbench/dump-inspector-hero-light.png) | ![CQClaw 资源中心](../static/assets/workbench/storage-center-hero-light.png) |
+| 将截图和 UI XML 联动起来，帮助 Agent 选择稳定操作目标。 | 集中预览和管理截图、Dump、日志、APK、临时脚本与工作流导出。 |
+
 ### 自动化编排
 
 支持安装 APK、智能点击、应用操作、输入文本、剪切板、截图、录屏、文件推送/提取、权限处理、Shell 命令和自动化脚本。

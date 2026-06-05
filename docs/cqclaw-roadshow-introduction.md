@@ -55,6 +55,25 @@ CQClaw 的执行结果面向 Agent 友好，CLI 返回机器可读 JSON，并包
 
 ## 强大功能模块
 
+### 应用截图与功能展示
+
+这些截图展示了 CQClaw 的主要使用入口。路演时可以先用截图快速建立产品感，再进入真实设备演示。
+
+| 自动化编排 | 日志洞察 |
+| --- | --- |
+| ![CQClaw 自动化编排](../static/assets/workbench/workflow-automation-hero-light.png) | ![CQClaw 日志洞察](../static/assets/workbench/log-insight-hero-light.png) |
+| 面向用户和 Agent 的统一流程编辑器，支持安装 APK、智能点击、脚本节点、预览、执行、保存与复用。 | 面向日常排查的日志工作台，支持实时 Logcat、导入日志文件、过滤、高亮、上下文和关键 Android 日志 Timeline。 |
+
+| 节点解析 | 资源中心 |
+| --- | --- |
+| ![CQClaw 节点解析](../static/assets/workbench/dump-inspector-hero-light.png) | ![CQClaw 资源中心](../static/assets/workbench/storage-center-hero-light.png) |
+| 将设备截图、UI XML、节点树、bounds 和推荐命令联动起来，帮助 Agent 选择稳定操作目标。 | 集中预览和管理截图、Dump、日志、APK、临时脚本、工作流导出和运行产物。 |
+
+| 工作台模块总览 | 设备控制台 |
+| --- | --- |
+| ![CQClaw 工作台模块总览](../static/assets/workbench/cqclaw-workbench-module-board.png) | ![CQClaw 设备控制台](../static/assets/device-manager/device-console-hero.png) |
+| 展示 CQClaw 的自动化、日志、节点、资源等模块如何组成统一工作台。 | 连接真实 Android 设备，查看状态、安装手机端能力，并快速进入日志洞察和节点解析。 |
+
 ### Agent Skill
 
 CQClaw 提供可安装的 Agent Skill。用户安装客户端后，再安装 skill，Agent 就知道如何调用用户电脑上的 CQClaw CLI。
