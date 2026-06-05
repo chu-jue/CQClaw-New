@@ -10,6 +10,9 @@
     topActivity: null,
     screenshot: null,
     resultItems: [],
+    remoteEntries: [],
+    remoteSelectedEntry: null,
+    remoteSelectedPath: "",
     sync: {
       running: false,
       serial: "",
@@ -706,39 +709,266 @@
     return parent || "/";
   }
 
-  async function listRemote(pathValue) {
+  function remoteSerialOptions() {
+    const serials = state.devices
+      .filter((device) => device.state === "device")
+      .map((device) => device.serial);
+    if (state.activeSerial && !serials.includes(state.activeSerial)) serials.unshift(state.activeSerial);
+    return serials;
+  }
+
+  function resetRemoteSelection() {
+    state.remoteSelectedEntry = null;
+    state.remoteSelectedPath = "";
+    updateRemoteSelectionUi();
+  }
+
+  function openRemoteBrowser(pathValue) {
     const path = pathValue || ($("remotePathInput").value || "/sdcard/Download").trim();
     $("remotePathInput").value = path;
+    const modal = $("remoteModal");
+    const serials = remoteSerialOptions();
+    $("remoteSerial").innerHTML = serials.map((serial) => `<option value="${attr(serial)}">${escapeHtml(deviceLabel(serial))}</option>`).join("");
+    if (state.activeSerial) $("remoteSerial").value = state.activeSerial;
+    $("remotePath").value = path;
+    $("remoteSearch").value = "";
+    $("remoteTitle").textContent = state.activeSerial ? `手机文件管理器：${deviceLabel(state.activeSerial)}` : "手机文件管理器";
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    if (!serials.length) {
+      $("remoteCrumbs").innerHTML = "";
+      $("remoteEntries").innerHTML = `<div class="empty">没有在线设备</div>`;
+      $("remoteStatus").textContent = "请先连接并选择一台在线设备";
+      return;
+    }
+    listRemote(path);
+  }
+
+  function closeRemoteBrowser() {
+    $("remoteModal")?.classList.remove("open");
+    $("remoteModal")?.setAttribute("aria-hidden", "true");
+    resetRemoteSelection();
+  }
+
+  function renderRemoteCrumbs(path) {
+    const cleaned = (path || "/").trim() || "/";
+    const parts = cleaned.split("/").filter(Boolean);
+    const crumbs = [`<button class="btn btn-ghost" data-remote-crumb="/" title="/" type="button">/</button>`];
+    let current = "";
+    parts.forEach((part) => {
+      current += `/${part}`;
+      crumbs.push(`<button class="btn btn-ghost" data-remote-crumb="${attr(current)}" title="${attr(current)}" type="button">${escapeHtml(part)}</button>`);
+    });
+    $("remoteCrumbs").innerHTML = crumbs.join("");
+    document.querySelectorAll("[data-remote-crumb]").forEach((button) => {
+      button.addEventListener("click", () => {
+        $("remotePath").value = button.dataset.remoteCrumb || "/";
+        listRemote($("remotePath").value);
+      });
+    });
+  }
+
+  function formatRemoteSize(entry) {
+    if (!entry || entry.type === "directory") return "-";
+    const raw = entry.sizeBytes ?? entry.size;
+    const bytes = Number(raw);
+    if (!Number.isFinite(bytes)) return entry.size || "-";
+    if (bytes < 1024) return `${bytes} B`;
+    const units = ["KB", "MB", "GB", "TB"];
+    let value = bytes / 1024;
+    let unit = units[0];
+    for (let index = 1; index < units.length && value >= 1024; index += 1) {
+      value /= 1024;
+      unit = units[index];
+    }
+    const digits = value >= 100 ? 0 : value >= 10 ? 1 : 2;
+    return `${value.toFixed(digits)} ${unit}`;
+  }
+
+  function remoteTypeLabel(entry) {
+    if (entry.type === "directory") return "目录";
+    if (entry.type === "symlink") return "链接";
+    return "文件";
+  }
+
+  function remoteEntryTarget(entry) {
+    if (!entry) return "";
+    if (entry.type === "symlink") return entry.targetPath || entry.linkTarget || entry.path;
+    return entry.path;
+  }
+
+  function remoteEntryCanEnter(entry) {
+    return entry && (entry.type === "directory" || entry.type === "symlink");
+  }
+
+  function selectRemoteEntry(entry) {
+    state.remoteSelectedEntry = entry || null;
+    state.remoteSelectedPath = entry?.path || "";
+    updateRemoteSelectionUi();
+    if (entry) $("remoteStatus").textContent = `已选中：${entry.path}`;
+  }
+
+  function updateRemoteSelectionUi() {
+    document.querySelectorAll(".device-remote-modal .remote-entry").forEach((row) => {
+      row.classList.toggle("selected", !!state.remoteSelectedPath && row.dataset.path === state.remoteSelectedPath);
+    });
+    const entry = state.remoteSelectedEntry;
+    $("remoteEnterSelected").disabled = !remoteEntryCanEnter(entry);
+    $("remoteOpenFile").disabled = !(entry && entry.type === "file");
+    $("remoteCopySelected").disabled = !(entry || ($("remotePath")?.value || "").trim());
+  }
+
+  async function listRemote(pathValue) {
+    const path = pathValue || ($("remotePath").value || $("remotePathInput").value || "/sdcard/Download").trim();
+    $("remotePath").value = path;
+    $("remotePathInput").value = path;
+    resetRemoteSelection();
+    renderRemoteCrumbs(path);
+    const serial = $("remoteSerial")?.value || state.activeSerial;
+    if (!serial) {
+      $("remoteEntries").innerHTML = `<div class="empty">请先选择一台在线设备</div>`;
+      $("remoteStatus").textContent = "";
+      return;
+    }
+    $("remoteStatus").textContent = "读取中...";
+    $("remoteEntries").innerHTML = `<div class="empty">读取中...</div>`;
     try {
-      const data = await deviceApi("/api/remote-list", { path });
-      if (!data.ok) throw new Error(data.stderr || data.error || "读取失败");
-      const entries = data.entries || [];
-      const html = `<div class="remote-list-mini">
-        <div class="remote-entry-mini">
-          <strong>${escapeHtml(data.path || path)}</strong>
-          <button class="btn btn-ghost" data-remote-path="${attr(data.parent || remoteParent(path))}" type="button">上一级</button>
-        </div>
-        ${entries.slice(0, 60).map((entry) => `
-          <div class="remote-entry-mini">
-            <div>
-              <strong>${escapeHtml(entry.type === "directory" ? `${entry.name}/` : entry.name)}</strong>
-              <div class="device-muted">${escapeHtml([entry.sizeText || entry.size, entry.modified, entry.mode].filter(Boolean).join(" · "))}</div>
-            </div>
-            ${entry.type === "directory" ? `<button class="btn btn-ghost" data-remote-path="${attr(entry.path)}" type="button">进入</button>` : `<button class="btn btn-ghost" data-open-remote="${attr(entry.path)}" type="button">打开</button>`}
-          </div>
-        `).join("")}
-      </div>`;
-      addResult("手机文件", "success", `${entries.length} 项`, html);
+      const data = await postJson("/api/remote-list", { serial, path });
+      $("remoteStatus").textContent = data.ok ? `${data.entries.length} 项` : (data.stderr || data.error || "读取失败");
+      if (!data.ok) {
+        $("remoteEntries").innerHTML = `<div class="empty">${escapeHtml(data.stderr || data.error || "读取失败")}</div>`;
+        addResult("手机文件", "failed", data.stderr || data.error || "读取失败");
+        return;
+      }
+      $("remotePath").value = data.path || path;
+      $("remotePathInput").value = data.path || path;
+      renderRemoteCrumbs($("remotePath").value);
+      state.remoteEntries = data.entries || [];
+      renderRemoteEntries();
+      addResult("手机文件", "success", `${state.remoteEntries.length} 项 · ${data.path || path}`);
     } catch (error) {
+      $("remoteStatus").textContent = `读取失败：${error.message}`;
+      $("remoteEntries").innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
       addResult("手机文件", "failed", error.message);
     }
   }
 
+  function renderRemoteEntries() {
+    const keyword = ($("remoteSearch").value || "").trim().toLowerCase();
+    const sort = $("remoteSort").value || "name";
+    let entries = [...(state.remoteEntries || [])];
+    if (keyword) {
+      entries = entries.filter((entry) => [entry.name, entry.path, entry.type, entry.mode, entry.owner, entry.group, entry.modified, entry.linkTarget].join(" ").toLowerCase().includes(keyword));
+    }
+    entries.sort((a, b) => {
+      const dir = (a.type === "directory" ? 0 : 1) - (b.type === "directory" ? 0 : 1);
+      if (dir) return dir;
+      if (sort === "size") return (Number(b.sizeBytes ?? b.size) || 0) - (Number(a.sizeBytes ?? a.size) || 0);
+      if (sort === "modified") return String(b.modified || "").localeCompare(String(a.modified || ""));
+      if (sort === "type") return String(a.type || "").localeCompare(String(b.type || "")) || a.name.localeCompare(b.name, "zh-CN");
+      return a.name.localeCompare(b.name, "zh-CN");
+    });
+    if (!entries.length) {
+      $("remoteEntries").innerHTML = `<div class="empty">目录为空</div>`;
+      updateRemoteSelectionUi();
+      return;
+    }
+    $("remoteEntries").innerHTML = entries.map((entry, index) => `
+      <div class="remote-entry ${state.remoteSelectedPath === entry.path ? "selected" : ""}" data-remote-index="${index}" data-path="${attr(entry.path)}" tabindex="0">
+        <span class="badge ${entry.type === "directory" ? "ok" : entry.type === "symlink" ? "warn" : ""}">${remoteTypeLabel(entry)}</span>
+        <span class="remote-name" title="${attr(entry.path)}">
+          <span>${escapeHtml(entry.type === "directory" ? `${entry.name}/` : entry.name)}</span>
+          ${entry.linkTarget ? `<small>-> ${escapeHtml(entry.linkTarget)}</small>` : ""}
+        </span>
+        <span class="remote-meta">${escapeHtml(formatRemoteSize(entry))}</span>
+        <span class="remote-meta">${escapeHtml(entry.modified || "-")}</span>
+        <span class="remote-meta">${escapeHtml([entry.mode, entry.owner, entry.group].filter(Boolean).join(" ") || "-")}</span>
+        <div class="remote-actions">
+          ${remoteEntryCanEnter(entry)
+            ? `<button class="btn btn-ghost" data-remote-enter="${index}" type="button">进入</button>`
+            : `<button class="btn btn-ghost" data-remote-file-open="${index}" type="button">本机打开</button>`}
+          <button class="btn btn-ghost" data-copy-remote-path="${index}" type="button">复制</button>
+        </div>
+      </div>
+    `).join("");
+    document.querySelectorAll(".device-remote-modal .remote-entry").forEach((row) => {
+      row.addEventListener("click", () => selectRemoteEntry(entries[Number(row.dataset.remoteIndex)]));
+      row.addEventListener("dblclick", () => {
+        const entry = entries[Number(row.dataset.remoteIndex)];
+        if (remoteEntryCanEnter(entry)) enterRemoteEntry(entry);
+        else openRemoteFile(entry?.path || "");
+      });
+      row.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        const entry = entries[Number(row.dataset.remoteIndex)];
+        if (remoteEntryCanEnter(entry)) enterRemoteEntry(entry);
+        else openRemoteFile(entry?.path || "");
+      });
+    });
+    document.querySelectorAll("[data-remote-enter]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        enterRemoteEntry(entries[Number(button.dataset.remoteEnter)]);
+      });
+    });
+    document.querySelectorAll("[data-remote-file-open]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openRemoteFile(entries[Number(button.dataset.remoteFileOpen)]?.path || "");
+      });
+    });
+    document.querySelectorAll("[data-copy-remote-path]").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        const entry = entries[Number(button.dataset.copyRemotePath)];
+        await copyText(entry?.path || "", "复制手机路径");
+        $("remoteStatus").textContent = "路径已复制";
+      });
+    });
+    updateRemoteSelectionUi();
+  }
+
+  function enterRemoteEntry(entry) {
+    if (!remoteEntryCanEnter(entry)) {
+      $("remoteStatus").textContent = "请选择目录或链接";
+      return;
+    }
+    $("remotePath").value = remoteEntryTarget(entry) || entry.path;
+    listRemote($("remotePath").value);
+  }
+
+  function openSelectedRemoteFile() {
+    const entry = state.remoteSelectedEntry;
+    if (!entry) {
+      $("remoteStatus").textContent = "请选择文件";
+      return;
+    }
+    if (entry.type !== "file") {
+      $("remoteStatus").textContent = "目录请进入，文件才可本机打开";
+      return;
+    }
+    openRemoteFile(entry.path);
+  }
+
+  async function copySelectedRemotePath() {
+    const path = state.remoteSelectedEntry?.path || ($("remotePath").value || "").trim();
+    if (!path) return;
+    await copyText(path, "复制手机路径");
+    $("remoteStatus").textContent = "路径已复制";
+  }
+
   async function openRemoteFile(path) {
     try {
-      const data = await deviceApi("/api/remote-open", { path });
+      const serial = $("remoteSerial")?.value || state.activeSerial;
+      const remotePath = (path || state.remoteSelectedEntry?.path || $("remotePath")?.value || "").trim();
+      if (!serial) throw new Error("请先选择一台在线设备");
+      if (!remotePath || remotePath.endsWith("/")) throw new Error("请选择具体文件");
+      $("remoteStatus").textContent = "正在临时复制并用本机默认应用打开...";
+      const data = await postJson("/api/remote-open", { serial, path: remotePath });
+      $("remoteStatus").textContent = data.ok ? `已打开：${data.localPath}` : (data.stderr || data.error || "打开失败");
       addResult("本机打开手机文件", data.ok ? "success" : "failed", resultText(data) || data.localPath || "");
     } catch (error) {
+      if ($("remoteStatus")) $("remoteStatus").textContent = error.message;
       addResult("本机打开手机文件", "failed", error.message);
     }
   }
@@ -871,12 +1101,49 @@
     bindClick("launchAppBtn", launchApp, { busy: true, busyText: "启动中", feedback: "启动 App", failTitle: "启动 App" });
     bindClick("stopAppBtn", stopApp, { busy: true, busyText: "停止中", feedback: "停止 App", failTitle: "停止 App" });
     bindClick("permissionPageBtn", openPermissionPage, { busy: true, busyText: "打开中", feedback: "打开权限页", failTitle: "权限设置" });
-    bindClick("listRemoteBtn", () => listRemote(), { busy: true, busyText: "浏览中", feedback: "浏览手机文件" });
+    bindClick("listRemoteBtn", () => openRemoteBrowser(), { busy: false, feedback: "浏览手机文件" });
     document.querySelectorAll("[data-remote-shortcut]").forEach((button) => {
       button.addEventListener("click", () => {
         const path = button.dataset.remoteShortcut || "/sdcard/";
         setActionFeedback("浏览手机目录", "running", path);
-        listRemote(path);
+        openRemoteBrowser(path);
+      });
+    });
+    bindRequired("remoteClose", "click", closeRemoteBrowser);
+    bindRequired("remoteOpen", "click", () => listRemote($("remotePath").value));
+    bindRequired("remoteEnterSelected", "click", () => enterRemoteEntry(state.remoteSelectedEntry));
+    bindRequired("remoteOpenFile", "click", openSelectedRemoteFile);
+    bindRequired("remoteCopySelected", "click", copySelectedRemotePath);
+    bindRequired("remoteUseCurrent", "click", () => {
+      const path = ($("remotePath").value || "").trim() || "/sdcard/";
+      $("remotePathInput").value = path;
+      closeRemoteBrowser();
+      setActionFeedback("手机文件路径", "success", `已使用 ${path}`);
+    });
+    bindRequired("remoteUp", "click", () => {
+      $("remotePath").value = remoteParent($("remotePath").value || "/");
+      listRemote($("remotePath").value);
+    });
+    bindRequired("remoteSerial", "change", () => {
+      state.activeSerial = $("remoteSerial").value || state.activeSerial;
+      $("remoteTitle").textContent = state.activeSerial ? `手机文件管理器：${deviceLabel(state.activeSerial)}` : "手机文件管理器";
+      listRemote($("remotePath").value);
+    });
+    bindRequired("remoteSearch", "input", renderRemoteEntries);
+    bindRequired("remoteSort", "change", renderRemoteEntries);
+    bindRequired("remotePath", "keydown", (event) => {
+      if (event.key === "Enter") listRemote($("remotePath").value);
+    });
+    $("remoteModal")?.addEventListener("click", (event) => {
+      if (event.target === $("remoteModal")) closeRemoteBrowser();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && $("remoteModal")?.classList.contains("open")) closeRemoteBrowser();
+    });
+    document.querySelectorAll("[data-remote-modal-shortcut]").forEach((button) => {
+      button.addEventListener("click", () => {
+        $("remotePath").value = button.dataset.remoteModalShortcut || "/sdcard/";
+        listRemote($("remotePath").value);
       });
     });
 

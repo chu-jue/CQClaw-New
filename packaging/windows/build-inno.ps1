@@ -36,6 +36,30 @@ function Find-InnoCompiler {
   throw "ISCC.exe was not found. Install Inno Setup 6 or pass -InnoCompiler <path-to-ISCC.exe>."
 }
 
+function Test-AgentAssets {
+  param([Parameter(Mandatory = $true)][string]$Root)
+
+  $Assets = @(
+    (Join-Path $Root "data\agent\CQClawAgent.apk"),
+    (Join-Path $Root "data\agent\cqclaw-agent-server.jar")
+  )
+  $Missing = @()
+  foreach ($Asset in $Assets) {
+    if (-not (Test-Path $Asset)) {
+      $Missing += $Asset
+    }
+  }
+  if ($Missing.Count -gt 0) {
+    Write-Warning "Agent assets are missing and will not be bundled:"
+    foreach ($Asset in $Missing) {
+      Write-Warning "  $Asset"
+    }
+    Write-Warning "Put CQClawAgent.apk and cqclaw-agent-server.jar in data\agent before publishing the installer."
+  } else {
+    Write-Host "Agent assets: bundled"
+  }
+}
+
 $Compiler = Find-InnoCompiler -Explicit $InnoCompiler
 $Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
 $VersionFile = Join-Path $Root "version.txt"
@@ -49,6 +73,7 @@ if (Test-Path $VersionFile) {
 $TauriDir = Join-Path $Root "desktop\tauri-client"
 $TauriExe = Join-Path $TauriDir "src-tauri\target\release\cqclaw-client.exe"
 New-Item -ItemType Directory -Force -Path (Join-Path $Root "dist") | Out-Null
+Test-AgentAssets -Root $Root
 
 if (-not (Test-Path $TauriExe)) {
   Write-Host "Building Tauri client..."

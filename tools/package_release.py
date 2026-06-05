@@ -22,6 +22,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
+AGENT_ASSETS = [
+    ROOT / "data" / "agent" / "CQClawAgent.apk",
+    ROOT / "data" / "agent" / "cqclaw-agent-server.jar",
+]
 
 
 EXCLUDE_DIRS = {
@@ -88,6 +92,15 @@ def make_zip(name: str) -> Path:
         return Path(archive_path)
 
 
+def report_agent_assets() -> None:
+    missing = [path.relative_to(ROOT).as_posix() for path in AGENT_ASSETS if not path.exists()]
+    if missing:
+        print("agent assets: missing " + ", ".join(missing), file=sys.stderr)
+        print("agent assets: put release binaries in data/agent before publishing Windows packages.", file=sys.stderr)
+        return
+    print("agent assets: bundled " + ", ".join(path.relative_to(ROOT).as_posix() for path in AGENT_ASSETS))
+
+
 def build_windows_inno() -> int:
     script = ROOT / "packaging" / "windows" / "build-inno.ps1"
     if platform.system().lower() != "windows":
@@ -111,6 +124,7 @@ def main(argv: list[str] | None = None) -> int:
         args.macos_zip = True
 
     version = read_version()
+    report_agent_assets()
     outputs = []
     if args.all or args.windows_zip:
         outputs.append(make_zip(f"CQClaw-{version}-windows-source"))

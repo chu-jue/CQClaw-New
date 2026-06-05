@@ -6,7 +6,7 @@
   <title>设备管理 - CQClaw</title>
   <link rel="stylesheet" href="/css/app.css?v=8">
   <link rel="stylesheet" href="/css/pages/side-nav-shell.css?v=2">
-  <link rel="stylesheet" href="/css/pages/device-manager.css?v=4">
+  <link rel="stylesheet" href="/css/pages/device-manager.css?v=5">
   <script src="/js/core/theme-boot.js"></script>
 </head>
 <body class="device-manager-page app-page cq-side-nav-page">
@@ -289,9 +289,64 @@
     </main>
   </div>
 
+  <div id="remoteModal" class="modal device-remote-modal" aria-hidden="true">
+    <div class="modal-panel remote-modal-panel">
+      <div class="modal-head">
+        <div>
+          <h2 id="remoteTitle">手机文件管理器</h2>
+          <p class="device-muted">浏览手机目录，进入文件夹或用本机打开文件</p>
+        </div>
+        <button id="remoteClose" class="btn btn-ghost" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#chevron-down"></use></svg>关闭</button>
+      </div>
+      <div class="remote-tools stack">
+        <div id="remoteCrumbs" class="remote-crumbs"></div>
+        <div class="grid2">
+          <label><span>浏览设备</span><select id="remoteSerial"></select></label>
+          <label><span>当前路径</span><input id="remotePath" value="/sdcard/Download"></label>
+        </div>
+        <div class="grid2">
+          <label><span>搜索/过滤</span><input id="remoteSearch" placeholder="文件名、.log、.png"></label>
+          <label><span>排序</span><select id="remoteSort">
+            <option value="name">名称</option>
+            <option value="type">类型</option>
+            <option value="size">大小</option>
+            <option value="modified">修改时间</option>
+          </select></label>
+        </div>
+        <div class="row remote-action-row">
+          <button id="remoteUp" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#arrow-up"></use></svg>上一级</button>
+          <button id="remoteOpen" class="btn btn-primary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#refresh"></use></svg>刷新</button>
+          <button id="remoteEnterSelected" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#folder-open"></use></svg>进入</button>
+          <button id="remoteOpenFile" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#file"></use></svg>本机打开</button>
+          <button id="remoteCopySelected" class="btn btn-secondary" type="button"><svg class="ui-icon"><use href="/assets/icons/cqclaw-ui-icons.svg#copy"></use></svg>复制路径</button>
+        </div>
+        <div class="row remote-shortcuts">
+          <button class="btn btn-ghost" type="button" data-remote-modal-shortcut="/sdcard/Download">Download</button>
+          <button class="btn btn-ghost" type="button" data-remote-modal-shortcut="/sdcard/DCIM">DCIM</button>
+          <button class="btn btn-ghost" type="button" data-remote-modal-shortcut="/sdcard/Android/data">Android/data</button>
+          <button class="btn btn-ghost" type="button" data-remote-modal-shortcut="/sdcard/Android/media">Android/media</button>
+          <button class="btn btn-ghost" type="button" data-remote-modal-shortcut="/data/local/tmp">local/tmp</button>
+        </div>
+      </div>
+      <div class="remote-table-head">
+        <span>类型</span>
+        <span>名称</span>
+        <span>大小</span>
+        <span>修改时间</span>
+        <span>权限</span>
+        <span>操作</span>
+      </div>
+      <div id="remoteEntries" class="remote-list"></div>
+      <div class="modal-foot">
+        <span id="remoteStatus" class="muted tiny"></span>
+        <button id="remoteUseCurrent" class="btn btn-primary" type="button">使用当前路径</button>
+      </div>
+    </div>
+  </div>
+
   <script src="/js/api.js"></script>
   <script src="/js/theme-manager.js"></script>
   <script src="/js/core/side-nav.js?v=2"></script>
-  <script src="/js/pages/device-manager.js?v=4"></script>
+  <script src="/js/pages/device-manager.js?v=5"></script>
 </body>
 </html>

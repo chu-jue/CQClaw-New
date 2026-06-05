@@ -1436,6 +1436,101 @@ function renderColumnPicker() {
     </label>
   `).join("");
   applyColumnLayout();
+  if (!panel.hidden) placeColumnPickerPanel();
+}
+
+function placeFloatingPanel(panel, anchor, options = {}) {
+  if (!panel || !anchor) return;
+  if (panel.parentElement !== document.body) document.body.appendChild(panel);
+  const gap = options.gap ?? 6;
+  const anchorRect = anchor.getBoundingClientRect();
+  const width = panel.offsetWidth || options.width || 180;
+  const height = panel.offsetHeight || options.height || 180;
+  const point = options.point;
+  let left = point ? point.x - width + 20 : (options.align === "left" ? anchorRect.left : anchorRect.right - width);
+  let top = point ? point.y + gap : anchorRect.bottom + gap;
+  left = Math.max(8, Math.min(left, window.innerWidth - width - 8));
+  if (top + height > window.innerHeight - 8 && anchorRect.top - height - gap > 8) {
+    top = anchorRect.top - height - gap;
+  }
+  panel.style.position = "fixed";
+  panel.style.left = `${Math.round(left)}px`;
+  panel.style.top = `${Math.round(top)}px`;
+  panel.style.right = "auto";
+  panel.style.marginTop = "0";
+  panel.style.zIndex = "10000";
+  const placed = panel.getBoundingClientRect();
+  if (placed.right > window.innerWidth - 8) left -= placed.right - (window.innerWidth - 8);
+  if (placed.left < 8) left += 8 - placed.left;
+  if (placed.bottom > window.innerHeight - 8) top -= placed.bottom - (window.innerHeight - 8);
+  if (placed.top < 8) top += 8 - placed.top;
+  panel.style.left = `${Math.round(Math.max(8, left))}px`;
+  panel.style.top = `${Math.round(Math.max(8, top))}px`;
+}
+
+function placeColumnPickerPanel() {
+  placeFloatingPanel(byId("columnPickerPanel"), byId("columnPickerToggle"), { width: 180 });
+}
+
+function placeAdvancedCapturePanel() {
+  placeFloatingPanel(
+    byId("advancedCapturePanel")?.querySelector(".advanced-capture-body") || document.querySelector(".advanced-capture-body"),
+    byId("advancedCapturePanel")?.querySelector("summary"),
+    { width: 304 }
+  );
+}
+
+function placeOpenFloatingPanels() {
+  if (!byId("columnPickerPanel")?.hidden) placeColumnPickerPanel();
+  if (byId("advancedCapturePanel")?.open) placeAdvancedCapturePanel();
+}
+
+function closeFloatingPanelsOutside(target) {
+  const advancedPanel = byId("advancedCapturePanel");
+  if (advancedPanel?.open && !target.closest("#advancedCapturePanel") && !target.closest(".advanced-capture-body")) {
+    setAdvancedCapturePanelOpen(false);
+  }
+  if (!target.closest("#columnPicker") && !target.closest("#columnPickerPanel")) {
+    setColumnPickerOpen(false);
+  }
+}
+
+function setColumnPickerOpen(open) {
+  const panel = byId("columnPickerPanel");
+  const toggle = byId("columnPickerToggle");
+  if (!panel || !toggle) return;
+  panel.hidden = !open;
+  toggle.setAttribute("aria-expanded", String(open));
+  toggle.classList.toggle("is-active", Boolean(open));
+  if (open) placeColumnPickerPanel();
+}
+
+function toggleColumnPicker(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  const panel = byId("columnPickerPanel");
+  setColumnPickerOpen(Boolean(panel?.hidden));
+}
+
+function toggleAdvancedCapturePanel(event) {
+  const panel = event.currentTarget.closest("#advancedCapturePanel");
+  if (!panel) return;
+  event.preventDefault();
+  event.stopPropagation();
+  setAdvancedCapturePanelOpen(!panel.open);
+  if (panel.open) {
+    fillDefaultCaptureSince();
+    placeAdvancedCapturePanel();
+  }
+}
+
+function setAdvancedCapturePanelOpen(open) {
+  const panel = byId("advancedCapturePanel");
+  const body = panel?.querySelector(".advanced-capture-body") || document.querySelector(".advanced-capture-body");
+  if (!panel || !body) return;
+  panel.open = Boolean(open);
+  body.hidden = !open;
+  if (open) placeAdvancedCapturePanel();
 }
 
 function visibleLogColumns() {
@@ -3705,6 +3800,22 @@ function bindEvents() {
   byId("advancedCapturePanel")?.addEventListener("toggle", (event) => {
     if (event.currentTarget.open) fillDefaultCaptureSince();
   });
+  const advancedCaptureSummary = byId("advancedCapturePanel")?.querySelector("summary");
+  advancedCaptureSummary?.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    state.advancedCapturePointerHandledUntil = Date.now() + 600;
+    toggleAdvancedCapturePanel(event);
+  }, true);
+  advancedCaptureSummary?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (Date.now() < (state.advancedCapturePointerHandledUntil || 0)) return;
+    toggleAdvancedCapturePanel(event);
+  }, true);
+  advancedCaptureSummary?.addEventListener("keydown", (event) => {
+    if (!["Enter", " "].includes(event.key)) return;
+    toggleAdvancedCapturePanel(event);
+  });
   byId("captureSinceInput")?.addEventListener("focus", () => fillDefaultCaptureSince());
   byId("appendSinceCaptureBtn")?.addEventListener("click", () => startAdvancedCapture("append"));
   byId("replaceSinceCaptureBtn")?.addEventListener("click", () => startAdvancedCapture("replace"));
@@ -3779,6 +3890,7 @@ function bindEvents() {
     syncHiddenDeviceSelectFromCheckboxes();
     scheduleFilter();
   });
+  byId("columnPickerToggle")?.addEventListener("click", toggleColumnPicker);
   byId("columnPickerPanel")?.addEventListener("change", (event) => {
     const input = event.target.closest("[data-column-toggle]");
     if (!input) return;
@@ -3805,6 +3917,8 @@ function bindEvents() {
   document.addEventListener("pointermove", updateColumnResize);
   document.addEventListener("pointerup", finishColumnResize);
   document.addEventListener("pointercancel", finishColumnResize);
+  window.addEventListener("resize", placeOpenFloatingPanels);
+  document.addEventListener("pointerdown", (event) => closeFloatingPanelsOutside(event.target), true);
   byId("returnAnchorBtn").addEventListener("click", () => {
     const anchor = state.contextMode ? anchorFromLog(findLogByRawIndex(state.contextMode.rawIndex), "context", byId("keywordFilter").value.trim()) : state.currentAnchor;
     jumpToAnchor(anchor, { forceGhost: true });
@@ -3845,7 +3959,6 @@ function bindEvents() {
 
   document.addEventListener("click", (event) => {
     const logs = currentViewerLogs();
-    const advancedPanel = byId("advancedCapturePanel");
     const addAnchor = event.target.closest("[data-add-anchor]");
     const contextLog = event.target.closest("[data-context-log]");
     const copyLog = event.target.closest("[data-copy-log]");
@@ -3871,9 +3984,7 @@ function bindEvents() {
       return;
     }
 
-    if (advancedPanel?.open && !event.target.closest("#advancedCapturePanel")) {
-      advancedPanel.open = false;
-    }
+    closeFloatingPanelsOutside(event.target);
     if (byId("quickFilterMenu")?.open && !event.target.closest("#quickFilterMenu")) {
       closeQuickFilterMenu();
     }

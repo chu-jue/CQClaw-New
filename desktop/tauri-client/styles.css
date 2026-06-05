@@ -167,7 +167,7 @@ button:active {
 }
 
 button:disabled {
-  cursor: wait;
+  cursor: default;
   opacity: 0.52;
 }
 
@@ -178,7 +178,7 @@ button.is-busy,
 
 button.is-busy {
   gap: 8px;
-  cursor: progress;
+  cursor: default;
   opacity: .88;
 }
 
@@ -198,15 +198,6 @@ button.is-busy::after,
   top: 14px;
   right: 14px;
   color: var(--accent);
-}
-
-.is-command-busy .primary-button:not(.is-busy),
-.is-command-busy .danger-button:not(.is-busy),
-.is-command-busy .quiet-button:not(.is-busy),
-.is-command-busy .open-web-button:not(.is-busy),
-.is-command-busy .launcher-card:not(.is-busy),
-.is-command-busy .autostart-switch-card:not(.is-busy) {
-  opacity: .66;
 }
 
 @keyframes cq-client-spin {
@@ -679,7 +670,7 @@ button,
 }
 
 .autostart-switch-card:has(input:disabled) {
-  cursor: wait;
+  cursor: default;
   opacity: 0.62;
 }
 

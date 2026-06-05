@@ -113,6 +113,7 @@ const messages = {
     "activity.refreshed.detail": "{count} 台设备，服务{tone}",
     "activity.refreshFailed.title": "刷新失败",
     "activity.commandRunning.title": "正在处理",
+    "activity.commandBusy.title": "已有命令在执行",
     "activity.commandDone.title": "命令已完成",
     "activity.commandFailed.title": "命令失败",
     "last.refreshed": "刷新于 {time}",
@@ -235,6 +236,7 @@ const messages = {
     "activity.refreshed.detail": "{count} device(s), {tone} service",
     "activity.refreshFailed.title": "Refresh failed",
     "activity.commandRunning.title": "Working",
+    "activity.commandBusy.title": "Command already running",
     "activity.commandDone.title": "Command completed",
     "activity.commandFailed.title": "Command failed",
     "last.refreshed": "Refreshed {time}",
@@ -322,6 +324,7 @@ const state = {
   devices: [],
   python: "",
   busy: false,
+  busyControlId: "",
   activities: [],
 };
 
@@ -402,6 +405,7 @@ function setText(element, value) {
 
 function setBusy(value, activeControl = null) {
   state.busy = value;
+  state.busyControlId = value ? (activeControl?.id || "") : "";
   document.body.classList.toggle("is-command-busy", value);
   document.querySelectorAll(".is-busy[aria-busy]").forEach((element) => {
     element.classList.remove("is-busy");
@@ -412,9 +416,6 @@ function setBusy(value, activeControl = null) {
     activeShell.classList.add("is-busy");
     activeShell.setAttribute("aria-busy", "true");
   }
-  elements.buttons.forEach((button) => {
-    if (!["clearLogBtn", "langZhBtn", "langEnBtn", "themeSystemBtn", "themeLightBtn", "themeDarkBtn"].includes(button.id)) button.disabled = value;
-  });
   if (value) {
     elements.healthPill.textContent = t("status.working");
     elements.healthPill.dataset.state = "working";
@@ -422,14 +423,19 @@ function setBusy(value, activeControl = null) {
   applyButtonState();
 }
 
+function blockIfBusy() {
+  if (!state.busy) return false;
+  appendActivity("activity.commandBusy.title", t("status.working"), "warn");
+  return true;
+}
+
 function applyButtonState() {
   elements.autostartButtonText.textContent = state.autostart.status === "enabled" ? t("status.enabled") : state.autostart.status === "disabled" ? t("status.disabled") : t("status.unknown");
   elements.autostartToggle.checked = state.autostart.status === "enabled";
-  elements.autostartToggle.disabled = state.busy || state.autostart.status === "unknown";
+  elements.autostartToggle.disabled = state.autostart.status === "unknown";
   elements.clientAutostartButtonText.textContent = state.clientAutostart.status === "enabled" ? t("status.enabled") : state.clientAutostart.status === "disabled" ? t("status.disabled") : t("status.unknown");
   elements.clientAutostartToggle.checked = state.clientAutostart.status === "enabled";
-  elements.clientAutostartToggle.disabled = state.busy || state.clientAutostart.status === "unknown";
-  if (state.busy) return;
+  elements.clientAutostartToggle.disabled = state.clientAutostart.status === "unknown";
   elements.buttons.forEach((button) => {
     button.disabled = false;
   });
@@ -441,6 +447,10 @@ function applyButtonState() {
   });
   elements.autostartToggle.disabled = state.autostart.status === "unknown";
   elements.clientAutostartToggle.disabled = state.clientAutostart.status === "unknown";
+  const activeBusyControl = state.busyControlId ? document.getElementById(state.busyControlId) : null;
+  if (state.busy && activeBusyControl && !["clearLogBtn", "langZhBtn", "langEnBtn", "themeSystemBtn", "themeLightBtn", "themeDarkBtn"].includes(activeBusyControl.id)) {
+    activeBusyControl.disabled = true;
+  }
 }
 
 function parseKeyedLine(text, key) {
@@ -693,11 +703,12 @@ function featureUrl(path) {
   return new URL(path || "/index.html", origin).toString();
 }
 
-async function openWebConsole(path = "", activeControl = null) {
+async function openWebConsole(path = "", activeControl = null, options = {}) {
+  if (!options.allowDuringBusy && blockIfBusy()) return;
   setBusy(true, activeControl);
   appendActivity("activity.commandRunning.title", path ? featureUrl(path) || path : t("action.openWeb"), "neutral");
   if (!state.service.url) {
-    await refresh(activeControl);
+    await refresh(activeControl, { allowDuringBusy: true });
     setBusy(true, activeControl);
   }
   try {
@@ -722,7 +733,8 @@ async function openWebConsole(path = "", activeControl = null) {
   }
 }
 
-async function refresh(activeControl = null) {
+async function refresh(activeControl = null, options = {}) {
+  if (!options.allowDuringBusy && activeControl && blockIfBusy()) return;
   setBusy(true, activeControl);
   if (activeControl) appendActivity("activity.commandRunning.title", t("action.refresh"), "neutral");
   try {
@@ -768,6 +780,7 @@ async function refresh(activeControl = null) {
 }
 
 async function runAndRefresh(args, options = {}) {
+  if (blockIfBusy()) return;
   const command = `cqclaw ${args.join(" ")}`;
   setBusy(true, options.activeControl || null);
   appendActivity("activity.commandRunning.title", command, "neutral");
@@ -785,6 +798,10 @@ async function runAndRefresh(args, options = {}) {
 }
 
 async function setClientAutostart(enabled) {
+  if (blockIfBusy()) {
+    elements.clientAutostartToggle.checked = state.clientAutostart.status === "enabled";
+    return;
+  }
   setBusy(true, elements.clientAutostartToggle);
   appendActivity("activity.commandRunning.title", enabled ? t("action.enableAutostart") : t("action.disableAutostart"), "neutral");
   try {
@@ -814,6 +831,11 @@ elements.launchButtons.forEach((button) => {
   button.addEventListener("click", () => openWebConsole(button.dataset.openPath || "", button).catch((error) => appendActivity("activity.openFailed.title", String(error), "error")));
 });
 elements.autostartToggle.addEventListener("change", () => {
+  if (state.busy) {
+    blockIfBusy();
+    elements.autostartToggle.checked = state.autostart.status === "enabled";
+    return;
+  }
   const args = elements.autostartToggle.checked ? ["autostart", "enable", "--no-open"] : ["autostart", "disable"];
   runAndRefresh(args, { timeoutSecs: 20, activeControl: elements.autostartToggle });
 });

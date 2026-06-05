@@ -42,6 +42,9 @@ SETTINGS_FILE = DATA_DIR / "settings.json"
 ENTERPRISE_FILE = DATA_DIR / "enterprise.json"
 ENTERPRISE_SOURCE_FILE = DATA_DIR / "enterprise-source.json"
 ENTERPRISE_SOURCE_TEXT_FILE = DATA_DIR / "enterprise-source.txt"
+AGENT_BUNDLE_DIR = DATA_DIR / "agent"
+AGENT_BUNDLE_APK = AGENT_BUNDLE_DIR / "CQClawAgent.apk"
+AGENT_BUNDLE_SERVER_JAR = AGENT_BUNDLE_DIR / "cqclaw-agent-server.jar"
 ADB_SNIPPETS_FILE = DATA_DIR / "adb_script_snippets.json"
 LOGS_FILE = DATA_DIR / "runs.jsonl"
 APP_LABEL_CACHE_FILE = DATA_DIR / "app_label_cache.json"
@@ -387,18 +390,34 @@ def enterprise_value(*keys):
     return dict_value(enterprise_config(), *keys)
 
 
+def bundled_agent_asset_path(path):
+    try:
+        candidate = Path(path)
+        if candidate.exists() and candidate.is_file():
+            return str(candidate)
+    except OSError:
+        return ""
+    return ""
+
+
 def configured_agent_apk_path():
-    return str(settings().get("agentApkPath") or enterprise_value("agentApkPath", "defaultAgentApkPath", "agentApk.path") or "").strip()
+    configured = str(settings().get("agentApkPath") or enterprise_value("agentApkPath", "defaultAgentApkPath", "agentApk.path") or "").strip()
+    if configured:
+        return configured
+    return bundled_agent_asset_path(AGENT_BUNDLE_APK)
 
 
 def configured_agent_server_jar_path():
-    return str(settings().get("agentServerJarPath") or enterprise_value(
+    configured = str(settings().get("agentServerJarPath") or enterprise_value(
         "agentServerJarPath",
         "defaultAgentServerJarPath",
         "agentServerJar.path",
         "agent.serverJarPath",
         "agent.serverJar.path",
     ) or "").strip()
+    if configured:
+        return configured
+    return bundled_agent_asset_path(AGENT_BUNDLE_SERVER_JAR)
 
 
 def default_adb_snippet_config():
@@ -6790,6 +6809,9 @@ class ApiHandler(SimpleHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        parsed_path = urllib.parse.urlparse(self.path).path
+        if parsed_path in {"", "/"} or Path(parsed_path).suffix in {".html", ".css", ".js"}:
+            self.send_header("Cache-Control", "no-store, max-age=0")
         super().end_headers()
 
     def do_OPTIONS(self):

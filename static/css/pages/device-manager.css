@@ -721,6 +721,78 @@ html[data-theme="dark"] .phone-empty-visual .theme-art-dark {
   white-space: nowrap;
 }
 
+.device-remote-modal {
+  z-index: 80;
+}
+
+.device-remote-modal .remote-modal-panel {
+  width: min(1120px, calc(100vw - 32px));
+  max-height: min(820px, calc(100vh - 32px));
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+}
+
+.device-remote-modal .modal-head h2 {
+  margin: 0 0 4px;
+}
+
+.device-remote-modal .remote-tools {
+  display: grid;
+  gap: 10px;
+}
+
+.device-remote-modal .remote-tools label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.device-remote-modal .remote-tools label span {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.device-remote-modal .remote-tools input,
+.device-remote-modal .remote-tools select {
+  width: 100%;
+  min-width: 0;
+}
+
+.device-remote-modal .remote-action-row,
+.device-remote-modal .remote-shortcuts {
+  flex-wrap: wrap;
+}
+
+.device-remote-modal .remote-list {
+  min-height: 260px;
+}
+
+.device-remote-modal .remote-entry {
+  min-width: 860px;
+}
+
+.device-remote-modal .remote-name {
+  min-width: 0;
+}
+
+.device-remote-modal .remote-name span,
+.device-remote-modal .remote-name small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.device-remote-modal .remote-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.device-remote-modal .empty {
+  margin: 12px;
+}
+
 .is-running {
   border-color: var(--color-success-line) !important;
   background: var(--color-success-soft) !important;

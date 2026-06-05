@@ -143,6 +143,15 @@ cqclaw agent workflow report --name "应用登录"
 
 从 [GitHub Releases](https://github.com/chu-jue/CQClaw-New/releases) 下载对应平台安装包，安装后启动 CQClaw 客户端。
 
+发布 Windows 安装包前，如果要内置手机端能力，把二进制放到：
+
+```text
+data/agent/CQClawAgent.apk
+data/agent/cqclaw-agent-server.jar
+```
+
+没有用户或企业路径配置时，CQClaw 会自动使用这两个随安装包分发的内置文件。
+
 确认服务与设备：
 
 ```bash
