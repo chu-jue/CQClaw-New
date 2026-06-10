@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CQClaw 产品介绍</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #101828;
+      --muted: #667085;
+      --subtle: #f5f7fb;
+      --line: #dbe4f0;
+      --blue: #2563eb;
+      --cyan: #0891b2;
+      --green: #16a34a;
+      --orange: #ea580c;
+      --violet: #7c3aed;
+      --card: rgba(255, 255, 255, 0.86);
+      --shadow: 0 28px 80px rgba(32, 63, 112, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #eef5ff 0%, #ffffff 34%, #f7fafc 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .page {
+      overflow: hidden;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(219, 228, 240, 0.8);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      display: flex;
+      min-height: 70px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 10px;
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #0891b2);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.28);
+      font-size: 17px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 72px 0 54px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+      gap: 46px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(44px, 7vw, 82px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .hero-lead {
+      margin: 26px 0 0;
+      max-width: 640px;
+      color: #344054;
+      font-size: 20px;
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 0 20px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.08);
+    }
+
+    .button.primary {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+    }
+
+    .hero-visual {
+      position: relative;
+      border: 1px solid rgba(219, 228, 240, 0.9);
+      border-radius: 26px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-visual img {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(219, 228, 240, 0.82);
+      background: #fff;
+    }
+
+    .signal-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .signal {
+      padding: 16px;
+      border: 1px solid rgba(219, 228, 240, 0.88);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 18px 44px rgba(32, 63, 112, 0.08);
+    }
+
+    .signal strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .signal span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    section {
+      padding: 54px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.08;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+
+    .value-card,
+    .capability-card,
+    .scenario-card {
+      border: 1px solid rgba(219, 228, 240, 0.88);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: 0 18px 46px rgba(32, 63, 112, 0.08);
+    }
+
+    .value-card {
+      min-height: 190px;
+      padding: 20px;
+    }
+
+    .accent {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .accent.blue { background: var(--blue); }
+    .accent.cyan { background: var(--cyan); }
+    .accent.green { background: var(--green); }
+    .accent.orange { background: var(--orange); }
+    .accent.violet { background: var(--violet); }
+
+    .value-card h3,
+    .capability-card h3,
+    .scenario-card h3 {
+      margin: 16px 0 8px;
+      font-size: 18px;
+      line-height: 1.28;
+    }
+
+    .value-card p,
+    .capability-card p,
+    .scenario-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.72;
+    }
+
+    .capability-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .capability-card {
+      padding: 22px;
+    }
+
+    .showcase {
+      background: #0f172a;
+      color: #fff;
+    }
+
+    .showcase .section-head p {
+      color: #b9c5d8;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .product-shot {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .product-shot img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #f8fafc;
+    }
+
+    .shot-copy {
+      padding: 18px 20px 20px;
+    }
+
+    .shot-copy h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .shot-copy p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 26px;
+      align-items: stretch;
+    }
+
+    .arch-copy {
+      padding: 30px;
+      border: 1px solid rgba(219, 228, 240, 0.88);
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 20px 60px rgba(32, 63, 112, 0.09);
+    }
+
+    .arch-copy h3 {
+      margin: 0 0 14px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .arch-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .arch-map {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      border: 1px solid rgba(219, 228, 240, 0.88);
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 20px 60px rgba(32, 63, 112, 0.09);
+    }
+
+    .arch-row {
+      display: grid;
+      grid-template-columns: 1fr 34px 1fr 34px 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .node {
+      min-height: 72px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: var(--subtle);
+    }
+
+    .node strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .node span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .arrow {
+      color: var(--blue);
+      font-size: 24px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .scenarios {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .scenario-card {
+      padding: 18px;
+    }
+
+    .closing {
+      padding: 56px 0 72px;
+    }
+
+    .closing-panel {
+      padding: 36px;
+      border-radius: 26px;
+      color: #fff;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8 58%, #0f766e);
+      box-shadow: var(--shadow);
+    }
+
+    .closing-panel h2 {
+      margin: 0;
+      max-width: 840px;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.14;
+    }
+
+    .closing-panel p {
+      margin: 18px 0 0;
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .architecture {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-grid {
+        gap: 30px;
+      }
+
+      .signal-row,
+      .capability-grid,
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .value-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .scenarios {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .topbar-inner,
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .hero {
+        padding-top: 46px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .hero-lead {
+        font-size: 17px;
+      }
+
+      .signal-row,
+      .value-grid,
+      .capability-grid,
+      .product-grid,
+      .scenarios {
+        grid-template-columns: 1fr;
+      }
+
+      .arch-row {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <div class="brand">
+          <div class="brand-mark">CQ</div>
+          <span>CQClaw</span>
+        </div>
+        <nav class="nav" aria-label="页面导航">
+          <a href="#value">核心价值</a>
+          <a href="#capability">关键能力</a>
+          <a href="#interface">产品界面</a>
+          <a href="#architecture">架构亮点</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <h1>让 AI 真正操作手机，把测试流程变成可复用资产。</h1>
+            <p class="hero-lead">CQClaw 是一个 AI 驱动的 Android 自动化测试平台。它既提供可视化界面，让开发和测试人员低成本编排自动化流程；也提供 CLI 能力，让 AI Agent 观察真实设备、执行动作、验证结果并沉淀脚本。</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#interface">查看产品界面</a>
+              <a class="button" href="#architecture">了解架构能力</a>
+            </div>
+            <div class="signal-row" aria-label="产品核心信号">
+              <div class="signal">
+                <strong>可视化</strong>
+                <span>低成本编排手机自动化测试脚本</span>
+              </div>
+              <div class="signal">
+                <strong>AI CLI</strong>
+                <span>Agent 可直接观察和操作真实手机</span>
+              </div>
+              <div class="signal">
+                <strong>本地优先</strong>
+                <span>日志、截图、Dump 和流程保存在本机</span>
+              </div>
+              <div class="signal">
+                <strong>可复用</strong>
+                <span>一次任务沉淀为后续可执行 Profile</span>
+              </div>
+            </div>
+          </div>
+          <figure class="hero-visual">
+            <img src="https://raw.githubusercontent.com/chu-jue/CQClaw-New/main/docs/assets/cqclaw-agent-workflow-hero.png" alt="CQClaw Agent 自动化工作流主视觉">
+          </figure>
+        </div>
+      </section>
+
+      <section id="value">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>核心价值</h2>
+            <p>面向开发和测试团队，CQClaw 把传统高成本的 Android 自动化，转化为可视化、可执行、可沉淀的工作流。</p>
+          </div>
+          <div class="value-grid">
+            <article class="value-card">
+              <span class="accent blue">1</span>
+              <h3>降低自动化门槛</h3>
+              <p>把安装、启动、点击、输入、截图、日志检查等步骤变成可视化工作流，减少脚本编写成本。</p>
+            </article>
+            <article class="value-card">
+              <span class="accent cyan">2</span>
+              <h3>让 AI 操作手机</h3>
+              <p>通过 cqclaw CLI，Agent 可以观察真实设备、执行动作、验证结果，并保存为复用流程。</p>
+            </article>
+            <article class="value-card">
+              <span class="accent green">3</span>
+              <h3>提升排查效率</h3>
+              <p>日志洞察、节点解析、截图、Dump 和运行证据集中管理，帮助团队更快复现与定位问题。</p>
+            </article>
+            <article class="value-card">
+              <span class="accent orange">4</span>
+              <h3>沉淀测试资产</h3>
+              <p>一次人工或 AI 执行的任务可以保存为 Profile，后续回归测试直接复用。</p>
+            </article>
+            <article class="value-card">
+              <span class="accent violet">5</span>
+              <h3>创造团队价值</h3>
+              <p>减少手工回归和问题复现成本，提升自动化覆盖率、问题定位效率和交付速度。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="capability">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>关键能力</h2>
+            <p>人可以用界面快速编排，AI 可以用命令执行同一套能力，最终沉淀成持续复用的自动化资产。</p>
+          </div>
+          <div class="capability-grid">
+            <article class="capability-card">
+              <span class="accent blue">可</span>
+              <h3>可视化编排</h3>
+              <p>安装、启动、点击、输入、截图、日志检查等测试步骤都可以低成本组合成工作流。</p>
+            </article>
+            <article class="capability-card">
+              <span class="accent cyan">AI</span>
+              <h3>AI 可执行</h3>
+              <p>AI Agent 通过 CLI 观察真实手机、操作真实手机、验证结果并保存流程。</p>
+            </article>
+            <article class="capability-card">
+              <span class="accent green">闭</span>
+              <h3>闭环沉淀</h3>
+              <p>一次人工或 AI 任务可以变成可复用 Profile，后续回归测试直接执行。</p>
+            </article>
+            <article class="capability-card">
+              <span class="accent orange">测</span>
+              <h3>适用场景</h3>
+              <p>覆盖回归测试、开发自测、问题复现、日志排查、多设备验证和 AI 自动化执行。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="showcase" id="interface">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>产品界面</h2>
+            <p>核心功能都围绕“操作手机、理解页面、分析日志、管理证据、复用流程”展开。</p>
+          </div>
+          <div class="product-grid">
+            <article class="product-shot">
+              <img src="https://raw.githubusercontent.com/chu-jue/CQClaw-New/main/static/assets/workbench/workflow-automation-hero-light.png" alt="CQClaw 自动化编排界面">
+              <div class="shot-copy">
+                <h3>自动化编排</h3>
+                <p>面向用户和 Agent 的统一流程编辑器，支持预览、执行、保存与复用。</p>
+              </div>
+            </article>
+            <article class="product-shot">
+              <img src="https://raw.githubusercontent.com/chu-jue/CQClaw-New/main/static/assets/workbench/log-insight-hero-light.png" alt="CQClaw 日志洞察界面">
+              <div class="shot-copy">
+                <h3>日志洞察</h3>
+                <p>实时 Logcat、文件导入、过滤、Crash/ANR 定位和规则化问题识别。</p>
+              </div>
+            </article>
+            <article class="product-shot">
+              <img src="https://raw.githubusercontent.com/chu-jue/CQClaw-New/main/static/assets/workbench/dump-inspector-hero-light.png" alt="CQClaw 节点解析界面">
+              <div class="shot-copy">
+                <h3>节点解析</h3>
+                <p>将 UIAutomator Dump 转换为可查询节点，帮助 Agent 选择稳定的操作目标。</p>
+              </div>
+            </article>
+            <article class="product-shot">
+              <img src="https://raw.githubusercontent.com/chu-jue/CQClaw-New/main/static/assets/workbench/storage-center-hero-light.png" alt="CQClaw 资源中心界面">
+              <div class="shot-copy">
+                <h3>资源中心</h3>
+                <p>集中预览和管理截图、Dump、日志、APK、临时脚本与工作流导出。</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="architecture">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>架构亮点</h2>
+            <p>同一套本地服务同时服务 Web、桌面客户端和 AI CLI，让人的操作和 Agent 的操作互相复用。</p>
+          </div>
+          <div class="architecture">
+            <article class="arch-copy">
+              <h3>人和 AI 共用同一套手机自动化能力</h3>
+              <p>开发和测试人员通过 Web 或桌面客户端低成本编排流程；AI Agent 通过 cqclaw CLI 执行观察、点击、输入、截图、日志检查和文件操作；本地服务统一管理设备、证据和工作流 Profile。</p>
+            </article>
+            <div class="arch-map" aria-label="CQClaw 架构关系">
+              <div class="arch-row">
+                <div class="node">
+                  <strong>开发 / 测试人员</strong>
+                  <span>Web 工作台、桌面客户端</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="node">
+                  <strong>本地 CQClaw 服务</strong>
+                  <span>设备控制、流程执行、证据管理</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="node">
+                  <strong>真实 Android 设备</strong>
+                  <span>ADB、UIAutomator、可选 OCR</span>
+                </div>
+              </div>
+              <div class="arch-row">
+                <div class="node">
+                  <strong>AI Agent</strong>
+                  <span>cqclaw CLI、可安装 Skill</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="node">
+                  <strong>自动化能力层</strong>
+                  <span>观察页面、执行动作、验证结果</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="node">
+                  <strong>测试资产</strong>
+                  <span>日志、截图、Dump、Profile、报告</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-head">
+            <h2>使用场景</h2>
+            <p>从日常自测到团队回归，从日志排查到 AI 自动化执行，都可以用同一个平台完成。</p>
+          </div>
+          <div class="scenarios">
+            <article class="scenario-card">
+              <h3>回归测试</h3>
+              <p>将高频流程沉淀为可重复执行的 Profile。</p>
+            </article>
+            <article class="scenario-card">
+              <h3>开发自测</h3>
+              <p>快速验证安装、启动、页面跳转和核心功能。</p>
+            </article>
+            <article class="scenario-card">
+              <h3>问题复现</h3>
+              <p>保留截图、日志和步骤证据，复现过程更稳定。</p>
+            </article>
+            <article class="scenario-card">
+              <h3>日志排查</h3>
+              <p>导入日志或实时采集，定位 Crash、ANR 和关键事件。</p>
+            </article>
+            <article class="scenario-card">
+              <h3>多设备验证</h3>
+              <p>统一管理设备和运行结果，降低手工切换成本。</p>
+            </article>
+            <article class="scenario-card">
+              <h3>AI 自动化</h3>
+              <p>让 Agent 调用 CLI 操作手机并沉淀流程。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing">
+        <div class="wrap">
+          <div class="closing-panel">
+            <h2>CQClaw 将手机自动化从“写脚本”升级为“可视化编排 + AI 执行 + 资产复用”。</h2>
+            <p>它帮助团队以更低的人力和技术成本提升测试覆盖率、问题定位效率和交付速度，让开发、测试和 AI Agent 共享同一套可持续演进的 Android 自动化能力。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
