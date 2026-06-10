@@ -30,6 +30,59 @@
 
 > **一句话：CQClaw 让 AI 真正操作手机，把人工测试流程快速变成可视化、可复用、可自动执行的测试资产。**
 
+## 评委快速看
+
+- **可视化**：把安装、启动、点击、输入、截图、日志检查等测试步骤拖进工作流，低成本生成自动化脚本。
+- **AI 可执行**：通过 `cqclaw` CLI，AI Agent 可以观察真实手机、操作真实手机、验证结果并保存流程。
+- **闭环沉淀**：一次人工/AI 任务可以变成可复用 Profile，后续回归测试直接执行。
+- **公司价值**：减少手工回归和问题复现成本，提升测试覆盖率、定位效率和团队交付速度。
+
+## 产品界面
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="static/assets/workbench/workflow-automation-hero-light.png" alt="CQClaw 自动化编排">
+      <br><strong>自动化编排</strong><br>
+      面向用户和 Agent 的统一流程编辑器，支持预览、执行、保存与复用。
+    </td>
+    <td width="50%">
+      <img src="static/assets/workbench/log-insight-hero-light.png" alt="CQClaw 日志洞察">
+      <br><strong>日志洞察</strong><br>
+      实时 Logcat、文件导入、过滤、Crash/ANR 定位和规则化问题识别。
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="static/assets/workbench/dump-inspector-hero-light.png" alt="CQClaw UI Dump 节点解析">
+      <br><strong>节点解析</strong><br>
+      将 UIAutomator Dump 转换为可查询节点，帮助 Agent 选择稳定的操作目标。
+    </td>
+    <td width="50%">
+      <img src="static/assets/workbench/storage-center-hero-light.png" alt="CQClaw 资源中心">
+      <br><strong>资源中心</strong><br>
+      集中预览和管理截图、Dump、日志、APK、临时脚本与工作流导出。
+    </td>
+  </tr>
+</table>
+
+## 架构亮点
+
+```mermaid
+flowchart TB
+    USER["开发 / 测试人员"] --> WEB["可视化 Web 工作台"]
+    USER --> DESKTOP["桌面客户端"]
+    AGENT["AI Agent"] --> CLI["cqclaw CLI"]
+    WEB --> SERVICE["本地 CQClaw 服务"]
+    DESKTOP --> SERVICE
+    CLI --> SERVICE
+    SERVICE --> ADB["ADB / UIAutomator / 可选 OCR"]
+    ADB --> PHONE["真实 Android 设备"]
+    SERVICE --> DATA["日志、截图、Dump、工作流 Profile 与运行证据"]
+```
+
+CQClaw 让“人”和“AI”共用同一套手机自动化能力：人用界面低成本编排，AI 用 CLI 自动执行和沉淀。
+
 ## CQClaw 是什么
 
 CQClaw 把 Android 设备控制、UI 检查、自动化编排和运行证据统一在一个本地工作台中。
@@ -103,35 +156,6 @@ cqclaw agent workflow report --name "应用登录"
 - 最近运行 ID 和步骤结果
 - 截图、Dump 等证据路径
 - 最新学习报告
-
-## 产品界面
-
-<table>
-  <tr>
-    <td width="50%">
-      <img src="static/assets/workbench/workflow-automation-hero-light.png" alt="CQClaw 自动化编排">
-      <br><strong>自动化编排</strong><br>
-      面向用户和 Agent 的统一流程编辑器，支持预览、执行、保存与复用。
-    </td>
-    <td width="50%">
-      <img src="static/assets/workbench/log-insight-hero-light.png" alt="CQClaw 日志洞察">
-      <br><strong>日志洞察</strong><br>
-      实时 Logcat、文件导入、过滤、Crash/ANR 定位和规则化问题识别。
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <img src="static/assets/workbench/dump-inspector-hero-light.png" alt="CQClaw UI Dump 节点解析">
-      <br><strong>节点解析</strong><br>
-      将 UIAutomator Dump 转换为可查询节点，帮助 Agent 选择稳定的操作目标。
-    </td>
-    <td width="50%">
-      <img src="static/assets/workbench/storage-center-hero-light.png" alt="CQClaw 资源中心">
-      <br><strong>资源中心</strong><br>
-      集中预览和管理截图、Dump、日志、APK、临时脚本与工作流导出。
-    </td>
-  </tr>
-</table>
 
 ## 完整功能
 
@@ -253,23 +277,6 @@ cqclaw agent workflow preview --profile "应用登录" --devices SERIAL
 cqclaw agent workflow run --profile "应用登录" --devices SERIAL
 cqclaw agent workflow report --name "应用登录"
 ```
-
-## 架构
-
-```mermaid
-flowchart TB
-    USER["用户"] --> DESKTOP["Tauri 桌面客户端"]
-    USER --> WEB["Web 控制台"]
-    AGENT["Agent + CQClaw Skill"] --> CLI["cqclaw Agent CLI"]
-    DESKTOP --> SERVICE["本地 CQClaw 服务"]
-    WEB --> SERVICE
-    CLI --> SERVICE
-    SERVICE --> ADB["ADB / UIAutomator / 可选 OCR"]
-    ADB --> PHONE["真实 Android 设备"]
-    SERVICE --> DATA["本地日志、截图、Dump、Profile 与运行证据"]
-```
-
-CQClaw 默认只在本机启动服务。设备命令、日志、截图、UI Dump 和工作流记录由用户自己的电脑管理。
 
 ## 常用服务命令
 
